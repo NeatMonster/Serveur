@@ -48,7 +48,7 @@ private:
     PacketQueue<ServerPacket*> writeQueue;
     PacketHandler *handler;
     std::atomic<bool> closed;
-    std::atomic<bool> authentificated;
+    std::atomic<Phase> phase;
 
     void runRead();
 

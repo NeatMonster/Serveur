@@ -5,11 +5,13 @@
 #include "ClientSocket.h"
 #include "PacketDisconnect.h"
 #include "PacketHandler.h"
+#include "PacketHandshake.h"
+#include "PacketLoginStart.h"
 #include "PacketQueue.cpp"
 #include "ServerPacket.h"
 #include "Logger.h"
 
-PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket), closed(false), authentificated(false) {
+PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket), closed(false), phase(HANDSHAKE) {
     handler = new PacketHandler(this);
     readThread = std::thread(&PlayerConnection::runRead, this);
     writeThread = std::thread(&PlayerConnection::runWrite, this);
@@ -79,11 +81,17 @@ void PlayerConnection::runRead() {
                     varint_t packetId;
                     readBuffer.getVarInt(packetId);
                     ClientPacket *packet = nullptr;
-                    if (authentificated) {
+                    if (phase == HANDSHAKE) {
+                        if (packetId == 0x00) {
+                            packet = new PacketHandshake();
+                            phase = LOGIN;
+                        }
+                    } else if (phase == LOGIN) {
+                        if (packetId == 0x00)
+                            packet = new PacketLoginStart();
+                    } else if (phase == PLAY) {
                         if (factory.hasPacket(packetId))
                             packet = factory.createPacket(packetId);
-                    } else {
-                        //TODO
                     }
                     if (packet == nullptr) {
                         disconnect("ID de paquet invalide : " + std::to_string(packetId));
@@ -123,7 +131,7 @@ void PlayerConnection::runWrite() {
             writeBuffer.putVarInt(packetLength);
             writeBuffer.rewind();
             socket->transmit(writeBuffer.getData(), writeBuffer.getLimit());
-            if (!authentificated && packet->getPacketId() == 0x00)
+            if (phase == LOGIN && packet->getPacketId() == 0x00)
                 close();
             delete packet;
         }
