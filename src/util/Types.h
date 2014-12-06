@@ -24,6 +24,21 @@ typedef float float_t;
 typedef double double_t;
 typedef std::string string_t;
 
+struct position_t {
+    int_t x, y, z;
+    long_t pos;
+
+    position_t() {}
+
+    position_t(long_t pos) : x(pos >> 38),
+                             y((pos >> 26) & 0xfff),
+                             z(pos << 38 >> 38), pos(pos) {}
+
+    position_t(int_t x, int_t y, int_t z) : x(x), y(y), z(z), pos((((long_t) x & 0x3ffffff) << 38)
+                                                                | (((long_t) y & 0xfff) << 26)
+                                                                | (((long_t) z & 0x3ffffff))) {}
+};
+
 struct InvalidArgumentException : std::runtime_error {
     InvalidArgumentException(string_t s) : std::runtime_error(s) {}
 };
