@@ -1,4 +1,4 @@
-[![Build Status](https://magnum.travis-ci.com/Minecraft-France/Serveur.svg?token=htYEgJf9D1vD8Lyz4aKb&branch=master)](https://magnum.travis-ci.com/Minecraft-France/Serveur)
+[![Build Status](https://magnum.travis-ci.com/MC-France/Serveur.svg?token=htYEgJf9D1vD8Lyz4aKb&branch=master)](https://magnum.travis-ci.com/MC-France/Serveur)
 
 ### Installation
 Nous utilisons CMake, donc il suffit de quelques commandes :
