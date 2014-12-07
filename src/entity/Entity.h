@@ -3,6 +3,7 @@
 
 #include "Types.h"
 
+class Chunk;
 class World;
 
 class Entity {
@@ -18,6 +19,8 @@ public:
     int_t getEntityId();
 
     virtual World *getWorld();
+
+    Chunk *getChunk();
 
     void move(double_t, double_t, double_t);
 

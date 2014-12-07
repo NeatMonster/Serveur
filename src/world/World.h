@@ -19,13 +19,9 @@ public:
 
     ~World();
 
+    Level *getLevel();
+
     string_t getName();
-
-    std::set<Entity*> getEntities();
-
-    void addEntity(Entity*);
-
-    void removeEntity(Entity*);
 
     std::set<Player*> getPlayers();
 
@@ -45,18 +41,11 @@ public:
 
     void tryUnloadChunk(chunk_t);
 
-    Level *getLevel();
-
-    int_t getTime();
-
-    long_t getFullTime();
-
     void onTick();
 
 private:
     Level *level;
     string_t name;
-    std::set<Entity*> entities;
     std::set<Player*> players;
     std::map<chunk_t, Chunk*> chunks;
 };

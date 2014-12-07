@@ -11,6 +11,9 @@ class Section;
 class World;
 
 class Chunk {
+    friend class World;
+
+public:
     struct Meta {
         int_t x;
         int_t z;
@@ -26,12 +29,6 @@ class Chunk {
     int_t getX();
 
     int_t getZ();
-
-    std::set<Entity*> getEntities();
-
-    void addEntity(Entity*);
-
-    void removeEntity(Entity*);
 
     std::set<Player*> getPlayers();
 
@@ -50,7 +47,6 @@ private:
     ubyte_t biomes[256];
     int_t heightMap[256];
     Section *sections[16];
-    std::set<Entity*> entities;
     std::set<Player*> players;
 };
 

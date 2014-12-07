@@ -15,11 +15,16 @@ ubyte_t Section::getY() {
     return y;
 }
 
-void Section::initialize() {
+void Section::initialize(bool fill) {
     if (!initialized) {
         blockData = new ushort_t[4096];
         blockLight = new ubyte_t[2048];
         skyLight = new ubyte_t[2048];
+        if (fill) {
+            memset(blockData, 0, 8192);
+            memset(blockLight, 0, 2048);
+            memset(skyLight, 255, 2048);
+        }
         initialized = true;
     }
 }

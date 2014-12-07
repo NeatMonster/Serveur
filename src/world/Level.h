@@ -9,6 +9,8 @@ class Level {
 public:
     Level(string_t);
 
+    ~Level();
+
     long_t getTime();
 
     void setTime(long_t);

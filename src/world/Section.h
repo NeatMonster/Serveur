@@ -5,6 +5,7 @@
 
 class Section {
     friend class Chunk;
+    friend class World;
 
 public:
     Section(ubyte_t);
@@ -13,7 +14,7 @@ public:
 
     ubyte_t getY();
 
-    void initialize();
+    void initialize(bool);
 
     ubyte_t getBlockType(int_t);
 

@@ -28,18 +28,6 @@ int_t Chunk::getZ() {
     return z;
 }
 
-std::set<Entity*> Chunk::getEntities() {
-    return entities;
-}
-
-void Chunk::addEntity(Entity *entity) {
-    entities.insert(entity);
-}
-
-void Chunk::removeEntity(Entity *entity) {
-    entities.erase(entity);
-}
-
 std::set<Player*> Chunk::getPlayers() {
     return players;
 }
