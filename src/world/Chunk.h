@@ -41,7 +41,7 @@ class Chunk {
 
     Meta getMeta();
 
-    void *write(ubyte_t*&);
+    void write(ubyte_t*&);
 
 private:
     World *world;
@@ -49,7 +49,7 @@ private:
     int_t z;
     ubyte_t biomes[256];
     int_t heightMap[256];
-    Section *section[16];
+    Section *sections[16];
     std::set<Entity*> entities;
     std::set<Player*> players;
 };

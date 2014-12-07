@@ -4,6 +4,8 @@
 #include "Types.h"
 
 class Section {
+    friend class Chunk;
+
 public:
     Section(ubyte_t);
 
@@ -11,7 +13,7 @@ public:
 
     ubyte_t getY();
 
-    void initialize(bool);
+    void initialize();
 
     ubyte_t getBlockType(int_t);
 
@@ -33,8 +35,7 @@ private:
     ubyte_t y;
     short_t blockCount;
     bool initialized;
-    ubyte_t *blockType;
-    ubyte_t *blockData;
+    ushort_t *blockData;
     ubyte_t *blockLight;
     ubyte_t *skyLight;
 };
