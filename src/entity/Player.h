@@ -12,19 +12,33 @@ public:
 
     virtual ~Player();
 
+    virtual Type getType();
+
+    void setPosition(double_t, double_t, double_t);
+
+    void setRotation(float_t, float_t);
+
     string_t getUUID();
 
     string_t getName();
-
-    void sendMessage(string_t);
-
-    void disconnect(string_t);
 
     string_t getIP();
 
     ushort_t getPort();
 
+    void sendMessage(string_t);
+
+    void disconnect(string_t);
+
     void sendPacket(ServerPacket*);
+
+    void onJoinGame();
+
+    void onLeftGame();
+
+    void onJoinWorld();
+
+    void onLeftWorld();
 
     virtual void onTick();
 

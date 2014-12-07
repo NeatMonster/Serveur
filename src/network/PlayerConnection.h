@@ -31,6 +31,14 @@ public:
 
     bool isClosed();
 
+    string_t getName();
+
+    string_t getUUID();
+
+    string_t getIP();
+
+    ushort_t getPort();
+
     void handlePackets();
 
     void sendPacket(ServerPacket*);

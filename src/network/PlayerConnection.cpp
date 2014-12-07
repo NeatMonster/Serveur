@@ -41,6 +41,22 @@ bool PlayerConnection::isClosed() {
     return closed;
 }
 
+string_t PlayerConnection::getName() {
+    return handler->name;
+}
+
+string_t PlayerConnection::getUUID() {
+    return handler->uuid;
+}
+
+string_t PlayerConnection::getIP() {
+    return socket->getIP();
+}
+
+ushort PlayerConnection::getPort() {
+    return socket->getPort();
+}
+
 void PlayerConnection::handlePackets() {
     ClientPacket *packet;
     while (!closed && readQueue.tryPop(packet)) {
@@ -54,11 +70,11 @@ void PlayerConnection::sendPacket(ServerPacket *packet) {
         writeQueue.push(packet);
 }
 
-void PlayerConnection::disconnect(string_t message) {
+void PlayerConnection::disconnect(string_t reason) {
     Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
         << " s'est déconnecté" << std::endl;
     PacketDisconnect *packet = new PacketDisconnect();
-    packet->reason = (Chat() << message).getJSON();
+    packet->reason = (Chat() << reason).getJSON();
     sendPacket(packet);
 }
 

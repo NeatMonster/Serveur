@@ -8,6 +8,8 @@ class PacketLoginStart;
 class PlayerConnection;
 
 class PacketHandler {
+    friend class PlayerConnection;
+
 public:
     PacketHandler(PlayerConnection*);
 
@@ -17,7 +19,7 @@ public:
 
 private:
     PlayerConnection *connect;
-    string_t username;
+    string_t name;
     string_t uuid;
 };
 

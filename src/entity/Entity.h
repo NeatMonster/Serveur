@@ -3,7 +3,10 @@
 
 #include "Types.h"
 
+#include <set>
+
 class Chunk;
+class Player;
 class World;
 
 class Entity {
@@ -14,17 +17,19 @@ public:
 
     virtual ~Entity();
 
-    virtual void getType() = 0;
+    virtual Type getType() = 0;
 
     int_t getEntityId();
 
-    virtual World *getWorld();
-
     Chunk *getChunk();
 
-    void move(double_t, double_t, double_t);
+    virtual World *getWorld();
 
-    void rotate(float_t, float_t);
+    std::set<Player*> getWatchers();
+
+    virtual void setPosition(double_t, double_t, double_t);
+
+    virtual void setRotation(float_t, float_t);
 
     bool isDead();
 
@@ -39,8 +44,8 @@ protected:
     bool dead;
 
     World * world;
-    int_t x, y, z;
-    int_t yaw, pitch;
+    double_t x, y, z;
+    float_t yaw, pitch;
     bool onGround;
     int_t lastX, lastY, lastZ;
     int_t lastYaw, lastPitch;

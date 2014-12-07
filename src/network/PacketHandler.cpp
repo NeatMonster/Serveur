@@ -29,8 +29,8 @@ void PacketHandler::handleHandshake(PacketHandshake *packet) {
 }
 
 void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
-    username = packet->name;
-    string_t s = "OfflinePlayer:" + username;
+    name = packet->name;
+    string_t s = "OfflinePlayer:" + name;
     md5_context ctx;
     md5_init(&ctx);
     md5_starts(&ctx);
@@ -50,7 +50,7 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     }
     uuid = ss.str();
     PacketLoginSuccess *successPacket = new PacketLoginSuccess();
-    successPacket->username = username;
+    successPacket->username = name;
     successPacket->uuid = uuid;
     connect->sendPacket(successPacket);
     connect->phase = PlayerConnection::PLAY;

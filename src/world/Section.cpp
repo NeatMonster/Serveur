@@ -1,5 +1,7 @@
 #include "Section.h"
 
+#include <cstring>
+
 Section::Section(ubyte_t y) : y(y), blockCount(0), initialized(false),
     blockData(nullptr), blockLight(nullptr), skyLight(nullptr) {}
 
@@ -21,9 +23,9 @@ void Section::initialize(bool fill) {
         blockLight = new ubyte_t[2048];
         skyLight = new ubyte_t[2048];
         if (fill) {
-            memset(blockData, 0, 8192);
-            memset(blockLight, 0, 2048);
-            memset(skyLight, 255, 2048);
+            std::memset(blockData, 0, 8192);
+            std::memset(blockLight, 0, 2048);
+            std::memset(skyLight, 255, 2048);
         }
         initialized = true;
     }

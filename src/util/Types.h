@@ -8,6 +8,7 @@
 #include <vector>
 
 #define BUFFER_SIZE 65535
+#define VIEW_DISTANCE 10
 
 typedef std::int8_t byte_t;
 typedef std::uint8_t ubyte_t;
@@ -42,6 +43,38 @@ struct position_t {
 struct InvalidArgumentException : std::runtime_error {
     InvalidArgumentException(string_t s) : std::runtime_error(s) {}
 };
+
+template<class T>
+inline T abs(T x) {
+    return x > 0 ? -x : x;
+}
+
+template<class T>
+inline T min(T x, T y) {
+    return x > y ? y : x;
+}
+
+template<class T>
+inline T max(T x, T y) {
+    return x > y ? x : y;
+}
+
+template<class T>
+inline T mod(T x, T y) {
+    while (x >= y)
+        x -= y;
+    while (x < 0)
+        x += y;
+    return x;
+}
+
+inline int_t floor(float_t x) {
+    return x >= 0 ? (int_t) x : ((int_t) x) - 1;
+}
+
+inline long_t floor(double_t x) {
+    return x >= 0 ? (long_t) x : ((long_t) x) - 1;
+}
 
 template<class T>
 inline bool contains(T x, std::vector<T> vec) {

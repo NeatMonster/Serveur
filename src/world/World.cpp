@@ -32,11 +32,11 @@ std::set<Player*> World::getPlayers() {
 void World::addPlayer(Player *player) {
     players.insert(player);
     player->getChunk()->addPlayer(player);
-    //TODO: Notifier le joueur.
+    player->onJoinWorld();
 }
 
 void World::removePlayer(Player *player) {
-    //TODO: Notifier le joueur.
+    player->onLeftWorld();
     player->getChunk()->removePlayer(player);
     players.erase(player);
 }
@@ -92,8 +92,8 @@ void World::unloadChunk(chunk_t c) {
 void World::tryUnloadChunk(chunk_t c) {
     if (chunks.find(c) == chunks.end())
         return;
-    for (int_t x = -10; x <= 10; x++)
-        for (int_t z = -10; z <= 10; z++) {
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++) {
             Chunk *chunk = tryGetChunk(std::make_pair(c.first + x, c.second + z));
             if (chunk != nullptr && chunk->getPlayers().size() > 0)
                 return;
