@@ -11,6 +11,7 @@
 
 class ClientPacket;
 class PacketHandler;
+class Player;
 class ServerPacket;
 
 class PlayerConnection {
@@ -57,6 +58,7 @@ private:
     PacketHandler *handler;
     std::atomic<bool> closed;
     std::atomic<Phase> phase;
+    Player *player;
 
     void runRead();
 

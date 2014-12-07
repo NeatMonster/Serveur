@@ -1,9 +1,13 @@
 #include "PacketHandler.h"
 
+#include "Logger.h"
+#include "PacketChatMessage.h"
 #include "PacketHandshake.h"
 #include "PacketLoginStart.h"
 #include "PacketLoginSuccess.h"
+#include "Player.h"
 #include "PlayerConnection.h"
+#include "Server.h"
 
 #include "polarssl/md5.h"
 
@@ -53,6 +57,17 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     successPacket->username = name;
     successPacket->uuid = uuid;
     connect->sendPacket(successPacket);
+    for (Player *player : Server::getPlayers())
+        if (player->getUUID() == uuid)
+            player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
-    std::cout << uuid << std::endl;
+    Player *player = new Player(Server::getWorld(), connect);
+    connect->player = player;
+    Logger::info() << player->getName() << " [/" << player->getIP() << ":" << player->getPort()
+        << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
+        << " en (" << player->getX() << ", " << player->getY() << ", " << player->getZ() << ")" << std::endl;
+}
+
+void PacketHandler::handleChatMessage(PacketChatMessage *packet) {
+    Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->jsonData);
 }

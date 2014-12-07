@@ -36,7 +36,7 @@ void World::addPlayer(Player *player) {
 }
 
 void World::removePlayer(Player *player) {
-    player->onLeftWorld();
+    player->onQuitWorld();
     player->getChunk()->removePlayer(player);
     players.erase(player);
 }

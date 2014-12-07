@@ -1,15 +1,27 @@
 #include "Player.h"
 
 #include "Chunk.h"
+#include "Level.h"
+#include "PacketChatMessage.h"
 #include "PlayerConnection.h"
+#include "Server.h"
 #include "World.h"
 
 Player::Player(World *world, PlayerConnection *connect) : LivingEntity(world), connect(connect) {
     uuid = connect->getUUID();
     name = connect->getName();
+    position_t spawn = world->getLevel()->getSpawn();
+    onJoinGame();
+    Server::getServer()->addPlayer(this);
+    setPosition(spawn.x, spawn.y, spawn.z);
+    world->addPlayer(this);
 }
 
-Player::~Player() {}
+Player::~Player() {
+    world->removePlayer(this);
+    Server::getServer()->removePlayer(this);
+    onQuitGame();
+}
 
 Entity::Type Player::getType() {
     return Type::PLAYER;
@@ -81,8 +93,11 @@ ushort Player::getPort() {
     return connect->getPort();
 }
 
-void Player::sendMessage(string_t) {
-    //TODO : Envoyer le paquet.
+void Player::sendMessage(ChatMessage &message) {
+    PacketChatMessage *packet = new PacketChatMessage();
+    packet->jsonData = message.getJSON();
+    packet->position = 0;
+    sendPacket(packet);
 }
 
 void Player::disconnect(string_t reason) {
@@ -95,11 +110,11 @@ void Player::sendPacket(ServerPacket *packet) {
 
 void Player::onJoinGame() {}
 
-void Player::onLeftGame() {}
+void Player::onQuitGame() {}
 
 void Player::onJoinWorld() {}
 
-void Player::onLeftWorld() {}
+void Player::onQuitWorld() {}
 
 void Player::onTick() {
     LivingEntity::onTick();

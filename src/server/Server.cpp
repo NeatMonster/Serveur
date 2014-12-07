@@ -1,6 +1,9 @@
 #include "Server.h"
 
 #include "Logger.h"
+#include "PacketChatMessage.h"
+#include "Player.h"
+#include "World.h"
 
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
@@ -18,10 +21,31 @@ NetworkManager *Server::getNetwork() {
     return getServer()->network;
 }
 
+World *Server::getWorld() {
+    return world;
+}
+
+Player *Server::getPlayer(string_t name) {
+    for (Player *player : getPlayers())
+        if (player->getName() == name)
+            return player;
+    return nullptr;
+}
+
+std::set<Player*> Server::getPlayers() {
+    return getServer()->players;
+}
+
+void Server::broadcast(ChatMessage &message) {
+    for (Player *player : getPlayers())
+        player->sendMessage(message);
+}
+
 Server::Server() : running(true), ticks(0) {
     instance = this;
     Logger::info() << "Démarrage du serveur version 1.8.1" << std::endl;
     network = new NetworkManager();
+    world = new World("world");
     if (network->start()) {
         run();
         network->stop();
@@ -30,11 +54,22 @@ Server::Server() : running(true), ticks(0) {
 
 Server::~Server() {
     delete network;
+    delete world;
 }
 
 void Server::stop() {
     running = false;
     Logger::info() << "Extinction du serveur" << std::endl;
+}
+
+void Server::addPlayer(Player *player) {
+    players.insert(player);
+    broadcast(Chat() << Color::YELLOW << player->getName() << " a rejoint la partie");
+}
+
+void Server::removePlayer(Player *player) {
+    players.erase(player);
+    broadcast(Chat() << Color::YELLOW << player->getName() << " a quitté la partie");
 }
 
 Server *Server::instance;

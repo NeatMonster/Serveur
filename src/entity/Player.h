@@ -1,6 +1,7 @@
 #ifndef __Serveur__Player__
 #define __Serveur__Player__
 
+#include "ChatMessage.h"
 #include "LivingEntity.h"
 
 class PlayerConnection;
@@ -26,7 +27,7 @@ public:
 
     ushort_t getPort();
 
-    void sendMessage(string_t);
+    void sendMessage(ChatMessage&);
 
     void disconnect(string_t);
 
@@ -34,11 +35,11 @@ public:
 
     void onJoinGame();
 
-    void onLeftGame();
+    void onQuitGame();
 
     void onJoinWorld();
 
-    void onLeftWorld();
+    void onQuitWorld();
 
     virtual void onTick();
 

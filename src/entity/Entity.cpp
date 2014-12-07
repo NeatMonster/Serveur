@@ -37,6 +37,18 @@ std::set<Player*> Entity::getWatchers() {
     return watchers;
 }
 
+double_t Entity::getX() {
+    return x;
+}
+
+double_t Entity::getY() {
+    return y;
+}
+
+double_t Entity::getZ() {
+    return z;
+}
+
 void Entity::setPosition(double_t x, double_t y, double_t z) {
     this->x = x;
     this->y = y;

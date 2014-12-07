@@ -27,6 +27,12 @@ public:
 
     std::set<Player*> getWatchers();
 
+    double_t getX();
+
+    double_t getY();
+
+    double_t getZ();
+
     virtual void setPosition(double_t, double_t, double_t);
 
     virtual void setRotation(float_t, float_t);

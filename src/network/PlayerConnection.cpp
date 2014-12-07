@@ -8,16 +8,20 @@
 #include "PacketHandshake.h"
 #include "PacketLoginStart.h"
 #include "PacketQueue.cpp"
+#include "Player.h"
 #include "ServerPacket.h"
 #include "Logger.h"
 
-PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket), closed(false), phase(HANDSHAKE) {
+PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket),
+        closed(false), phase(HANDSHAKE), player(nullptr) {
     handler = new PacketHandler(this);
     readThread = std::thread(&PlayerConnection::runRead, this);
     writeThread = std::thread(&PlayerConnection::runWrite, this);
 }
 
 PlayerConnection::~PlayerConnection() {
+    if (player != nullptr)
+        delete player;
     delete handler;
     delete socket;
 }

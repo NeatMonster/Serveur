@@ -3,6 +3,7 @@
 
 #include "Types.h"
 
+class PacketChatMessage;
 class PacketHandshake;
 class PacketLoginStart;
 class PlayerConnection;
@@ -16,6 +17,8 @@ public:
     void handleHandshake(PacketHandshake*);
 
     void handleLoginStart(PacketLoginStart*);
+
+    void handleChatMessage(PacketChatMessage*);
 
 private:
     PlayerConnection *connect;
