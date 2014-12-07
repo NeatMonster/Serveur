@@ -19,9 +19,9 @@ PacketHandler::PacketHandler(PlayerConnection *connect) : connect(connect) {}
 void PacketHandler::handleHandshake(PacketHandshake *packet) {
     switch (packet->nextState) {
         case PlayerConnection::LOGIN:
-            if (packet->protocolVersion < 47)
+            if (packet->protocol < 47)
                 connect->disconnect("Client trop ancien, merci d'utiliser au moins la 1.8");
-            else if (packet->protocolVersion > 47)
+            else if (packet->protocol > 47)
                 connect->disconnect("Serveur trop ancien, merci d'utiliser au plus la 1.8.1");
             else
                 connect->phase = PlayerConnection::LOGIN;
@@ -53,10 +53,7 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
         ss << std::setw(2) << std::hex << std::setfill('0') << (int) hash[i];
     }
     uuid = ss.str();
-    PacketLoginSuccess *successPacket = new PacketLoginSuccess();
-    successPacket->username = name;
-    successPacket->uuid = uuid;
-    connect->sendPacket(successPacket);
+    connect->sendPacket(new PacketLoginSuccess(uuid, name));
     for (Player *player : Server::getPlayers())
         if (player->getUUID() == uuid)
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
@@ -69,5 +66,5 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
 }
 
 void PacketHandler::handleChatMessage(PacketChatMessage *packet) {
-    Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->jsonData);
+    Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->message);
 }

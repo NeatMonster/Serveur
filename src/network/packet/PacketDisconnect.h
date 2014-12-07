@@ -5,11 +5,12 @@
 
 class PacketDisconnect : public ServerPacket {
 public:
-    string_t reason;
-
-    PacketDisconnect();
+    PacketDisconnect(string_t);
 
     void write(ByteBuffer&);
+
+private:
+    string_t reason;
 };
 
 #endif /* defined(__Serveur__PacketDisconnect__) */

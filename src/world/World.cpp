@@ -116,10 +116,6 @@ void World::onTick() {
     level->setTime(level->getTime());
     level->setDayTime(level->getDayTime() + 1);
     if (level->getTime() % 20 == 0)
-        for (Player *const &player : players) {
-            PacketTimeUpdate *timePacket = new PacketTimeUpdate();
-            timePacket->worldAge = level->getTime();
-            timePacket->dayTime = level->getDayTime();
-            player->sendPacket(timePacket);
-        }
+        for (Player *const &player : players)
+            player->sendPacket(new PacketTimeUpdate(level->getTime(), level->getDayTime()));
 }

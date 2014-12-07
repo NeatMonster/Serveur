@@ -5,12 +5,13 @@
 
 class PacketLoginSuccess : public ServerPacket {
 public:
-    string_t uuid;
-    string_t username;
-
-    PacketLoginSuccess();
+    PacketLoginSuccess(string_t, string_t);
 
     void write(ByteBuffer&);
+
+private:
+    string_t uuid;
+    string_t name;
 };
 
 #endif /* defined(__Serveur__PacketLoginSuccess__) */

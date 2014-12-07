@@ -1,8 +1,11 @@
 #include "PacketTimeUpdate.h"
 
-PacketTimeUpdate::PacketTimeUpdate() : ServerPacket(0x03) {};
+PacketTimeUpdate::PacketTimeUpdate(long_t time, long_t dayTime) : ServerPacket(0x03) {
+    this->time = time;
+    this->dayTime = dayTime;
+};
 
 void PacketTimeUpdate::write(ByteBuffer &buffer) {
-    buffer.putLong(worldAge);
+    buffer.putLong(time);
     buffer.putLong(dayTime);
 }

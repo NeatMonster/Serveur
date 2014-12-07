@@ -2,7 +2,9 @@
 
 #include "PlayerConnection.h"
 
-PacketDisconnect::PacketDisconnect() : ServerPacket(0x00) {}
+PacketDisconnect::PacketDisconnect(string_t reason) : ServerPacket(0x00) {
+    this->reason = reason;
+}
 
 void PacketDisconnect::write(ByteBuffer &buffer) {
     buffer.putString(reason);

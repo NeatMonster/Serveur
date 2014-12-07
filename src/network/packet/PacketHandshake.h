@@ -5,8 +5,8 @@
 
 class PacketHandshake : public ClientPacket {
 public:
-    varint_t protocolVersion;
-    string_t serverAddress;
+    varint_t protocol;
+    string_t serverIP;
     ushort_t serverPort;
     varint_t nextState;
 

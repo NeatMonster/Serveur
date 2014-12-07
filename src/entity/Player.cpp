@@ -3,6 +3,9 @@
 #include "Chunk.h"
 #include "Level.h"
 #include "PacketChatMessage.h"
+#include "PacketChunkData.h"
+#include "PacketJoinGame.h"
+#include "PacketPlayerListItem.h"
 #include "PlayerConnection.h"
 #include "Server.h"
 #include "World.h"
@@ -40,33 +43,17 @@ void Player::setPosition(double_t x, double_t y, double_t z) {
             if (newChunk->getX() + x < oldChunk->getX() - VIEW_DISTANCE
                 || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
                     || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
-                        || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE) {
-                //TODO : Envoyer les paquets.
-                Chunk *chunk = world->getChunk(std::make_pair(newChunk->getX() + x, newChunk->getZ() + z));
-                /*PacketChunkData *packet = new PacketChunkData();
-                packet->continuous = true;
-                packet->meta = chunk->getMeta();
-                packet->size = chunk->getSize(getVersion());
-                packet->data = new ubyte_t[packet->size];
-                ubyte_t *data = packet->data;
-                chunk->writeData(data, getVersion());
-                sendPacket(packet);*/
-            }
+                        || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE)
+                sendPacket(new PacketChunkData(world->getChunk(std::make_pair(newChunk->getX() + x,
+                                                                              newChunk->getZ() + z)), false));
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
             if (oldChunk->getX() + x < newChunk->getX() - VIEW_DISTANCE
                 || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
                     || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
-                        || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE) {
-                //TODO : Envoyer les paquets.
-                /*PacketChunkData *packet = new PacketChunkData();
-                packet->continuous = true;
-                packet->meta = {xOld + x, zOld + z, 0};
-                packet->size = 0;
-                packet->data = nullptr;
-                sendPacket(packet);
-                world->tryUnloadChunk(std::make_pair(xOld + x, zOld + z));*/
-            }
+                        || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE)
+                sendPacket(new PacketChunkData(world->getChunk(std::make_pair(newChunk->getX() + x,
+                                                                              newChunk->getZ() + z)), true));
 }
 
 void Player::setRotation(float_t yaw, float_t pitch) {
@@ -94,10 +81,7 @@ ushort Player::getPort() {
 }
 
 void Player::sendMessage(ChatMessage &message) {
-    PacketChatMessage *packet = new PacketChatMessage();
-    packet->jsonData = message.getJSON();
-    packet->position = 0;
-    sendPacket(packet);
+    sendPacket(new PacketChatMessage(message.getJSON()));
 }
 
 void Player::disconnect(string_t reason) {
@@ -108,7 +92,21 @@ void Player::sendPacket(ServerPacket *packet) {
     connect->sendPacket(packet);
 }
 
-void Player::onJoinGame() {}
+void Player::onJoinGame() {
+    PacketJoinGame *joinPacket = new PacketJoinGame();
+    joinPacket->entityId = entityId;
+    joinPacket->gameMode = 1;
+    joinPacket->dimension = 0;
+    joinPacket->difficulty = 0;
+    joinPacket->maxPlayers = 20;
+    joinPacket->levelType = "default";
+    joinPacket->reducedDebugInfo = false;
+    sendPacket(joinPacket);
+
+    sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, Server::getPlayers()));
+    for (Player *player : Server::getPlayers())
+        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
+}
 
 void Player::onQuitGame() {}
 

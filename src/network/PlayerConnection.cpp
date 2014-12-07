@@ -77,9 +77,7 @@ void PlayerConnection::sendPacket(ServerPacket *packet) {
 void PlayerConnection::disconnect(string_t reason) {
     Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
         << " s'est déconnecté" << std::endl;
-    PacketDisconnect *packet = new PacketDisconnect();
-    packet->reason = (Chat() << reason).getJSON();
-    sendPacket(packet);
+    sendPacket(new PacketDisconnect((Chat() << reason).getJSON()));
 }
 
 PacketFactory PlayerConnection::factory;

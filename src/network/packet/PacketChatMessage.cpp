@@ -1,14 +1,17 @@
 #include "PacketChatMessage.h"
 
-PacketChatMessage::PacketChatMessage() : ClientPacket(0x02), ServerPacket(0x02) {};
+PacketChatMessage::PacketChatMessage(string_t message) : ClientPacket(0x02), ServerPacket(0x02) {
+    this->message = message;
+    position = 0;
+};
 
 void PacketChatMessage::write(ByteBuffer &buffer) {
-    buffer.putString(jsonData);
+    buffer.putString(message);
     buffer.putByte(position);
 }
 
 void PacketChatMessage::read(ByteBuffer &buffer) {
-    buffer.getString(jsonData);
+    buffer.getString(message);
 }
 
 void PacketChatMessage::handle(PacketHandler *handler) {

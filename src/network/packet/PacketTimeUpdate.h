@@ -5,10 +5,10 @@
 
 class PacketTimeUpdate : public ServerPacket {
 public:
-    long_t worldAge;
+    long_t time;
     long_t dayTime;
 
-    PacketTimeUpdate();
+    PacketTimeUpdate(long_t, long_t);
 
     void write(ByteBuffer&);
 };

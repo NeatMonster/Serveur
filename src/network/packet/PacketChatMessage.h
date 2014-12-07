@@ -7,10 +7,10 @@
 
 class PacketChatMessage : public ClientPacket, public ServerPacket {
 public:
-    string_t jsonData;
+    string_t message;
     byte_t position;
 
-    PacketChatMessage();
+    PacketChatMessage(string_t);
 
     void write(ByteBuffer&);
 
