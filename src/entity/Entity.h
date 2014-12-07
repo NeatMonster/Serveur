@@ -45,11 +45,11 @@ public:
 
 protected:
     Type type;
+    World * world;
     int_t entityId;
     int_t ticks;
     bool dead;
 
-    World * world;
     double_t x, y, z;
     float_t yaw, pitch;
     bool onGround;

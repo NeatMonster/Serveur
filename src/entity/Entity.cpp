@@ -1,6 +1,10 @@
 #include "Entity.h"
 
 #include "Chunk.h"
+#include "PacketEntityLook.h"
+#include "PacketEntityMove.h"
+#include "PacketEntityMoveLook.h"
+#include "PacketEntityTeleport.h"
 #include "Player.h"
 #include "World.h"
 
@@ -81,29 +85,26 @@ void Entity::onTick() {
         && abs<int_t>(z - lastZ) < 128 && onGround != lastOnGround && ticks % 60 > 0;
     if (hasMoved && isRelative && !hasRotated)
         for (Player *const &watcher : getWatchers()) {
-            //TODO : Envoyer les paquets.
-            /*PacketEntityRelativeMove *packet = new PacketEntityRelativeMove();
+            PacketEntityMove *packet = new PacketEntityMove();
             packet->entityId = entityId;
             packet->dX = x - lastX;
             packet->dY = y - lastY;
             packet->dZ = z - lastZ;
             packet->onGround = onGround;
-            watcher->sendPacket(packet);*/
+            watcher->sendPacket(packet);
         }
     else if (!hasMoved && hasRotated)
         for (Player *const &watcher : getWatchers()) {
-            //TODO : Envoyer les paquets.
-            /*PacketEntityLook *packet = new PacketEntityLook();
+            PacketEntityLook *packet = new PacketEntityLook();
             packet->entityId = entityId;
             packet->yaw = yaw;
             packet->pitch = pitch;
             packet->onGround = onGround;
-            watcher->sendPacket(packet);*/
+            watcher->sendPacket(packet);
         }
     else if (hasMoved && isRelative && hasRotated)
         for (Player *const &watcher : getWatchers()) {
-            //TODO : Envoyer les paquets.
-            /*PacketEntityLookAndRelativeMove *packet = new PacketEntityLookAndRelativeMove();
+            PacketEntityMoveLook *packet = new PacketEntityMoveLook();
             packet->entityId = entityId;
             packet->dX = x - lastX;
             packet->dY = y - lastY;
@@ -111,12 +112,11 @@ void Entity::onTick() {
             packet->yaw = yaw;
             packet->pitch = pitch;
             packet->onGround = onGround;
-            watcher->sendPacket(packet);*/
+            watcher->sendPacket(packet);
         }
     else if (hasMoved && !isRelative) {
         for (Player *const &watcher : getWatchers()) {
-            //TODO : Envoyer les paquets.
-            /*PacketEntityTeleport *packet = new PacketEntityTeleport();
+            PacketEntityTeleport *packet = new PacketEntityTeleport();
             packet->entityId = entityId;
             packet->x = x;
             packet->y = y;
@@ -124,7 +124,7 @@ void Entity::onTick() {
             packet->yaw = yaw;
             packet->pitch = pitch;
             packet->onGround = onGround;
-            watcher->sendPacket(packet);*/
+            watcher->sendPacket(packet);
         }
     }
     lastX = x;

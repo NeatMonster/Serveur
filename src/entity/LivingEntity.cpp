@@ -1,5 +1,8 @@
 #include "LivingEntity.h"
 
+#include "PacketEntityHeadLook.h"
+#include "Player.h"
+
 LivingEntity::LivingEntity(World *world) : Entity(world), headYaw(0), lastHeadYaw(0) {}
 
 LivingEntity::~LivingEntity() {}
@@ -21,11 +24,10 @@ void LivingEntity::onTick() {
     int_t headYaw = (int_t) floor(this->headYaw / 360. * 256.);
     if (headYaw != lastHeadYaw)
         for (Player *const &watcher : getWatchers()) {
-            //TODO : Envoyer les paquets.
-            /*PacketEntityHeadLook *packet = new PacketEntityHeadLook();
+            PacketEntityHeadLook *packet = new PacketEntityHeadLook();
             packet->entityId = entityId;
             packet->headYaw = headYaw;
-            watcher->sendPacket(packet);*/
+            watcher->sendPacket(packet);
         }
     lastHeadYaw = headYaw;
 }

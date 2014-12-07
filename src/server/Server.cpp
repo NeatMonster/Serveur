@@ -22,7 +22,7 @@ NetworkManager *Server::getNetwork() {
 }
 
 World *Server::getWorld() {
-    return world;
+    return getServer()->world;
 }
 
 Player *Server::getPlayer(string_t name) {

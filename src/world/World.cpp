@@ -2,6 +2,7 @@
 
 #include "Chunk.h"
 #include "Level.h"
+#include "PacketTimeUpdate.h"
 #include "Player.h"
 #include "Section.h"
 
@@ -31,13 +32,21 @@ std::set<Player*> World::getPlayers() {
 
 void World::addPlayer(Player *player) {
     players.insert(player);
-    player->getChunk()->addPlayer(player);
+    Chunk *chunk = player->getChunk();
+    chunk->addPlayer(player);
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+            tryLoadChunk(std::make_pair(chunk->getX() + x, chunk->getZ() + z));
     player->onJoinWorld();
 }
 
 void World::removePlayer(Player *player) {
     player->onQuitWorld();
-    player->getChunk()->removePlayer(player);
+    Chunk *chunk = player->getChunk();
+    chunk->removePlayer(player);
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+            tryUnloadChunk(std::make_pair(chunk->getX() + x, chunk->getZ() + z));
     players.erase(player);
 }
 
@@ -106,5 +115,11 @@ void World::onTick() {
         player->onTick();
     level->setTime(level->getTime());
     level->setDayTime(level->getDayTime() + 1);
-    //TODO: Envoyer le temps aux joueurs.
+    if (level->getTime() % 20 == 0)
+        for (Player *const &player : players) {
+            PacketTimeUpdate *timePacket = new PacketTimeUpdate();
+            timePacket->worldAge = level->getTime();
+            timePacket->dayTime = level->getDayTime();
+            player->sendPacket(timePacket);
+        }
 }
