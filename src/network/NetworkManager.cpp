@@ -5,7 +5,7 @@
 NetworkManager::NetworkManager() : running(false) {}
 
 NetworkManager::~NetworkManager() {
-    for (PlayerConnection *connect : connects)
+    for (PlayerConnection *&connect : connects)
         delete connect;
     delete socket;
 }
@@ -19,7 +19,7 @@ void NetworkManager::handlePackets() {
             connect = connects.erase(connect);
         }
     }
-    for (PlayerConnection *connect : connects)
+    for (PlayerConnection *&connect : connects)
         connect->handlePackets();
 }
 

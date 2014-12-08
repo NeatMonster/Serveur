@@ -92,7 +92,7 @@ inline long_t floor(double_t x) {
 
 template<class T>
 inline bool contains(T x, std::vector<T> vec) {
-    for (T y : vec)
+    for (T &y : vec)
         if (x == y)
             return true;
     return false;

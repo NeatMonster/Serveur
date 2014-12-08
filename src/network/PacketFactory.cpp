@@ -1,5 +1,7 @@
 #include "PacketFactory.h"
 
+#include "PacketPlayerAbilities.h"
+
 PacketFactory::PacketFactory() {}
 
 ClientPacket *PacketFactory::createPacket(const varint_t packetId) {

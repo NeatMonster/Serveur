@@ -5,12 +5,13 @@
 
 class PacketTimeUpdate : public ServerPacket {
 public:
-    long_t time;
-    long_t dayTime;
-
     PacketTimeUpdate(long_t, long_t);
 
     void write(ByteBuffer&);
+
+private:
+    long_t time;
+    long_t dayTime;
 };
 
 #endif /* defined(__Serveur__PacketTimeUpdate__) */

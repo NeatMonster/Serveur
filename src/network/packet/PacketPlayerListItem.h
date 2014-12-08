@@ -4,6 +4,7 @@
 #include "ServerPacket.h"
 
 #include <set>
+#include <vector>
 
 class Player;
 
@@ -11,6 +12,11 @@ class PacketPlayerListItem : public ServerPacket {
 public:
     enum Type {ADD_PLAYER, UPDATE_GAMEMODE, UPDATE_LATENCY, UPDATE_DISPLAY_NAME, REMOVE_PLAYER};
 
+    PacketPlayerListItem(Type, std::set<Player*>);
+
+    void write(ByteBuffer&);
+
+private:
     struct Action {
         string_t uuid;
         string_t name;
@@ -22,10 +28,6 @@ public:
 
     Type type;
     std::vector<Action> actions;
-
-    PacketPlayerListItem(Type, std::set<Player*>);
-
-    void write(ByteBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketPlayerListItem__) */

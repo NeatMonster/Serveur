@@ -14,7 +14,7 @@ World::World(string_t name) : name(name) {
 
 World::~World() {
     delete level;
-    for (auto chunk : chunks)
+    for (auto &chunk : chunks)
         delete chunk.second;
 }
 

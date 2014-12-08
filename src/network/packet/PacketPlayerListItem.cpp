@@ -4,7 +4,7 @@
 
 PacketPlayerListItem::PacketPlayerListItem(Type type, std::set<Player*> players) : ServerPacket(0x38) {
     this->type = type;
-    for (Player *player : players) {
+    for (Player *const &player : players) {
         Action action;
         action.uuid = player->getUUID();
         action.name = player->getName();
@@ -18,7 +18,7 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, std::set<Player*> players)
 void PacketPlayerListItem::write(ByteBuffer &buffer) {
     buffer.putVarInt(type);
     buffer.putVarInt(actions.size());
-    for (Action &action : actions) {
+    for (Action const &action : actions) {
         UUID uuid(action.uuid);
         buffer.putLong(uuid.msb);
         buffer.putLong(uuid.lsb);

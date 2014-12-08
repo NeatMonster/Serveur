@@ -4,8 +4,14 @@
 #include "Level.h"
 #include "PacketChatMessage.h"
 #include "PacketChunkData.h"
+#include "PacketDestroyEntities.h"
 #include "PacketJoinGame.h"
+#include "PacketMapChunkBulk.h"
+#include "PacketPlayerAbilities.h"
 #include "PacketPlayerListItem.h"
+#include "PacketPlayerPositionLook.h"
+#include "PacketSpawnPosition.h"
+#include "PacketTimeUpdate.h"
 #include "PlayerConnection.h"
 #include "Server.h"
 #include "World.h"
@@ -104,15 +110,66 @@ void Player::onJoinGame() {
     sendPacket(joinPacket);
 
     sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, Server::getPlayers()));
-    for (Player *player : Server::getPlayers())
+    for (Player *const &player : Server::getPlayers())
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
 }
 
-void Player::onQuitGame() {}
+void Player::onQuitGame() {
+    for (Player *const &player : Server::getPlayers())
+        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));
+}
 
-void Player::onJoinWorld() {}
+void Player::onJoinWorld() {
+    sendPacket(new PacketSpawnPosition(x, y, z));
 
-void Player::onQuitWorld() {}
+    PacketPlayerAbilities *abilPacket = new PacketPlayerAbilities();
+    abilPacket->godMode = true;
+    abilPacket->canFly = true;
+    abilPacket->isFlying = true;
+    abilPacket->creativeMode = true;
+    abilPacket->flyingSpeed = 0.05;
+    abilPacket->walkingSpeed = 0.1;
+    sendPacket(abilPacket);
+
+    sendPacket(new PacketTimeUpdate(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
+
+    Chunk *chunk = getChunk();
+    std::vector<Chunk*> chunks = {chunk};
+    for (int_t distance = 1; distance <= VIEW_DISTANCE; distance++) {
+        for (int_t x = -distance; x < distance; x++)
+            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() + x, chunk->getZ() - distance)));
+        for (int_t z = -distance; z < distance; z++)
+            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() + distance, chunk->getZ() + z)));
+        for (int_t x = distance; x > -distance; x--)
+            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() + x, chunk->getZ() + distance)));
+        for (int_t z = distance; z > -distance; z--)
+            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() - distance, chunk->getZ() + z)));
+    }
+    std::vector<Chunk*> packetChunks;
+    for (Chunk *&chunk : chunks) {
+        if (packetChunks.size() == 10) {
+            sendPacket(new PacketMapChunkBulk(packetChunks));
+            packetChunks.clear();
+        }
+        packetChunks.push_back(chunk);
+    }
+    if (!packetChunks.empty())
+        sendPacket(new PacketMapChunkBulk(packetChunks));
+
+    PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
+    posPacket->x = x;
+    posPacket->y = y;
+    posPacket->z = z;
+    posPacket->yaw = yaw;
+    posPacket->pitch = pitch;
+    posPacket->flags = PacketPlayerPositionLook::Flags::NONE;
+    sendPacket(posPacket);
+}
+
+void Player::onQuitWorld() {
+    for (Player *const &watcher : getWatchers())
+        watcher->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
+}
 
 void Player::onTick() {
     LivingEntity::onTick();

@@ -26,7 +26,7 @@ World *Server::getWorld() {
 }
 
 Player *Server::getPlayer(string_t name) {
-    for (Player *player : getPlayers())
+    for (Player *const &player : getPlayers())
         if (player->getName() == name)
             return player;
     return nullptr;
@@ -37,7 +37,7 @@ std::set<Player*> Server::getPlayers() {
 }
 
 void Server::broadcast(ChatMessage &message) {
-    for (Player *player : getPlayers())
+    for (Player *const &player : getPlayers())
         player->sendMessage(message);
 }
 

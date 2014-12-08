@@ -6,16 +6,17 @@
 
 class PacketChunkData : public ServerPacket {
 public:
-    Chunk::Meta meta;
-    bool continuous;
-    int_t size;
-    ubyte_t *data;
-
     PacketChunkData(Chunk*, bool);
 
     ~PacketChunkData();
 
     void write(ByteBuffer&);
+
+private:
+    Chunk::Meta meta;
+    bool continuous;
+    int_t size;
+    ubyte_t *data;
 };
 
 #endif /* defined(__Serveur__PacketChunkData__) */

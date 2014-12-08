@@ -1,9 +1,9 @@
 #include "PacketMapChunkBulk.h"
 
-PacketMapChunkBulk::PacketMapChunkBulk(std::set<Chunk*> chunks) : ServerPacket(0x26) {
+PacketMapChunkBulk::PacketMapChunkBulk(std::vector<Chunk*> chunks) : ServerPacket(0x26) {
     skyLight = true;
     size = 0;
-    for (Chunk *chunk : chunks) {
+    for (Chunk *&chunk : chunks) {
         Chunk::Meta meta = chunk->getMeta();
         this->meta.push_back(meta);
         size_t count = 0;
@@ -25,7 +25,7 @@ PacketMapChunkBulk::~PacketMapChunkBulk() {
 void PacketMapChunkBulk::write(ByteBuffer &buffer) {
     buffer.putBool(skyLight);
     buffer.putVarInt(meta.size());
-    for (Chunk::Meta meta : this->meta) {
+    for (Chunk::Meta &meta : this->meta) {
         buffer.putInt(meta.x);
         buffer.putInt(meta.z);
         buffer.putUShort(meta.bitmask);

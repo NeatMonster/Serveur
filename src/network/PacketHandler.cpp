@@ -54,7 +54,7 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     }
     uuid = ss.str();
     connect->sendPacket(new PacketLoginSuccess(uuid, name));
-    for (Player *player : Server::getPlayers())
+    for (Player *const &player : Server::getPlayers())
         if (player->getUUID() == uuid)
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
