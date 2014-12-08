@@ -10,7 +10,7 @@ PacketMapChunkBulk::PacketMapChunkBulk(std::vector<Chunk*> chunks) : ServerPacke
         for (int i = 0; i < 16; i++)
             if ((meta.bitmask >> i) & 1)
                 count++;
-        size = 256 + count * 12288;
+        size += 256 + count * 12288;
     }
     data = new ubyte_t[size];
     ubyte_t *data = this->data;

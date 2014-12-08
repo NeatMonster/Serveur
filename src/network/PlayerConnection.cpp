@@ -13,10 +13,11 @@
 #include "Logger.h"
 
 PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket),
-        closed(false), phase(HANDSHAKE), player(nullptr) {
+        closed(false), phase(HANDSHAKE), player(nullptr), ping(0) {
     handler = new PacketHandler(this);
     readThread = std::thread(&PlayerConnection::runRead, this);
     writeThread = std::thread(&PlayerConnection::runWrite, this);
+    sentKeepAlive = rcvdKeepAlive = Clock::now();
 }
 
 PlayerConnection::~PlayerConnection() {
@@ -61,6 +62,10 @@ ushort PlayerConnection::getPort() {
     return socket->getPort();
 }
 
+float_t PlayerConnection::getPing() {
+    return ping;
+}
+
 void PlayerConnection::handlePackets() {
     ClientPacket *packet;
     while (!closed && readQueue.tryPop(packet)) {
@@ -75,9 +80,7 @@ void PlayerConnection::sendPacket(ServerPacket *packet) {
 }
 
 void PlayerConnection::disconnect(string_t reason) {
-    Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
-        << " s'est déconnecté" << std::endl;
-    sendPacket(new PacketDisconnect((Chat() << reason).getJSON()));
+    sendPacket(new PacketDisconnect(phase == PLAY, (Chat() << reason).getJSON()));
 }
 
 PacketFactory PlayerConnection::factory;
@@ -115,11 +118,12 @@ void PlayerConnection::runRead() {
                         disconnect("ID de paquet invalide : " + std::to_string(packetId));
                         break;
                     }
+                    packet->setLength(packetLength);
                     packet->read(readBuffer);
                     readQueue.push(packet);
                     readBuffer.compact();
-                    Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
-                        << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
+                    //Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
+                    //    << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
                 }
             } catch (const ByteBuffer::BufferUnderflowException &e) {}
         }
@@ -137,8 +141,8 @@ void PlayerConnection::runWrite() {
             writeQueue.pop(packet);
             if (closed)
                 break;
-            Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
-                << " a reçu un paquet " << typeid(*packet).name() << std::endl;
+            //Logger::info() << "/" << socket->getIP() << ":" << socket->getPort()
+            //    << " a reçu un paquet " << typeid(*packet).name() << std::endl;
             writeBuffer.clear();
             writeBuffer.putVarInt(packet->getPacketId());
             packet->write(writeBuffer);
@@ -149,8 +153,11 @@ void PlayerConnection::runWrite() {
             writeBuffer.putVarInt(packetLength);
             writeBuffer.rewind();
             socket->transmit(writeBuffer.getData(), writeBuffer.getLimit());
-            if (phase == LOGIN && packet->getPacketId() == 0x00)
+            if ((phase == LOGIN && packet->getPacketId() == 0x00)
+                    || (phase == PLAY && packet->getPacketId() == 0x40))
                 close();
+            else if (phase == PLAY && packet->getPacketId() == 0x00)
+                sentKeepAlive = Clock::now();
             delete packet;
         }
     } catch (const ClientSocket::SocketWriteException &e) {

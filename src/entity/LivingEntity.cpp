@@ -12,7 +12,11 @@ void LivingEntity::setPosition(double_t x, double_t y, double_t z) {
 }
 
 void LivingEntity::setRotation(float_t yaw, float_t pitch) {
-    Entity::setRotation(yaw, pitch);
+    if (abs<float_t>(this->yaw - yaw) > 15.)
+        Entity::setRotation(this->yaw + yaw - headYaw, pitch);
+    else
+        Entity::setRotation(this->yaw, pitch);
+    setHeadRotation(yaw);
 }
 
 void LivingEntity::setHeadRotation(float_t headYaw) {
@@ -21,7 +25,7 @@ void LivingEntity::setHeadRotation(float_t headYaw) {
 
 void LivingEntity::onTick() {
     Entity::onTick();
-    int_t headYaw = (int_t) floor(this->headYaw / 360. * 256.);
+    int_t headYaw = (int_t) floor_f(this->headYaw / 360. * 256.);
     if (headYaw != lastHeadYaw)
         for (Player *const &watcher : getWatchers()) {
             PacketEntityHeadLook *packet = new PacketEntityHeadLook();

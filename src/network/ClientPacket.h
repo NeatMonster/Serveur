@@ -13,7 +13,12 @@ public:
 
     virtual void read(ByteBuffer&) = 0;
 
-    virtual void handle(PacketHandler*) = 0;
+    virtual void handle(PacketHandler*) {};
+
+    void setLength(varint_t);
+
+protected:
+    varint_t packetLength;
 };
 
 #endif /* defined(__Serveur__ClientPacket__) */

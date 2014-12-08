@@ -1,6 +1,14 @@
 #include "NetworkManager.h"
 
 #include "Logger.h"
+#include "PacketKeepAlive.h"
+#include "Player.h"
+#include "Server.h"
+
+#include <chrono>
+
+using namespace std::chrono;
+typedef std::chrono::high_resolution_clock Clock;
 
 NetworkManager::NetworkManager() : running(false) {}
 
@@ -10,17 +18,8 @@ NetworkManager::~NetworkManager() {
     delete socket;
 }
 
-void NetworkManager::handlePackets() {
-    for (auto connect = connects.end(); connect != connects.begin();) {
-        connect--;
-        if ((*connect)->isClosed()) {
-            (*connect)->join();
-            delete *connect;
-            connect = connects.erase(connect);
-        }
-    }
-    for (PlayerConnection *&connect : connects)
-        connect->handlePackets();
+varint_t NetworkManager::getKeepAliveId() {
+    return keepAliveId;
 }
 
 bool NetworkManager::start() {
@@ -32,6 +31,7 @@ bool NetworkManager::start() {
         Logger::info() << "Démarrage du serveur sur " << ip << ":" << port << std::endl;
         running = true;
         thread = std::thread(&NetworkManager::run, this);
+        keepAliveThread = std::thread(&NetworkManager::runKeepAlive, this);
         return true;
     } catch (const ServerSocket::SocketBindException &e) {
         Logger::warning() << "IMPOSSIBLE DE SE LIER À L'IP ET AU PORT !" << std::endl;
@@ -51,6 +51,29 @@ bool NetworkManager::stop() {
     socket->close();
     thread.join();
     return true;
+}
+
+void NetworkManager::handlePackets() {
+    for (auto connect = connects.end(); connect != connects.begin();) {
+        connect--;
+        if ((*connect)->isClosed()) {
+            (*connect)->join();
+            delete *connect;
+            connect = connects.erase(connect);
+        }
+    }
+    for (PlayerConnection *&connect : connects)
+        connect->handlePackets();
+}
+
+void NetworkManager::runKeepAlive() {
+    random_t rand = random_t(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
+    while (running) {
+        keepAliveId = rand();
+        for (Player *const &player : Server::getPlayers())
+            player->sendPacket(new PacketKeepAlive(keepAliveId));
+        std::this_thread::sleep_for(seconds(2));
+    }
 }
 
 void NetworkManager::run() {

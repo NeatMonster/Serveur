@@ -10,11 +10,13 @@ public:
     string_t message;
     byte_t position;
 
+    PacketChatMessage();
+
     PacketChatMessage(string_t);
 
-    void write(ByteBuffer&);
-
     void read(ByteBuffer&);
+
+    void write(ByteBuffer&);
 
     void handle(PacketHandler*);
 };

@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "World.h"
 
+#include <chrono>
+
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -81,6 +83,7 @@ void Server::run() {
     while (running) {
         ++ticks;
         network->handlePackets();
+        world->onTick();
         microseconds limit = duration_cast<microseconds>(milliseconds(50) - missed);
         microseconds elapsed = duration_cast<microseconds>(Clock::now() - lastTick);
         if (elapsed < limit) {

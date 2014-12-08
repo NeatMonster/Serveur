@@ -67,19 +67,20 @@ Chunk *World::tryGetChunk(chunk_t c) {
 Chunk *World::loadChunk(chunk_t c) {
     Chunk *chunk = new Chunk(this, c.first, c.second);
     Section *section = chunk->sections[0];
+    section->blockCount = 1024;
     section->initialize(true);
     for (ubyte_t y = 0; y < 4; y++)
         for (ubyte_t z = 0; z < 16; z++)
             for (ubyte_t x = 0; x < 16; x++) {
                 if (y == 0)
-                    section->setBlockData(x + z * 16 + y * 256, 7);
+                    section->setBlockType(x + z * 16 + y * 256, 7);
                 else if (y == 1 || y == 2)
-                    section->setBlockData(x + z * 16 + y * 256, 3);
+                    section->setBlockType(x + z * 16 + y * 256, 3);
                 else {
-                    section->setBlockData(x + z * 16 + y * 256, 2);
+                    section->setBlockType(x + z * 16 + y * 256, 2);
                     chunk->heightMap[x + z * 16] = y;
                 }
-                section->setBlockLight(x + z * 16, 0);
+                section->setSkyLight(x + z * 16, 0);
             }
     chunks[c] = chunk;
     return chunk;

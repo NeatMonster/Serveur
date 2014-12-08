@@ -9,7 +9,7 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, std::set<Player*> players)
         action.uuid = player->getUUID();
         action.name = player->getName();
         action.gameMode = 1;
-        action.ping = 0;
+        action.ping = player->getPing();
         action.hasDisplayName = false;
         actions.push_back(action);
     }

@@ -10,6 +10,8 @@ class Player;
 class World;
 
 class Entity {
+    friend class PacketHandler;
+
 public:
     enum Type { PLAYER };
 
@@ -32,6 +34,10 @@ public:
     double_t getY();
 
     double_t getZ();
+
+    float_t getYaw();
+
+    float_t getPitch();
 
     virtual void setPosition(double_t, double_t, double_t);
 

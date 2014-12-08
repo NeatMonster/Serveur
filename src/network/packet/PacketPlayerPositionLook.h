@@ -6,10 +6,6 @@
 
 class PacketPlayerPositionLook : public ClientPacket, public ServerPacket {
 public:
-    enum Flags {
-        NONE = 0x00, X = 0x01, Y = 0x02, Z = 0X04, Y_ROT = 0x08, X_ROT = 0x10
-    };
-
     double_t x;
     double_t y;
     double_t z;

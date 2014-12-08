@@ -10,6 +10,7 @@
 #include "PacketPlayerAbilities.h"
 #include "PacketPlayerListItem.h"
 #include "PacketPlayerPositionLook.h"
+#include "PacketSpawnPlayer.h"
 #include "PacketSpawnPosition.h"
 #include "PacketTimeUpdate.h"
 #include "PlayerConnection.h"
@@ -62,14 +63,6 @@ void Player::setPosition(double_t x, double_t y, double_t z) {
                                                                               newChunk->getZ() + z)), true));
 }
 
-void Player::setRotation(float_t yaw, float_t pitch) {
-    if (abs<float_t>(this->yaw - yaw) > 15.)
-        LivingEntity::setRotation(this->yaw + yaw - headYaw, pitch);
-    else
-        LivingEntity::setRotation(this->yaw, pitch);
-    LivingEntity::setHeadRotation(yaw);
-}
-
 string_t Player::getUUID() {
     return uuid;
 }
@@ -84,6 +77,10 @@ string_t Player::getIP() {
 
 ushort Player::getPort() {
     return connect->getPort();
+}
+
+float_t Player::getPing() {
+    return connect->getPing();
 }
 
 void Player::sendMessage(ChatMessage &message) {
@@ -109,9 +106,11 @@ void Player::onJoinGame() {
     joinPacket->reducedDebugInfo = false;
     sendPacket(joinPacket);
 
-    sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, Server::getPlayers()));
-    for (Player *const &player : Server::getPlayers())
+    std::set<Player*> players = Server::getPlayers();
+    for (Player *const &player : players)
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
+    players.insert(this);
+    sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, players));
 }
 
 void Player::onQuitGame() {
@@ -162,8 +161,13 @@ void Player::onJoinWorld() {
     posPacket->z = z;
     posPacket->yaw = yaw;
     posPacket->pitch = pitch;
-    posPacket->flags = PacketPlayerPositionLook::Flags::NONE;
+    posPacket->flags = 0;
     sendPacket(posPacket);
+
+    for (Player *const &watcher : getWatchers()) {
+        sendPacket(new PacketSpawnPlayer(watcher));
+        watcher->sendPacket(new PacketSpawnPlayer(this));
+    }
 }
 
 void Player::onQuitWorld() {

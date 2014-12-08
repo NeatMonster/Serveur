@@ -18,8 +18,6 @@ public:
     void write(ByteBuffer&);
 
     void read(ByteBuffer&);
-
-    void handle(PacketHandler*);
 };
 
 #endif /* defined(__Serveur__PacketPlayerAbilities__) */

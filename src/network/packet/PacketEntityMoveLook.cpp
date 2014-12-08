@@ -1,6 +1,6 @@
 #include "PacketEntityMoveLook.h"
 
-PacketEntityMoveLook::PacketEntityMoveLook() : ServerPacket(0X17) {}
+PacketEntityMoveLook::PacketEntityMoveLook() : ServerPacket(0x17) {}
 
 void PacketEntityMoveLook::write(ByteBuffer &buffer) {
     buffer.putVarInt(entityId);

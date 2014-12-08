@@ -23,5 +23,3 @@ void PacketPlayerAbilities::write(ByteBuffer &buffer) {
     buffer.putFloat(flyingSpeed);
     buffer.putFloat(walkingSpeed);
 }
-
-void PacketPlayerAbilities::handle(PacketHandler*) {}

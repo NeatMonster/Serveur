@@ -5,7 +5,12 @@
 
 class PacketChatMessage;
 class PacketHandshake;
+class PacketKeepAlive;
 class PacketLoginStart;
+class PacketPlayer;
+class PacketPlayerLook;
+class PacketPlayerPosition;
+class PacketPlayerPositionLook;
 class PlayerConnection;
 
 class PacketHandler {
@@ -18,7 +23,17 @@ public:
 
     void handleLoginStart(PacketLoginStart*);
 
+    void handleKeepAlive(PacketKeepAlive*);
+
     void handleChatMessage(PacketChatMessage*);
+
+    void handlePlayer(PacketPlayer*);
+
+    void handlePlayerLook(PacketPlayerLook*);
+
+    void handlePlayerPosition(PacketPlayerPosition*);
+
+    void handlePlayerPositionLook(PacketPlayerPositionLook*);
 
 private:
     PlayerConnection *connect;

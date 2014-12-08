@@ -17,8 +17,6 @@ public:
 
     void setPosition(double_t, double_t, double_t);
 
-    void setRotation(float_t, float_t);
-
     string_t getUUID();
 
     string_t getName();
@@ -26,6 +24,8 @@ public:
     string_t getIP();
 
     ushort_t getPort();
+
+    float_t getPing();
 
     void sendMessage(ChatMessage&);
 

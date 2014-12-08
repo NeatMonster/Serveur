@@ -20,7 +20,7 @@ int_t Entity::getEntityId() {
 }
 
 Chunk *Entity::getChunk() {
-    return world->getChunk(std::make_pair((int_t) floor(x) >> 4, (int_t) floor(z) >> 4));
+    return world->getChunk(std::make_pair((int_t) floor_d(x) >> 4, (int_t) floor_d(z) >> 4));
 }
 
 World *Entity::getWorld() {
@@ -53,6 +53,14 @@ double_t Entity::getZ() {
     return z;
 }
 
+float_t Entity::getYaw() {
+    return yaw;
+}
+
+float_t Entity::getPitch() {
+    return pitch;
+}
+
 void Entity::setPosition(double_t x, double_t y, double_t z) {
     this->x = x;
     this->y = y;
@@ -74,11 +82,11 @@ void Entity::setDead() {
 
 void Entity::onTick() {
     ticks++;
-    int_t x = (int_t) floor(this->x * 32);
-    int_t y = (int_t) floor(this->y * 32);
-    int_t z = (int_t) floor(this->z * 32);
-    int_t yaw = (int_t) floor(this->yaw / 360 * 256);
-    int_t pitch = (int_t) floor(this->pitch / 360 * 256);
+    int_t x = (int_t) floor_d(this->x * 32.);
+    int_t y = (int_t) floor_d(this->y * 32.);
+    int_t z = (int_t) floor_d(this->z * 32.);
+    byte_t yaw = (byte_t) floor_f(this->yaw / 360. * 256.);
+    byte_t pitch = (byte_t) floor_f(this->pitch / 360. * 256.);
     bool hasMoved = x != lastX || y != lastY || z != lastZ;
     bool hasRotated = yaw != lastYaw || pitch != lastPitch;
     bool isRelative = abs<int_t>(x - lastX) < 128 && abs<int_t>(y - lastY) < 128

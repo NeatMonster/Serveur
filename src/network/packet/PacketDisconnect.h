@@ -5,7 +5,7 @@
 
 class PacketDisconnect : public ServerPacket {
 public:
-    PacketDisconnect(string_t);
+    PacketDisconnect(bool, string_t);
 
     void write(ByteBuffer&);
 

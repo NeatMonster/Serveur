@@ -2,7 +2,7 @@
 
 #include "PlayerConnection.h"
 
-PacketDisconnect::PacketDisconnect(string_t reason) : ServerPacket(0x00) {
+PacketDisconnect::PacketDisconnect(bool auth, string_t reason) : ServerPacket(auth ? 0x40 : 0x00) {
     this->reason = reason;
 }
 

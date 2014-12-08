@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <random>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -40,6 +41,8 @@ struct position_t {
                                                                 | (((long_t) y & 0xfff) << 26)
                                                                 | (((long_t) z & 0x3ffffff))) {}
 };
+
+typedef std::linear_congruential_engine<std::uint_fast64_t, 0x5deece66d, 0xb, 0xffffffffffff> random_t;
 
 struct UUID {
     long_t msb;
@@ -82,11 +85,11 @@ inline T mod(T x, T y) {
     return x;
 }
 
-inline int_t floor(float_t x) {
+inline int_t floor_f(float_t x) {
     return x >= 0 ? (int_t) x : ((int_t) x) - 1;
 }
 
-inline long_t floor(double_t x) {
+inline long_t floor_d(double_t x) {
     return x >= 0 ? (long_t) x : ((long_t) x) - 1;
 }
 

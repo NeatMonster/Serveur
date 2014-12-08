@@ -3,16 +3,25 @@
 #include "Logger.h"
 #include "PacketChatMessage.h"
 #include "PacketHandshake.h"
+#include "PacketKeepAlive.h"
 #include "PacketLoginStart.h"
 #include "PacketLoginSuccess.h"
+#include "PacketPlayer.h"
+#include "PacketPlayerLook.h"
+#include "PacketPlayerPosition.h"
+#include "PacketPlayerPositionLook.h"
 #include "Player.h"
 #include "PlayerConnection.h"
 #include "Server.h"
 
 #include "polarssl/md5.h"
 
+#include <chrono>
 #include <iomanip>
 #include <sstream>
+
+using namespace std::chrono;
+typedef std::chrono::high_resolution_clock Clock;
 
 PacketHandler::PacketHandler(PlayerConnection *connect) : connect(connect) {}
 
@@ -65,6 +74,37 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
         << " en (" << player->getX() << ", " << player->getY() << ", " << player->getZ() << ")" << std::endl;
 }
 
+void PacketHandler::handleKeepAlive(PacketKeepAlive *packet) {
+    if (packet->keepAliveId == Server::getNetwork()->getKeepAliveId()) {
+        connect->rcvdKeepAlive = Clock::now();
+        milliseconds elapsed = duration_cast<milliseconds>(connect->rcvdKeepAlive - connect->sentKeepAlive);
+        if (connect->ping > 0)
+            connect->ping = (3 * connect->ping + elapsed.count()) / 4;
+        else
+            connect->ping = elapsed.count();
+    }
+}
+
 void PacketHandler::handleChatMessage(PacketChatMessage *packet) {
     Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->message);
+}
+
+void PacketHandler::handlePlayer(PacketPlayer *packet) {
+    connect->player->onGround = packet->onGround;
+}
+
+void PacketHandler::handlePlayerLook(PacketPlayerLook *packet) {
+    connect->player->onGround = packet->onGround;
+    connect->player->setRotation(packet->yaw, packet->pitch);
+}
+
+void PacketHandler::handlePlayerPosition(PacketPlayerPosition *packet) {
+    connect->player->onGround = packet->onGround;
+    connect->player->setPosition(packet->x, packet->y, packet->z);
+}
+
+void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
+    connect->player->onGround = packet->onGround;
+    connect->player->setPosition(packet->x, packet->y, packet->z);
+    connect->player->setRotation(packet->yaw, packet->pitch);
 }

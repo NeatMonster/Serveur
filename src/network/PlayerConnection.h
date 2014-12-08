@@ -7,6 +7,7 @@
 #include "PacketQueue.h"
 
 #include <atomic>
+#include <chrono>
 #include <thread>
 
 class ClientPacket;
@@ -21,6 +22,8 @@ public:
     enum Phase {
         HANDSHAKE, STATUS, LOGIN, PLAY
     };
+
+    typedef std::chrono::high_resolution_clock Clock;
 
     PlayerConnection(ClientSocket*);
 
@@ -39,6 +42,8 @@ public:
     string_t getIP();
 
     ushort_t getPort();
+
+    float_t getPing();
 
     void handlePackets();
 
@@ -59,6 +64,9 @@ private:
     std::atomic<bool> closed;
     std::atomic<Phase> phase;
     Player *player;
+    Clock::time_point sentKeepAlive;
+    Clock::time_point rcvdKeepAlive;
+    float_t ping;
 
     void runRead();
 

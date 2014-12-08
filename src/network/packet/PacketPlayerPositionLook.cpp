@@ -1,5 +1,7 @@
 #include "PacketPlayerPositionLook.h"
 
+#include "PacketHandler.h"
+
 PacketPlayerPositionLook::PacketPlayerPositionLook() : ClientPacket(0x06), ServerPacket(0x08) {};
 
 void PacketPlayerPositionLook::read(ByteBuffer &buffer) {
@@ -20,4 +22,6 @@ void PacketPlayerPositionLook::write(ByteBuffer &buffer) {
     buffer.putByte(flags);
 }
 
-void PacketPlayerPositionLook::handle(PacketHandler*) {}
+void PacketPlayerPositionLook::handle(PacketHandler *handler) {
+    handler->handlePlayerPositionLook(this);
+}
