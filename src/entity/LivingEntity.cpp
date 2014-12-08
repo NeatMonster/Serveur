@@ -12,11 +12,8 @@ void LivingEntity::setPosition(double_t x, double_t y, double_t z) {
 }
 
 void LivingEntity::setRotation(float_t yaw, float_t pitch) {
-    if (abs<float_t>(this->yaw - yaw) > 15.)
-        Entity::setRotation(this->yaw + yaw - headYaw, pitch);
-    else
-        Entity::setRotation(this->yaw, pitch);
     setHeadRotation(yaw);
+    Entity::setRotation(yaw, pitch);
 }
 
 void LivingEntity::setHeadRotation(float_t headYaw) {

@@ -7,8 +7,6 @@ class PacketPlayer : public ClientPacket {
 public:
     bool onGround;
 
-    PacketPlayer();
-
     void read(ByteBuffer&);
 
     void handle(PacketHandler*);

@@ -8,8 +8,6 @@ public:
     string_t channel;
     ubytes_t data;
 
-    PacketPluginMessage();
-
     void read(ByteBuffer&);
 };
 

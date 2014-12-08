@@ -9,8 +9,6 @@ public:
     float_t pitch;
     bool onGround;
 
-    PacketPlayerLook();
-
     void read(ByteBuffer&);
 
     void handle(PacketHandler*);

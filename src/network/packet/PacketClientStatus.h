@@ -7,8 +7,6 @@ class PacketClientStatus : public ClientPacket {
 public:
     varint_t actionId;
 
-    PacketClientStatus();
-
     void read(ByteBuffer&);
 };
 

@@ -1,6 +1,6 @@
 #include "PacketChatMessage.h"
 
-PacketChatMessage::PacketChatMessage() : ClientPacket(0x02), ServerPacket(0x02) {};
+PacketChatMessage::PacketChatMessage() : ServerPacket(0x02) {};
 
 PacketChatMessage::PacketChatMessage(string_t message) : PacketChatMessage() {
     this->message = message;

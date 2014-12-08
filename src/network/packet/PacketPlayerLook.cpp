@@ -2,8 +2,6 @@
 
 #include "PacketHandler.h"
 
-PacketPlayerLook::PacketPlayerLook() : ClientPacket(0x05) {}
-
 void PacketPlayerLook::read(ByteBuffer &buffer) {
     buffer.getFloat(yaw);
     buffer.getFloat(pitch);

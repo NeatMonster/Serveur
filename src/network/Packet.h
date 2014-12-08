@@ -3,16 +3,6 @@
 
 #include "Types.h"
 
-class Packet {
-public:
-    Packet(uint_t);
-
-    virtual ~Packet();
-
-    varint_t getPacketId();
-
-private:
-    varint_t packetId;
-};
+class Packet {};
 
 #endif /* defined(__Serveur__Packet__) */

@@ -2,8 +2,6 @@
 
 #include "PacketHandler.h"
 
-PacketHandshake::PacketHandshake() : ClientPacket(0x00) {}
-
 void PacketHandshake::read(ByteBuffer &buffer) {
     buffer.getVarInt(protocol);
     buffer.getString(serverIP);

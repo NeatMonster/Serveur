@@ -3,17 +3,16 @@
 
 #include "ByteBuffer.h"
 #include "Packet.h"
-#include "PacketHandler.h"
 
-class ClientPacket : public Packet {
+class PacketHandler;
+
+class ClientPacket : virtual public Packet {
 public:
-    ClientPacket(varint_t);
-
     virtual ~ClientPacket();
 
     virtual void read(ByteBuffer&) = 0;
 
-    virtual void handle(PacketHandler*) {};
+    virtual void handle(PacketHandler*);
 
     void setLength(varint_t);
 

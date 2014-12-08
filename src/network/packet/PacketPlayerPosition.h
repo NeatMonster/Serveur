@@ -10,8 +10,6 @@ public:
     double_t z;
     bool onGround;
 
-    PacketPlayerPosition();
-
     void read(ByteBuffer&);
 
     void handle(PacketHandler*);

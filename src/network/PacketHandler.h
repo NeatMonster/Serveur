@@ -3,6 +3,7 @@
 
 #include "Types.h"
 
+class PacketAnimation;
 class PacketChatMessage;
 class PacketHandshake;
 class PacketKeepAlive;
@@ -34,6 +35,8 @@ public:
     void handlePlayerPosition(PacketPlayerPosition*);
 
     void handlePlayerPositionLook(PacketPlayerPositionLook*);
+
+    void handleAnimation(PacketAnimation*);
 
 private:
     PlayerConnection *connect;

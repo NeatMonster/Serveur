@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-PacketKeepAlive::PacketKeepAlive() : ClientPacket(0x00),ServerPacket(0x00) {};
+PacketKeepAlive::PacketKeepAlive() : ServerPacket(0x00) {};
 
 PacketKeepAlive::PacketKeepAlive(varint_t keepAliveId) : PacketKeepAlive() {
     this->keepAliveId = keepAliveId;

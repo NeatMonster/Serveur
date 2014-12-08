@@ -1,6 +1,7 @@
 #include "PacketHandler.h"
 
 #include "Logger.h"
+#include "PacketAnimation.h"
 #include "PacketChatMessage.h"
 #include "PacketHandshake.h"
 #include "PacketKeepAlive.h"
@@ -107,4 +108,9 @@ void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
     connect->player->onGround = packet->onGround;
     connect->player->setPosition(packet->x, packet->y, packet->z);
     connect->player->setRotation(packet->yaw, packet->pitch);
+}
+
+void PacketHandler::handleAnimation(PacketAnimation*) {
+    for (Player *const &watcher : connect->player->getWatchers())
+        watcher->sendPacket(new PacketAnimation(connect->player->getEntityId(), 0));
 }

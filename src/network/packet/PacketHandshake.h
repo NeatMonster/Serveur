@@ -10,8 +10,6 @@ public:
     ushort_t serverPort;
     varint_t nextState;
 
-    PacketHandshake();
-
     void read(ByteBuffer&);
 
     void handle(PacketHandler*);

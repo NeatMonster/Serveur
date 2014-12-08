@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-PacketPlayerPositionLook::PacketPlayerPositionLook() : ClientPacket(0x06), ServerPacket(0x08) {};
+PacketPlayerPositionLook::PacketPlayerPositionLook() : ServerPacket(0x08) {};
 
 void PacketPlayerPositionLook::read(ByteBuffer &buffer) {
     buffer.getDouble(x);

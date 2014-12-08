@@ -2,6 +2,8 @@
 
 #include "Player.h"
 
+#include <cstring>
+
 PacketSpawnPlayer::PacketSpawnPlayer(Player *player) : ServerPacket(0x0c) {
     entityId = player->getEntityId();
     uuid = player->getUUID();
@@ -14,7 +16,7 @@ PacketSpawnPlayer::PacketSpawnPlayer(Player *player) : ServerPacket(0x0c) {
     metadata = ubytes_t(6);
     metadata[0] = 102;
     float_t health = 20;
-    memcpy(metadata.data() + 1, (ubyte_t*) &health, 4);
+    std::memcpy(metadata.data() + 1, (ubyte_t*) &health, 4);
     metadata[5] = 127;
 }
 

@@ -1,6 +1,6 @@
 #include "PacketPlayerAbilities.h"
 
-PacketPlayerAbilities::PacketPlayerAbilities() : ClientPacket(0x13), ServerPacket(0x39) {}
+PacketPlayerAbilities::PacketPlayerAbilities() : ServerPacket(0x39) {}
 
 void PacketPlayerAbilities::read(ByteBuffer &buffer) {
     byte_t flags;
