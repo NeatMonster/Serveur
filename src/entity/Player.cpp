@@ -46,21 +46,37 @@ void Player::setPosition(double_t x, double_t y, double_t z) {
     oldChunk->removePlayer(this);
     newChunk->addPlayer(this);
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int_t z = - VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
             if (newChunk->getX() + x < oldChunk->getX() - VIEW_DISTANCE
-                || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
+                    || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
                     || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
-                        || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE)
-                sendPacket(new PacketChunkData(world->getChunk(std::make_pair(newChunk->getX() + x,
-                                                                              newChunk->getZ() + z)), false));
+                    || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE) {
+                Chunk *chunk = world->getChunk(std::make_pair(newChunk->getX() + x, newChunk->getZ() + z));
+                sendPacket(new PacketChunkData(chunk, false));
+                for (Player *const &player : chunk->getPlayers())
+                    if (player != this) {
+                        sendPacket(new PacketSpawnPlayer(player));
+                        player->sendPacket(new PacketSpawnPlayer(this));
+                    }
+            }
+
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
             if (oldChunk->getX() + x < newChunk->getX() - VIEW_DISTANCE
-                || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
+                    || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
                     || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
-                        || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE)
-                sendPacket(new PacketChunkData(world->getChunk(std::make_pair(newChunk->getX() + x,
-                                                                              newChunk->getZ() + z)), true));
+                    || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE) {
+                Chunk *chunk = world->getChunk(std::make_pair(oldChunk->getX() + x, oldChunk->getZ() + z));
+                sendPacket(new PacketChunkData(chunk, true));
+                std::set<varint_t> entitiesIds;
+                for (Player *const &player : chunk->getPlayers())
+                    if (player != this) {
+                        entitiesIds.insert(player->getEntityId());
+                        player->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
+                    }
+                sendPacket(new PacketDestroyEntities(entitiesIds));
+            }
+
 }
 
 string_t Player::getUUID() {
@@ -148,12 +164,25 @@ void Player::onJoinWorld() {
     for (Chunk *&chunk : chunks) {
         if (packetChunks.size() == 10) {
             sendPacket(new PacketMapChunkBulk(packetChunks));
+            for (Chunk *&packetChunk : packetChunks)
+                for (Player *const &player : packetChunk->getPlayers())
+                    if (player != this) {
+                        sendPacket(new PacketSpawnPlayer(player));
+                        player->sendPacket(new PacketSpawnPlayer(this));
+                    }
             packetChunks.clear();
         }
         packetChunks.push_back(chunk);
     }
-    if (!packetChunks.empty())
+    if (!packetChunks.empty()) {
         sendPacket(new PacketMapChunkBulk(packetChunks));
+        for (Chunk *&packetChunk : packetChunks)
+            for (Player *const &player : packetChunk->getPlayers())
+                if (player != this) {
+                    sendPacket(new PacketSpawnPlayer(player));
+                    player->sendPacket(new PacketSpawnPlayer(this));
+                }
+    }
 
     PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
     posPacket->x = x;
@@ -163,11 +192,6 @@ void Player::onJoinWorld() {
     posPacket->pitch = pitch;
     posPacket->flags = 0;
     sendPacket(posPacket);
-
-    for (Player *const &watcher : getWatchers()) {
-        sendPacket(new PacketSpawnPlayer(watcher));
-        watcher->sendPacket(new PacketSpawnPlayer(this));
-    }
 }
 
 void Player::onQuitWorld() {

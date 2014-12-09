@@ -9,6 +9,7 @@
 #include "PacketKeepAlive.h"
 #include "PacketPlayer.h"
 #include "PacketPlayerAbilities.h"
+#include "PacketPlayerDigging.h"
 #include "PacketPlayerLook.h"
 #include "PacketPluginMessage.h"
 #include "PacketPlayerPosition.h"
@@ -23,6 +24,7 @@ PacketFactory::PacketFactory() {
     registerPacket<PacketPlayerPosition>(0x04);
     registerPacket<PacketPlayerLook>(0x05);
     registerPacket<PacketPlayerPositionLook>(0x06);
+    registerPacket<PacketPlayerDigging>(0x07);
     registerPacket<PacketHeldItemChange>(0x09);
     registerPacket<PacketAnimation>(0x0a);
     registerPacket<PacketEntityAction>(0x0b);

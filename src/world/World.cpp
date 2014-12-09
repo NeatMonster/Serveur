@@ -114,7 +114,7 @@ void World::tryUnloadChunk(chunk_t c) {
 void World::onTick() {
     for (Player *const &player : players)
         player->onTick();
-    level->setTime(level->getTime());
+    level->setTime(level->getTime() + 1);
     level->setDayTime(level->getDayTime() + 1);
     if (level->getTime() % 20 == 0)
         for (Player *const &player : players)
