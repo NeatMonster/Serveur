@@ -22,9 +22,11 @@ PacketSpawnPlayer::PacketSpawnPlayer(Player *player) : ServerPacket(0x0c) {
 
 void PacketSpawnPlayer::write(ByteBuffer &buffer) {
     buffer.putVarInt(entityId);
-    UUID uuid(this->uuid);
-    buffer.putLong(uuid.msb);
-    buffer.putLong(uuid.lsb);
+    buffer.putLong(std::stoull(uuid.substr(0, 8)
+                             + uuid.substr(9, 4)
+                             + uuid.substr(14, 4), nullptr, 16));
+    buffer.putLong(std::stoull(uuid.substr(19, 4)
+                             + uuid.substr(24, 12), nullptr, 16));
     buffer.putInt(x);
     buffer.putInt(y);
     buffer.putInt(z);

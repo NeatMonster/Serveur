@@ -2,7 +2,6 @@
 #define __Serveur__Types__
 
 #include <cstdint>
-#include <iomanip>
 #include <iostream>
 #include <random>
 #include <stdexcept>
@@ -33,29 +32,13 @@ struct position_t {
 
     position_t() {}
 
-    position_t(long_t pos) : x(pos >> 38),
-                             y((pos >> 26) & 0xfff),
-                             z(pos << 38 >> 38), pos(pos) {}
+    position_t(long_t pos) : x(pos >> 38), y((pos >> 26) & 0xfff), z(pos << 38 >> 38), pos(pos) {}
 
     position_t(int_t x, int_t y, int_t z) : x(x), y(y), z(z), pos((((long_t) x & 0x3ffffff) << 38)
-                                                                | (((long_t) y & 0xfff) << 26)
-                                                                | (((long_t) z & 0x3ffffff))) {}
+        | (((long_t) y & 0xfff) << 26) | (((long_t) z & 0x3ffffff))) {}
 };
 
 typedef std::linear_congruential_engine<std::uint_fast64_t, 0x5deece66d, 0xb, 0xffffffffffff> random_t;
-
-struct UUID {
-    long_t msb;
-    long_t lsb;
-
-    UUID(string_t uuid) {
-        msb = std::stoll(uuid.substr(14, 4), nullptr, 16);
-        msb += std::stoll(uuid.substr(9, 4), nullptr, 16) << 16;
-        msb += std::stoll(uuid.substr(0, 8), nullptr, 16) << 32;
-        lsb = std::stoll(uuid.substr(24, 12), nullptr, 16);
-        lsb += std::stoll(uuid.substr(19, 4), nullptr, 16) << 48;
-    }
-};
 
 struct InvalidArgumentException : std::runtime_error {
     InvalidArgumentException(string_t s) : std::runtime_error(s) {}

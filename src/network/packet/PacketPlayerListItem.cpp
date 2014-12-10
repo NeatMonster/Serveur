@@ -2,6 +2,8 @@
 
 #include "Player.h"
 
+#include <iomanip>
+
 PacketPlayerListItem::PacketPlayerListItem(Type type, std::set<Player*> players) : ServerPacket(0x38) {
     this->type = type;
     for (Player *const &player : players) {
@@ -19,9 +21,11 @@ void PacketPlayerListItem::write(ByteBuffer &buffer) {
     buffer.putVarInt(type);
     buffer.putVarInt(actions.size());
     for (Action const &action : actions) {
-        UUID uuid(action.uuid);
-        buffer.putLong(uuid.msb);
-        buffer.putLong(uuid.lsb);
+        buffer.putLong(std::stoull(action.uuid.substr(0, 8)
+                                 + action.uuid.substr(9, 4)
+                                 + action.uuid.substr(14, 4), nullptr, 16));
+        buffer.putLong(std::stoull(action.uuid.substr(19, 4)
+                                 + action.uuid.substr(24, 12), nullptr, 16));
         if (type ==  Type::ADD_PLAYER) {
                 buffer.putString(action.name);
                 buffer.putVarInt(0);

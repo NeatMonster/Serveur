@@ -20,26 +20,26 @@ Server *Server::getServer() {
 }
 
 NetworkManager *Server::getNetwork() {
-    return getServer()->network;
+    return instance->network;
 }
 
 World *Server::getWorld() {
-    return getServer()->world;
+    return instance->world;
 }
 
 Player *Server::getPlayer(string_t name) {
-    for (Player *const &player : getPlayers())
+    for (Player *const &player : instance->players)
         if (player->getName() == name)
             return player;
     return nullptr;
 }
 
 std::set<Player*> Server::getPlayers() {
-    return getServer()->players;
+    return instance->players;
 }
 
 void Server::broadcast(ChatMessage &message) {
-    for (Player *const &player : getPlayers())
+    for (Player *const &player : instance->players)
         player->sendMessage(message);
 }
 
