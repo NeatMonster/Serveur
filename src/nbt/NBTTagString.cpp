@@ -1,5 +1,7 @@
 #include "NBTTagString.h"
 
+#include <cstring>
+
 NBTTagString::NBTTagString() : NBTTag(Type::STRING) {}
 
 void NBTTagString::read(ubyte_t *&data, bool header) {

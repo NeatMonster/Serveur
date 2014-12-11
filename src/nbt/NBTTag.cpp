@@ -13,6 +13,7 @@
 #include "NBTTagString.h"
 
 #include <cassert>
+#include <cstring>
 
 NBTTag::NBTTag(Type type) : type(type) {}
 
@@ -183,7 +184,7 @@ void NBTTag::write(ubyte_t *&data, bool header) {
         *(data++) = *(((ubyte_t*) &size) + 1);
         *(data++) = *(((ubyte_t*) &size) + 0);
         if (size > 0)
-            std::memcpy(data, name.data(), size);
+            memcpy(data, name.data(), size);
         data += size;
     }
 }

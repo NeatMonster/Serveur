@@ -2,6 +2,8 @@
 
 #include "zlib/zlib.h"
 
+#include <cstring>
+
 Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
     size_t outSize = 0;
     std::vector<size_t> bufferSizes;
