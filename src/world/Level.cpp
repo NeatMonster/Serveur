@@ -7,7 +7,7 @@
 #include "NBTTagInt.h"
 
 Level::Level(string_t worldName) {
-    file = std::fstream(worldName + "/level.dat",
+    file.open(worldName + "/level.dat",
                         std::fstream::in | std::fstream::out | std::ios::binary);
     file.seekg(0, file.end);
     int_t length = file.tellg();

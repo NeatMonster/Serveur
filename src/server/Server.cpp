@@ -45,7 +45,7 @@ void Server::broadcast(ChatMessage &message) {
 
 Server::Server() : running(true), ticks(0) {
     instance = this;
-    Logger::info() << "Démarrage du serveur version 1.8.1" << std::endl;
+    Logger::log("Démarrage du serveur version 1.8.1");
     network = new NetworkManager();
     world = new World("world");
     if (network->start()) {
@@ -61,7 +61,7 @@ Server::~Server() {
 
 void Server::stop() {
     running = false;
-    Logger::info() << "Extinction du serveur" << std::endl;
+    Logger::log("Extinction du serveur");
 }
 
 void Server::addPlayer(Player *player) {
@@ -95,7 +95,7 @@ void Server::run() {
             missed = microseconds(0);
         } else {
             missed = elapsed - limit;
-            Logger::warning() << "Impossible de suivre. Peut-être que le serveur est surchargé ?" << std::endl;
+            Logger::log("Impossible de suivre. Peut-être que le serveur est surchargé ?", LogLevel::WARNING);
         }
         lastTick = Clock::now();
     }
