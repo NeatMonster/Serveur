@@ -11,11 +11,13 @@ public:
 
     virtual Type getType() = 0;
 
-    virtual void setPosition(double_t, double_t, double_t);
+    virtual void move(double_t, double_t, double_t);
 
-    virtual void setRotation(float_t, float_t);
+    virtual void rotate(float_t, float_t);
 
-    virtual void setHeadRotation(float_t);
+    void setHeadRotation(float_t);
+
+    virtual void rotateHead(float_t);
 
     virtual void onTick();
 

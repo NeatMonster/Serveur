@@ -20,16 +20,14 @@
 Player::Player(World *world, PlayerConnection *connect) : LivingEntity(world), connect(connect) {
     uuid = connect->getUUID();
     name = connect->getName();
-    position_t spawn = world->getLevel()->getSpawn();
+    world->addPlayer(this);
     onJoinGame();
     Server::getServer()->addPlayer(this);
-    setPosition(spawn.x, spawn.y, spawn.z);
-    world->addPlayer(this);
 }
 
 Player::~Player() {
-    world->removePlayer(this);
     Server::getServer()->removePlayer(this);
+    world->removePlayer(this);
     onQuitGame();
 }
 
@@ -37,21 +35,21 @@ Entity::Type Player::getType() {
     return Type::PLAYER;
 }
 
-void Player::setPosition(double_t x, double_t y, double_t z) {
-    Chunk *oldChunk = getChunk();
-    LivingEntity::setPosition(x, y, z);
-    Chunk *newChunk = getChunk();
-    if (oldChunk == newChunk)
+void Player::move(double_t x, double_t y, double_t z) {
+    int_t xOld = (int_t) floor(this->x) >> 4;
+    int_t zOld = (int_t) floor(this->z) >> 4;
+    LivingEntity::move(x, y, z);
+    int_t xNew = (int_t) floor(x) >> 4;
+    int_t zNew = (int_t) floor(z) >> 4;
+    if (xOld == xNew && zOld == zNew)
         return;
-    oldChunk->removePlayer(this);
-    newChunk->addPlayer(this);
+    world->getChunk(xOld, zOld)->removePlayer(this);
+    world->getChunk(xNew, zNew)->addPlayer(this);
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
-            if (newChunk->getX() + x < oldChunk->getX() - VIEW_DISTANCE
-                    || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
-                    || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
-                    || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE) {
-                Chunk *chunk = world->getChunk(std::make_pair(newChunk->getX() + x, newChunk->getZ() + z));
+            if (xNew + x < xOld - VIEW_DISTANCE || xNew + x > xOld + VIEW_DISTANCE
+                    || zNew + z < zOld - VIEW_DISTANCE || zNew + z > zOld + VIEW_DISTANCE) {
+                Chunk *chunk = world->getChunk(xNew + x, zNew + z);
                 sendPacket(new PacketChunkData(chunk, false));
                 for (Player *const &player : chunk->getPlayers())
                     if (player != this) {
@@ -59,14 +57,11 @@ void Player::setPosition(double_t x, double_t y, double_t z) {
                         player->sendPacket(new PacketSpawnPlayer(this));
                     }
             }
-
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
-            if (oldChunk->getX() + x < newChunk->getX() - VIEW_DISTANCE
-                    || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
-                    || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
-                    || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE) {
-                Chunk *chunk = world->getChunk(std::make_pair(oldChunk->getX() + x, oldChunk->getZ() + z));
+            if (xOld + x < xNew - VIEW_DISTANCE || xOld + x > xNew + VIEW_DISTANCE
+                    || zOld + z < zNew - VIEW_DISTANCE || zOld + z > zNew + VIEW_DISTANCE) {
+                Chunk *chunk = world->getChunk(xOld + x, zOld + z);
                 sendPacket(new PacketChunkData(chunk, true));
                 std::set<varint_t> entitiesIds;
                 for (Player *const &player : chunk->getPlayers())
@@ -74,9 +69,9 @@ void Player::setPosition(double_t x, double_t y, double_t z) {
                         entitiesIds.insert(player->getEntityId());
                         player->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
                     }
-                sendPacket(new PacketDestroyEntities(entitiesIds));
+                if (!entitiesIds.empty())
+                    sendPacket(new PacketDestroyEntities(entitiesIds));
             }
-
 }
 
 string_t Player::getUUID() {
@@ -122,19 +117,6 @@ void Player::onJoinGame() {
     joinPacket->reducedDebugInfo = false;
     sendPacket(joinPacket);
 
-    std::set<Player*> players = Server::getPlayers();
-    for (Player *const &player : players)
-        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
-    players.insert(this);
-    sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, players));
-}
-
-void Player::onQuitGame() {
-    for (Player *const &player : Server::getPlayers())
-        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));
-}
-
-void Player::onJoinWorld() {
     sendPacket(new PacketSpawnPosition(x, y, z));
 
     PacketPlayerAbilities *abilPacket = new PacketPlayerAbilities();
@@ -146,19 +128,34 @@ void Player::onJoinWorld() {
     abilPacket->walkingSpeed = 0.1;
     sendPacket(abilPacket);
 
-    sendPacket(new PacketTimeUpdate(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
+    std::set<Player*> players = Server::getPlayers();
+    for (Player *const &player : players)
+        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
+    players.insert(this);
+    sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, players));
 
-    Chunk *chunk = getChunk();
-    std::vector<Chunk*> chunks = {chunk};
+    PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
+    posPacket->x = x;
+    posPacket->y = y;
+    posPacket->z = z;
+    posPacket->yaw = yaw;
+    posPacket->pitch = pitch;
+    posPacket->flags = 0;
+    sendPacket(posPacket);
+
+    sendPacket(new PacketTimeUpdate(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
+    int_t xChunk = (int_t) floor(x) >> 4;
+    int_t zChunk = (int_t) floor(z) >> 4;
+    std::vector<Chunk*> chunks = {world->getChunk(xChunk, zChunk)};
     for (int_t distance = 1; distance <= VIEW_DISTANCE; distance++) {
         for (int_t x = -distance; x < distance; x++)
-            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() + x, chunk->getZ() - distance)));
+            chunks.push_back(world->getChunk(xChunk + x, zChunk - distance));
         for (int_t z = -distance; z < distance; z++)
-            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() + distance, chunk->getZ() + z)));
+            chunks.push_back(world->getChunk(xChunk + distance, zChunk + z));
         for (int_t x = distance; x > -distance; x--)
-            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() + x, chunk->getZ() + distance)));
+            chunks.push_back(world->getChunk(xChunk + x, zChunk + distance));
         for (int_t z = distance; z > -distance; z--)
-            chunks.push_back(world->getChunk(std::make_pair(chunk->getX() - distance, chunk->getZ() + z)));
+            chunks.push_back(world->getChunk(xChunk - distance, zChunk + z));
     }
     std::vector<Chunk*> packetChunks;
     for (Chunk *&chunk : chunks) {
@@ -183,20 +180,13 @@ void Player::onJoinWorld() {
                     player->sendPacket(new PacketSpawnPlayer(this));
                 }
     }
-
-    PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
-    posPacket->x = x;
-    posPacket->y = y;
-    posPacket->z = z;
-    posPacket->yaw = yaw;
-    posPacket->pitch = pitch;
-    posPacket->flags = 0;
-    sendPacket(posPacket);
 }
-
-void Player::onQuitWorld() {
+void Player::onQuitGame() {
     for (Player *const &watcher : getWatchers())
         watcher->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
+
+    for (Player *const &player : Server::getPlayers())
+        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));
 }
 
 void Player::onTick() {

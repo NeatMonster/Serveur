@@ -12,7 +12,7 @@
 #include "NBTTagShort.h"
 #include "NBTTagString.h"
 
-#include <cassert>
+#include <cstring>
 
 NBTTag::NBTTag(Type type) : type(type) {}
 
@@ -158,7 +158,7 @@ NBTTag *NBTTag::read(ubyte_t *&data, Type type, bool header) {
             tag = new NBTTagIntArray();
             break;
         default:
-            assert(false);
+            throw NBTException("Type inconnu : " + std::to_string(type));
             break;
     }
     tag->read(data, header);

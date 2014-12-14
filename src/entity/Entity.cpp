@@ -20,7 +20,7 @@ int_t Entity::getEntityId() {
 }
 
 Chunk *Entity::getChunk() {
-    return world->getChunk(std::make_pair((int_t) floor_d(x) >> 4, (int_t) floor_d(z) >> 4));
+    return world->getChunk((int_t) floor_d(x) >> 4, (int_t) floor_d(z) >> 4);
 }
 
 World *Entity::getWorld() {
@@ -29,10 +29,11 @@ World *Entity::getWorld() {
 
 std::set<Player*> Entity::getWatchers() {
     std::set<Player*> watchers;
-    Chunk *c = getChunk();
+    int_t xChunk = (int_t) floor(x) >> 4;
+    int_t zChunk = (int_t) floor(z) >> 4;
     for (int x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++) {
-            Chunk *chunk = world->tryGetChunk(std::make_pair(c->getX() + x, c->getZ() + z));
+            Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
             if (chunk != nullptr)
                 for (Player *const &watcher : chunk->getPlayers())
                     if (watcher->getEntityId() != getEntityId())
@@ -67,9 +68,17 @@ void Entity::setPosition(double_t x, double_t y, double_t z) {
     this->z = z;
 }
 
+void Entity::move(double_t x, double_t y, double_t z) {
+    setPosition(x, y, z);
+}
+
 void Entity::setRotation(float_t yaw, float_t pitch) {
     this->yaw = mod<float_t>(yaw, 360.);
     this->pitch = mod<float_t>(pitch, 360.);
+}
+
+void Entity::rotate(float_t yaw, float_t pitch) {
+    setRotation(yaw, pitch);
 }
 
 bool Entity::isDead() {

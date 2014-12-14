@@ -22,7 +22,7 @@ Level::Level(string_t worldName) {
         time = data->get("Time")->asLong()->get();
         dayTime = data->get("DayTime")->asLong()->get();
         int_t spawnX = data->get("SpawnX")->asInt()->get();
-        int_t spawnY = data->get("SpawnY")->asInt()->get();
+        int_t spawnY = data->get("SpawnY")->asInt()->get() + 20; // Remove me. :)
         int_t spawnZ = data->get("SpawnZ")->asInt()->get();
         spawn = position_t(spawnX, spawnY, spawnZ);
         delete root;

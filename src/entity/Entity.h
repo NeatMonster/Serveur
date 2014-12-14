@@ -39,9 +39,13 @@ public:
 
     float_t getPitch();
 
-    virtual void setPosition(double_t, double_t, double_t);
+    void setPosition(double_t, double_t, double_t);
 
-    virtual void setRotation(float_t, float_t);
+    virtual void move(double_t, double_t, double_t);
+
+    void setRotation(float_t, float_t);
+
+    virtual void rotate(float_t, float_t);
 
     bool isDead();
 

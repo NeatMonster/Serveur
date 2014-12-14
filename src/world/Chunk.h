@@ -11,6 +11,7 @@ class Section;
 class World;
 
 class Chunk {
+    friend class Region;
     friend class World;
 
 public:

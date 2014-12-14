@@ -15,7 +15,7 @@ public:
 
     virtual Type getType();
 
-    void setPosition(double_t, double_t, double_t);
+    void move(double_t, double_t, double_t);
 
     string_t getUUID();
 
@@ -36,10 +36,6 @@ public:
     void onJoinGame();
 
     void onQuitGame();
-
-    void onJoinWorld();
-
-    void onQuitWorld();
 
     virtual void onTick();
 

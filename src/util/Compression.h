@@ -13,6 +13,8 @@ public:
     typedef std::pair<ubyte_t*, size_t> result_t;
 
     static result_t inflateGzip(ubyte_t*, size_t);
+
+    static result_t inflateZlib(ubyte_t*, size_t);
 };
 
 #endif /* defined(__Serveur__Compression__) */

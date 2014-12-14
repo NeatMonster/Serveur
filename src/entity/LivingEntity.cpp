@@ -7,17 +7,21 @@ LivingEntity::LivingEntity(World *world) : Entity(world), headYaw(0), lastHeadYa
 
 LivingEntity::~LivingEntity() {}
 
-void LivingEntity::setPosition(double_t x, double_t y, double_t z) {
-    Entity::setPosition(x, y, z);
+void LivingEntity::move(double_t x, double_t y, double_t z) {
+    Entity::move(x, y, z);
 }
 
-void LivingEntity::setRotation(float_t yaw, float_t pitch) {
-    setHeadRotation(yaw);
-    Entity::setRotation(yaw, pitch);
+void LivingEntity::rotate(float_t yaw, float_t pitch) {
+    rotateHead(yaw);
+    Entity::rotate(yaw, pitch);
 }
 
 void LivingEntity::setHeadRotation(float_t headYaw) {
     this->headYaw = mod<float_t>(headYaw, 360.);
+}
+
+void LivingEntity::rotateHead(float_t headYaw) {
+    setHeadRotation(headYaw);
 }
 
 void LivingEntity::onTick() {

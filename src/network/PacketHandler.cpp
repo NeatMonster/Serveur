@@ -96,18 +96,18 @@ void PacketHandler::handlePlayer(PacketPlayer *packet) {
 
 void PacketHandler::handlePlayerLook(PacketPlayerLook *packet) {
     connect->player->onGround = packet->onGround;
-    connect->player->setRotation(packet->yaw, packet->pitch);
+    connect->player->rotate(packet->yaw, packet->pitch);
 }
 
 void PacketHandler::handlePlayerPosition(PacketPlayerPosition *packet) {
     connect->player->onGround = packet->onGround;
-    connect->player->setPosition(packet->x, packet->y, packet->z);
+    connect->player->move(packet->x, packet->y, packet->z);
 }
 
 void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
     connect->player->onGround = packet->onGround;
-    connect->player->setPosition(packet->x, packet->y, packet->z);
-    connect->player->setRotation(packet->yaw, packet->pitch);
+    connect->player->move(packet->x, packet->y, packet->z);
+    connect->player->rotate(packet->yaw, packet->pitch);
 }
 
 void PacketHandler::handleAnimation(PacketAnimation*) {

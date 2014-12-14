@@ -5,6 +5,7 @@
 
 class Section {
     friend class Chunk;
+    friend class Region;
     friend class World;
 
 public:
@@ -34,7 +35,7 @@ public:
 
 private:
     ubyte_t y;
-    short_t blockCount;
+    ushort_t blockCount;
     bool initialized;
     ushort_t *blockData;
     ubyte_t *blockLight;

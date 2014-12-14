@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <stdexcept>
+
 class NBTTagByte;
 class NBTTagByteArray;
 class NBTTagCompound;
@@ -21,6 +23,10 @@ class NBTTag {
 
 public:
     enum Type { END, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, BYTE_ARRAY, STRING, LIST, COMPOUND, INT_ARRAY };
+
+    struct NBTException : public std::runtime_error {
+        NBTException(string_t s) : std::runtime_error(s) {}
+    };
 
     NBTTag(Type);
 
