@@ -19,7 +19,7 @@ PacketMapChunkBulk::PacketMapChunkBulk(std::vector<Chunk*> chunks) : ServerPacke
 }
 
 PacketMapChunkBulk::~PacketMapChunkBulk() {
-    delete data;
+    delete[] data;
 }
 
 void PacketMapChunkBulk::write(ByteBuffer &buffer) {
