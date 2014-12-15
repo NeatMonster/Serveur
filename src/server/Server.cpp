@@ -34,7 +34,7 @@ Player *Server::getPlayer(string_t name) {
     return nullptr;
 }
 
-std::set<Player*> Server::getPlayers() {
+std::unordered_set<Player*> Server::getPlayers() {
     return instance->players;
 }
 
@@ -45,7 +45,7 @@ void Server::broadcast(ChatMessage &message) {
 
 Server::Server() : running(true), ticks(0) {
     instance = this;
-    Logger::log("Démarrage du serveur version 1.8.1");
+    Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
     network = new NetworkManager();
     world = new World("world");
     if (network->start()) {
@@ -61,7 +61,7 @@ Server::~Server() {
 
 void Server::stop() {
     running = false;
-    Logger::log("Extinction du serveur");
+    Logger() << "Extinction du serveur" << std::endl;
 }
 
 void Server::addPlayer(Player *player) {
@@ -95,7 +95,7 @@ void Server::run() {
             missed = microseconds(0);
         } else {
             missed = elapsed - limit;
-            Logger::log("Impossible de suivre. Peut-être que le serveur est surchargé ?", LogLevel::WARNING);
+            Logger(LogLevel::WARNING) << "Impossible de suivre. Peut-être que le serveur est surchargé ?" << std::endl;
         }
         lastTick = Clock::now();
     }

@@ -70,9 +70,9 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     connect->phase = PlayerConnection::PLAY;
     Player *player = new Player(Server::getWorld(), connect);
     connect->player = player;
-    Logger::log(player->getName() + " [/" + player->getIP() + ":" + player->getPort()
-        + "] s'est connecté avec l'ID d'entité " + player->getEntityId()
-        + " en (" + player->getX() + ", " + player->getY() + ", " + player->getZ() + ")");
+    Logger() << player->getName() << " [/" << player->getIP() << ":" << player->getPort()
+        << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
+        << " en (" << player->getX() << ", " << player->getY() << ", " << player->getZ() << ")" << std::endl;
 }
 
 void PacketHandler::handleKeepAlive(PacketKeepAlive *packet) {

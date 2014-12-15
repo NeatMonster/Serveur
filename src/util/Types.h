@@ -98,11 +98,4 @@ inline size_t getSize(uint_t i) {
     return 5;
 }
 
-//Permet l'utilisation par le logger du type déclaré dans ce header.
-inline const std::basic_string<char> operator+(std::basic_string<char> str, ushort_t value)
-{
-    str += std::to_string(value);
-    return str;
-}
-
 #endif /* defined(__Serveur__Types__) */

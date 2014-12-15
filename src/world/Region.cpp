@@ -10,8 +10,8 @@
 #include "Section.h"
 
 Region::Region(string_t worldName, int_t x, int_t z) {
-    file = std::fstream(worldName + "/region/r." + std::to_string(x) + "." + std::to_string(z) + ".mca",
-                        std::fstream::in | std::fstream::out | std::ios::binary);
+    file.open(worldName + "/region/r." + std::to_string(x) + "." + std::to_string(z) + ".mca",
+              std::fstream::in | std::fstream::out | std::ios::binary);
     file.seekg(0, file.end);
     int_t length = file.tellg();
     file.seekg(0, file.beg);

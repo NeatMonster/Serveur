@@ -3,16 +3,16 @@
 
 #include "ServerPacket.h"
 
-#include <set>
+#include <unordered_set>
 
 class PacketDestroyEntities : public ServerPacket {
 public:
-    PacketDestroyEntities(std::set<varint_t>);
+    PacketDestroyEntities(std::unordered_set<varint_t>);
 
     void write(ByteBuffer&);
 
 private:
-    std::set<varint_t> entityIds;
+    std::unordered_set<varint_t> entityIds;
 };
 
 #endif /* defined(__Serveur__PacketDestroyEntities__) */

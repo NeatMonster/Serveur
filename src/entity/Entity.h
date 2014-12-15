@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-#include <set>
+#include <unordered_set>
 
 class Chunk;
 class Player;
@@ -27,7 +27,7 @@ public:
 
     virtual World *getWorld();
 
-    std::set<Player*> getWatchers();
+    std::unordered_set<Player*> getWatchers();
 
     double_t getX();
 
@@ -55,7 +55,7 @@ public:
 
 protected:
     Type type;
-    World * world;
+    World *world;
     int_t entityId;
     int_t ticks;
     bool dead;

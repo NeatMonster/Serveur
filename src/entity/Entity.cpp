@@ -27,8 +27,8 @@ World *Entity::getWorld() {
     return world;
 }
 
-std::set<Player*> Entity::getWatchers() {
-    std::set<Player*> watchers;
+std::unordered_set<Player*> Entity::getWatchers() {
+    std::unordered_set<Player*> watchers;
     int_t xChunk = (int_t) floor(x) >> 4;
     int_t zChunk = (int_t) floor(z) >> 4;
     for (int x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)

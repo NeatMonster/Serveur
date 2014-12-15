@@ -63,7 +63,7 @@ void Player::move(double_t x, double_t y, double_t z) {
                     || zOld + z < zNew - VIEW_DISTANCE || zOld + z > zNew + VIEW_DISTANCE) {
                 Chunk *chunk = world->getChunk(xOld + x, zOld + z);
                 sendPacket(new PacketChunkData(chunk, true));
-                std::set<varint_t> entitiesIds;
+                std::unordered_set<varint_t> entitiesIds;
                 for (Player *const &player : chunk->getPlayers())
                     if (player != this) {
                         entitiesIds.insert(player->getEntityId());
@@ -128,7 +128,7 @@ void Player::onJoinGame() {
     abilPacket->walkingSpeed = 0.1;
     sendPacket(abilPacket);
 
-    std::set<Player*> players = Server::getPlayers();
+    std::unordered_set<Player*> players = Server::getPlayers();
     for (Player *const &player : players)
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
     players.insert(this);

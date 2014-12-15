@@ -28,15 +28,15 @@ bool NetworkManager::start() {
     try {
         socket = new ServerSocket(Socket::SocketAddress(ip, port));
         socket->open();
-        Logger::log("Démarrage du serveur sur " + ip + ":" + port);
+        Logger() << "Démarrage du serveur sur " << ip << ":" << port << std::endl;
         running = true;
         thread = std::thread(&NetworkManager::run, this);
         keepAliveThread = std::thread(&NetworkManager::runKeepAlive, this);
         return true;
     } catch (const ServerSocket::SocketBindException &e) {
-        Logger::log("IMPOSSIBLE DE SE LIER À L'IP ET AU PORT !",LogLevel::WARNING);
-        //Logger::log("L'erreur rencontrée est : " + e.what(),LogLevel::WARNING); TO FIX
-        Logger::log("Peut-être qu'un serveur occupe déjà ce port ?", LogLevel::WARNING);
+        Logger(LogLevel::WARNING) << "IMPOSSIBLE DE SE LIER À L'IP ET AU PORT !" << std::endl;
+        Logger(LogLevel::WARNING) << "L'erreur rencontrée est : " << e.what() << std::endl;
+        Logger(LogLevel::WARNING) << "Peut-être qu'un serveur occupe déjà ce port ?" << std::endl;
     }
     return false;
 }
@@ -80,8 +80,8 @@ void NetworkManager::run() {
     while (running) {
         try {
             ClientSocket *clientSocket = socket->accept();
-            Logger::log("/" + clientSocket->getIP() + ":" +
-                clientSocket->getPort() + " s'est connecté");
+            Logger() << "/" << clientSocket->getIP() << ":" <<
+                clientSocket->getPort() << " s'est connecté" << std::endl;
             connects.push_back(new PlayerConnection(clientSocket));
         } catch (const ServerSocket::SocketAcceptException &e) {}
     }

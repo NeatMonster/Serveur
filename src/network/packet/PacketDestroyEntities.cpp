@@ -1,6 +1,6 @@
 #include "PacketDestroyEntities.h"
 
-PacketDestroyEntities::PacketDestroyEntities(std::set<varint_t> entityIds) : ServerPacket(0x13) {
+PacketDestroyEntities::PacketDestroyEntities(std::unordered_set<varint_t> entityIds) : ServerPacket(0x13) {
     this->entityIds = entityIds;
 }
 

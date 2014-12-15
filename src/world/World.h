@@ -3,8 +3,8 @@
 
 #include "Types.h"
 
-#include <set>
-#include <map>
+#include <unordered_set>
+#include <unordered_map>
 
 class Chunk;
 class Entity;
@@ -22,7 +22,7 @@ public:
 
     string_t getName();
 
-    std::set<Player*> getPlayers();
+    std::unordered_set<Player*> getPlayers();
 
     void addPlayer(Player*);
 
@@ -49,9 +49,9 @@ public:
 private:
     Level *level;
     string_t name;
-    std::set<Player*> players;
-    std::map<long_t, Chunk*> chunks;
-    std::map<long_t, Region*> regions;
+    std::unordered_set<Player*> players;
+    std::unordered_map<long_t, Chunk*> chunks;
+    std::unordered_map<long_t, Region*> regions;
 
     static inline long_t hash(int_t x, int_t z) {
         return ((long_t) x & 4294967295L) | (((long_t) z & 4294967295L) << 32);

@@ -3,18 +3,22 @@
 
 #include "Types.h"
 
-#include <iostream>
-#include <fstream>
+#include <mutex>
 #include <sstream>
 
-enum LogLevel{INFO, WARNING, SEVERE, DEBUG};
-
-class Logger {
+class Logger : public std::ostringstream {
 public:
-    static void log(const string_t msg, LogLevel level = LogLevel::INFO);
+    enum Level { INFO, WARNING, SEVERE, DEBUG };
+
+    Logger(Level = Level::INFO);
+
+    ~Logger();
 
 private:
-    static string_t format(const string_t str, LogLevel level);
+    static std::mutex mutex;
+    std::unique_lock<std::mutex> lock;
 };
+
+typedef Logger::Level LogLevel;
 
 #endif /* defined(__Serveur__Logger__) */

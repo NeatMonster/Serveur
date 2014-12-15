@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-#include <set>
+#include <unordered_set>
 
 class Entity;
 class Player;
@@ -31,7 +31,7 @@ public:
 
     int_t getZ();
 
-    std::set<Player*> getPlayers();
+    std::unordered_set<Player*> getPlayers();
 
     void addPlayer(Player*);
 
@@ -48,7 +48,7 @@ private:
     ubyte_t biomes[256];
     int_t heightMap[256];
     Section *sections[16];
-    std::set<Player*> players;
+    std::unordered_set<Player*> players;
 };
 
 #endif /* defined(__Serveur__Chunk__) */

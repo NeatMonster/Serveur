@@ -4,7 +4,7 @@
 #include "ChatMessage.h"
 #include "NetworkManager.h"
 
-#include <set>
+#include <unordered_set>
 
 class Player;
 class World;
@@ -19,7 +19,7 @@ public:
 
     static Player *getPlayer(string_t);
 
-    static std::set<Player*> getPlayers();
+    static std::unordered_set<Player*> getPlayers();
 
     static void broadcast(ChatMessage&);
 
@@ -39,7 +39,7 @@ private:
     bool running;
     long_t ticks;
     World *world;
-    std::set<Player*> players;
+    std::unordered_set<Player*> players;
 
     void run();
 };

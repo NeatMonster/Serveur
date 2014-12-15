@@ -122,14 +122,13 @@ void PlayerConnection::runRead() {
                     packet->read(readBuffer);
                     readQueue.push(packet);
                     readBuffer.compact();
-                    Logger::log("/" + socket->getIP() + ":" + socket->getPort()
-                        + " a envoyé un paquet " + typeid(*packet).name());
+                    Logger() << "/" << socket->getIP() << ":" << socket->getPort()
+                        << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
                 }
             } catch (const ByteBuffer::BufferUnderflowException &e) {}
         }
     } catch (const ClientSocket::SocketReadException &e) {
-        Logger::log("/" + socket->getIP() + ":" + socket->getPort()
-            + " s'est déconnecté");
+        Logger() << "/" << socket->getIP() << ":" << socket->getPort() << " s'est déconnecté" << std::endl;
         close();
     }
 }
@@ -141,8 +140,8 @@ void PlayerConnection::runWrite() {
             writeQueue.pop(packet);
             if (closed)
                 break;
-            Logger::log("/" + socket->getIP() + ":" + socket->getPort()
-                + " a reçu un paquet " + typeid(*packet).name());
+            Logger() << "/" << socket->getIP() << ":" << socket->getPort()
+                << " a reçu un paquet " << typeid(*packet).name() << std::endl;
             writeBuffer.clear();
             writeBuffer.putVarInt(packet->getPacketId());
             packet->write(writeBuffer);
@@ -161,8 +160,7 @@ void PlayerConnection::runWrite() {
             delete packet;
         }
     } catch (const ClientSocket::SocketWriteException &e) {
-        Logger::log("/" + socket->getIP() + ":" + socket->getPort()
-            + " s'est déconnecté");
+        Logger() << "/" << socket->getIP() << ":" << socket->getPort() << " s'est déconnecté" << std::endl;
         close();
     }
 }

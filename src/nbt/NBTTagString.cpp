@@ -20,7 +20,7 @@ void NBTTagString::write(ubyte_t *&data, bool header) {
     *(data++) = *(((ubyte_t*) &size) + 1);
     *(data++) = *(((ubyte_t*) &size) + 0);
     if (size > 0)
-        memcpy(data, value.data(), size);
+        std::memcpy(data, value.data(), size);
     data += size;
 }
 

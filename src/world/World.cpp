@@ -29,7 +29,7 @@ Level *World::getLevel() {
     return level;
 }
 
-std::set<Player*> World::getPlayers() {
+std::unordered_set<Player*> World::getPlayers() {
     return players;
 }
 
