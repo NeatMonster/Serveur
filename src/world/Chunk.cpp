@@ -5,7 +5,7 @@
 #include <cstring>
 
 Chunk::Chunk(World *world, int_t x, int_t z) : world(world), x(x), z(z) {
-    std::memset(biomes, -1, 256);
+    std::memset(biomes, 0, 256);
     std::memset(heightMap, 0, 1024);
     for (int_t y = 0; y < 16; y++)
         sections[y] = new Section(y);
