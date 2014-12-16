@@ -88,41 +88,39 @@ PacketFactory PlayerConnection::factory;
 void PlayerConnection::runRead() {
     try {
         ubyte_t buffer[BUFFER_SIZE];
+        size_t position = 0;
         while (!closed) {
             size_t rcvd = socket->receive(buffer, sizeof(buffer));
             readBuffer.setPosition(readBuffer.getLimit());
             readBuffer.put(buffer, rcvd);
-            readBuffer.rewind();
+            readBuffer.setPosition(position);
             try {
                 while (readBuffer.getPosition() < readBuffer.getLimit()) {
                     varint_t packetLength;
                     readBuffer.getVarInt(packetLength);
                     if (readBuffer.getLimit() - readBuffer.getPosition() < packetLength)
-                        continue;
+                        break;
                     varint_t packetId;
                     readBuffer.getVarInt(packetId);
                     ClientPacket *packet = nullptr;
-                    if (phase == HANDSHAKE) {
-                        if (packetId == 0x00) {
-                            packet = new PacketHandshake();
-                            phase = LOGIN;
-                        }
-                    } else if (phase == LOGIN) {
-                        if (packetId == 0x00)
-                            packet = new PacketLoginStart();
-                    } else if (phase == PLAY) {
-                        if (factory.hasPacket(packetId))
-                            packet = factory.createPacket(packetId);
-                    }
-                    if (packet == nullptr) {
+                    if (phase == HANDSHAKE && packetId == 0x00) {
+                        packet = new PacketHandshake();
+                        phase = LOGIN;
+                    } else if (phase == LOGIN && packetId == 0x00)
+                        packet = new PacketLoginStart();
+                    else if (phase == PLAY && factory.hasPacket(packetId))
+                        packet = factory.createPacket(packetId);
+                    else {
                         disconnect("ID de paquet invalide : " + std::to_string(packetId));
                         break;
                     }
                     packet->setLength(packetLength);
                     packet->read(readBuffer);
                     readQueue.push(packet);
-                    readBuffer.compact();
-                    Logger() << "/" << socket->getIP() << ":" << socket->getPort()
+                    if (readBuffer.getPosition() == readBuffer.getLimit())
+                        readBuffer.clear();
+                    position = readBuffer.getPosition();
+                    Logger(LogLevel::DEBUG) << "/" << socket->getIP() << ":" << socket->getPort()
                         << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
                 }
             } catch (const ByteBuffer::BufferUnderflowException &e) {}
@@ -140,18 +138,26 @@ void PlayerConnection::runWrite() {
             writeQueue.pop(packet);
             if (closed)
                 break;
-            Logger() << "/" << socket->getIP() << ":" << socket->getPort()
+            Logger(LogLevel::DEBUG) << "/" << socket->getIP() << ":" << socket->getPort()
                 << " a reçu un paquet " << typeid(*packet).name() << std::endl;
             writeBuffer.clear();
+            writeBuffer.setPosition(5);
             writeBuffer.putVarInt(packet->getPacketId());
             packet->write(writeBuffer);
-            varint_t packetLength = writeBuffer.getLimit();
-            writeBuffer.rewind();
-            writeBuffer.shift(getSize(packetLength));
-            writeBuffer.rewind();
+            varint_t packetLength = writeBuffer.getLimit() - 5;
+            size_t position = 0;
+            if (packetLength < 128)
+                position = 4;
+            else if (packetLength < 16384)
+                position = 3;
+            else if (packetLength < 2097152)
+                position = 2;
+            else if (packetLength < 268435456)
+                position = 1;
+            writeBuffer.setPosition(position);
             writeBuffer.putVarInt(packetLength);
-            writeBuffer.rewind();
-            socket->transmit(writeBuffer.getData(), writeBuffer.getLimit());
+            writeBuffer.setPosition(position);
+            socket->transmit(writeBuffer.getArray() + position, writeBuffer.getLimit() - position);
             if ((phase == LOGIN && packet->getPacketId() == 0x00)
                     || (phase == PLAY && packet->getPacketId() == 0x40))
                 close();

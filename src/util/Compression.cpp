@@ -36,7 +36,7 @@ Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
     for (size_t i = 0; i < bufferPtrs.size(); i++) {
         std::memcpy(out + currentSize, bufferPtrs[i], bufferSizes[i]);
         currentSize += bufferSizes[i];
-        delete bufferPtrs[i];
+        delete[] bufferPtrs[i];
     }
     return {out, outSize};
 }
@@ -75,7 +75,7 @@ Compression::result_t Compression::inflateZlib(ubyte_t *in, size_t inSize) {
     for (size_t i = 0; i < bufferPtrs.size(); i++) {
         std::memcpy(out + currentSize, bufferPtrs[i], bufferSizes[i]);
         currentSize += bufferSizes[i];
-        delete bufferPtrs[i];
+        delete[] bufferPtrs[i];
     }
     return {out, outSize};
 }

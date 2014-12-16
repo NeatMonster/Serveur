@@ -86,16 +86,4 @@ inline bool contains(T x, std::vector<T> vec) {
     return false;
 }
 
-inline size_t getSize(uint_t i) {
-    if (i < 128)
-        return 1;
-    else if (i < 16384)
-        return 2;
-    else if (i < 2097152)
-        return 3;
-    else if (i < 268435456)
-        return 4;
-    return 5;
-}
-
 #endif /* defined(__Serveur__Types__) */

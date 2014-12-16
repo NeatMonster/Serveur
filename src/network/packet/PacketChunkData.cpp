@@ -20,7 +20,7 @@ PacketChunkData::PacketChunkData(Chunk *chunk, bool unload) : ServerPacket(0x21)
 }
 
 PacketChunkData::~PacketChunkData() {
-    delete data;
+    delete[] data;
 }
 
 void PacketChunkData::write(ByteBuffer &buffer) {

@@ -19,8 +19,6 @@ private:
     std::fstream file;
     int_t locations[1024];
     int_t timestamps[1024];
-
-    static void reverse(int_t*);
 };
 
 #endif /* defined(__Serveur__Region__) */

@@ -96,12 +96,13 @@ Chunk *World::loadChunk(int_t x, int_t z) {
                         section->setBlockType(x + z * 16 + y * 256, 7);
                     else if (y == 1 || y == 2)
                         section->setBlockType(x + z * 16 + y * 256, 3);
-                    else {
+                    else if (y == 3) {
                         section->setBlockType(x + z * 16 + y * 256, 2);
-                        chunk->heightMap[x + z * 16] = y;
+                        chunk->heightMap[x + z * 16] = 3;
                     }
                     section->setSkyLight(x + z * 16, 0);
                 }
+        std::memset(chunk->biomes, 1, 256);
     }
     chunks[hash(x, z)] = chunk;
     return chunk;

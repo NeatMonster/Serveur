@@ -83,9 +83,7 @@ public:
 
     void clear();
 
-    void compact();
-
-    ubyte_t *getData();
+    ubyte_t *getArray();
 
     size_t getLimit();
 
@@ -93,21 +91,15 @@ public:
 
     size_t getSize();
 
-    void rewind();
-
     void setLimit(size_t);
 
     void setPosition(size_t);
 
     void setSize(size_t);
 
-    void shift(size_t);
-
 private:
     ubytes_t buffer;
     size_t position, limit;
-
-    void reverse(ubyte_t*, size_t);
 };
 
 #endif /* defined(__Serveur__ByteBuffer__) */

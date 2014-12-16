@@ -7,8 +7,7 @@
 #include "NBTTagInt.h"
 
 Level::Level(string_t worldName) {
-    file.open(worldName + "/level.dat",
-                        std::fstream::in | std::fstream::out | std::ios::binary);
+    file.open(worldName + "/level.dat", std::fstream::in | std::fstream::out | std::ios::binary);
     file.seekg(0, file.end);
     int_t length = file.tellg();
     file.seekg(0, file.beg);
@@ -22,11 +21,11 @@ Level::Level(string_t worldName) {
         time = data->get("Time")->asLong()->get();
         dayTime = data->get("DayTime")->asLong()->get();
         int_t spawnX = data->get("SpawnX")->asInt()->get();
-        int_t spawnY = data->get("SpawnY")->asInt()->get() + 20; // Remove me. :)
+        int_t spawnY = data->get("SpawnY")->asInt()->get();
         int_t spawnZ = data->get("SpawnZ")->asInt()->get();
         spawn = position_t(spawnX, spawnY, spawnZ);
         delete root;
-        delete plain;
+        std::free(plain);
     } else {
         time = dayTime = 0;
         spawn = position_t(8, 4, 8);
