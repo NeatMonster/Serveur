@@ -2,26 +2,29 @@
 #define __Serveur__Server__
 
 #include "ChatMessage.h"
+#include "CommandManager.h"
+#include "CommandSender.h"
 #include "NetworkManager.h"
+#include "Types.h"
 
 #include <unordered_set>
 
 class Player;
 class World;
 
-class Server {
+class Server : public CommandSender {
 public:
     static Server *getServer();
 
-    static NetworkManager *getNetwork();
+    static void broadcast(ChatMessage&);
 
-    static World *getWorld();
+    static CommandManager *getCommands();
+
+    static NetworkManager *getNetwork();
 
     static Player *getPlayer(string_t);
 
     static std::unordered_set<Player*> getPlayers();
-
-    static void broadcast(ChatMessage&);
 
     Server();
 
@@ -33,8 +36,15 @@ public:
 
     void removePlayer(Player*);
 
+    string_t getName();
+
+    World *getWorld();
+
+    void sendMessage(ChatMessage&);
+
 private:
     static Server *instance;
+    CommandManager *commands;
     NetworkManager *network;
     bool running;
     long_t ticks;

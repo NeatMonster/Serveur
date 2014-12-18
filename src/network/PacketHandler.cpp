@@ -68,7 +68,7 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
         if (player->getUUID() == uuid)
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
-    Player *player = new Player(Server::getWorld(), connect);
+    Player *player = new Player(Server::getServer()->getWorld(), connect);
     connect->player = player;
     Logger() << player->getName() << " [/" << player->getIP() << ":" << player->getPort()
         << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
@@ -87,7 +87,10 @@ void PacketHandler::handleKeepAlive(PacketKeepAlive *packet) {
 }
 
 void PacketHandler::handleChatMessage(PacketChatMessage *packet) {
-    Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->message);
+    if (packet->message[0] == '/')
+        Server::getCommands()->processCommand(packet->message.substr(1), connect->player);
+    else
+        Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->message);
 }
 
 void PacketHandler::handlePlayer(PacketPlayer *packet) {

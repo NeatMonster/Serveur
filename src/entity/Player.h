@@ -2,12 +2,13 @@
 #define __Serveur__Player__
 
 #include "ChatMessage.h"
+#include "CommandSender.h"
 #include "LivingEntity.h"
 
 class PlayerConnection;
 class ServerPacket;
 
-class Player : public LivingEntity {
+class Player : public LivingEntity, public CommandSender {
 public:
     Player(World*, PlayerConnection*);
 
@@ -15,12 +16,14 @@ public:
 
     virtual Type getType();
 
-    void move(double_t, double_t, double_t);
+    World *getWorld();
+
+    virtual void move(double_t, double_t, double_t);
 
     string_t getUUID();
 
     string_t getName();
-
+    
     string_t getIP();
 
     ushort_t getPort();

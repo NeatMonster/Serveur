@@ -35,6 +35,10 @@ Entity::Type Player::getType() {
     return Type::PLAYER;
 }
 
+World *Player::getWorld() {
+    return Entity::getWorld();
+}
+
 void Player::move(double_t x, double_t y, double_t z) {
     int_t xOld = (int_t) floor(this->x) >> 4;
     int_t zOld = (int_t) floor(this->z) >> 4;
@@ -99,11 +103,13 @@ void Player::sendMessage(ChatMessage &message) {
 }
 
 void Player::disconnect(string_t reason) {
-    connect->disconnect(reason);
+    if (connect != nullptr)
+        connect->disconnect(reason);
 }
 
 void Player::sendPacket(ServerPacket *packet) {
-    connect->sendPacket(packet);
+    if (connect != nullptr)
+        connect->sendPacket(packet);
 }
 
 void Player::onJoinGame() {

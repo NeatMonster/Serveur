@@ -25,7 +25,7 @@ public:
 
     Chunk *getChunk();
 
-    virtual World *getWorld();
+    World *getWorld();
 
     std::unordered_set<Player*> getWatchers();
 

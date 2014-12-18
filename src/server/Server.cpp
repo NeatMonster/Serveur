@@ -19,12 +19,17 @@ Server *Server::getServer() {
     return instance;
 }
 
+void Server::broadcast(ChatMessage &message) {
+    for (Player *const &player : instance->players)
+        player->sendMessage(message);
+}
+
 NetworkManager *Server::getNetwork() {
     return instance->network;
 }
 
-World *Server::getWorld() {
-    return instance->world;
+CommandManager *Server::getCommands() {
+    return getServer()->commands;
 }
 
 Player *Server::getPlayer(string_t name) {
@@ -38,14 +43,10 @@ std::unordered_set<Player*> Server::getPlayers() {
     return instance->players;
 }
 
-void Server::broadcast(ChatMessage &message) {
-    for (Player *const &player : instance->players)
-        player->sendMessage(message);
-}
-
 Server::Server() : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
+    commands = new CommandManager();
     network = new NetworkManager();
     world = new World("world");
     if (network->start()) {
@@ -55,11 +56,14 @@ Server::Server() : running(true), ticks(0) {
 }
 
 Server::~Server() {
+    delete commands;
     delete network;
     delete world;
 }
 
 void Server::stop() {
+    for (Player *player : players)
+        player->disconnect("Serveur fermé");
     running = false;
     Logger() << "Extinction du serveur" << std::endl;
 }
@@ -72,6 +76,18 @@ void Server::removePlayer(Player *player) {
     players.erase(player);
 }
 
+string_t Server::getName() {
+    return "Serveur";
+}
+
+World *Server::getWorld() {
+    return world;
+}
+
+void Server::sendMessage(ChatMessage &message) {
+    Logger() << message.getText();
+}
+
 Server *Server::instance;
 
 void Server::run() {
@@ -80,6 +96,7 @@ void Server::run() {
     microseconds missed(0);
     while (running) {
         ++ticks;
+        commands->handleCommands();
         network->handlePackets();
         world->onTick();
         microseconds limit = duration_cast<microseconds>(milliseconds(50) - missed);
