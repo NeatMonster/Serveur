@@ -66,12 +66,10 @@ void Server::stop() {
 
 void Server::addPlayer(Player *player) {
     players.insert(player);
-    broadcast(Chat() << Color::YELLOW << player->getName() << " a rejoint la partie");
 }
 
 void Server::removePlayer(Player *player) {
     players.erase(player);
-    broadcast(Chat() << Color::YELLOW << player->getName() << " a quitté la partie");
 }
 
 Server *Server::instance;

@@ -128,6 +128,8 @@ void Player::onJoinGame() {
     abilPacket->walkingSpeed = 0.1;
     sendPacket(abilPacket);
 
+    Server::broadcast(Chat() << Color::YELLOW << name << " a rejoint la partie");
+
     std::unordered_set<Player*> players = Server::getPlayers();
     for (Player *const &player : players)
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
@@ -184,6 +186,8 @@ void Player::onJoinGame() {
 void Player::onQuitGame() {
     for (Player *const &watcher : getWatchers())
         watcher->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
+
+    Server::broadcast(Chat() << Color::YELLOW << name << " a quitté la partie");
 
     for (Player *const &player : Server::getPlayers())
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));

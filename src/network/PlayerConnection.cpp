@@ -116,12 +116,12 @@ void PlayerConnection::runRead() {
                     }
                     packet->setLength(packetLength);
                     packet->read(readBuffer);
+                    Logger(LogLevel::DEBUG) << "/" << socket->getIP() << ":" << socket->getPort()
+                        << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
                     readQueue.push(packet);
                     if (readBuffer.getPosition() == readBuffer.getLimit())
                         readBuffer.clear();
                     position = readBuffer.getPosition();
-                    Logger(LogLevel::DEBUG) << "/" << socket->getIP() << ":" << socket->getPort()
-                        << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
                 }
             } catch (const ByteBuffer::BufferUnderflowException &e) {}
         }
