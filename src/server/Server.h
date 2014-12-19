@@ -28,7 +28,7 @@ public:
 
     Server();
 
-    ~Server();
+    virtual ~Server();
 
     void stop();
 

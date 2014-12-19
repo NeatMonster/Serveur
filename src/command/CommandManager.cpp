@@ -8,11 +8,13 @@
 #include <sstream>
 #include <vector>
 
-CommandManager::CommandManager() : reader(CommandReader(&queue)) {
+CommandManager::CommandManager() {
+    reader = new CommandReader(&queue);
     registerCommand(new CommandStop());
 };
 
 CommandManager::~CommandManager() {
+    delete reader;
     for (auto command : commands)
         delete command.second;
 };

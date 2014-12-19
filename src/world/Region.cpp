@@ -54,7 +54,6 @@ bool Region::getChunk(Chunk *chunk) {
         Section *section = chunk->sections[y];
         section->initialize(false);
         ushort blockCount = 0;
-        ushort_t *blockTypeData = new ushort_t[4096];
         ubyte_t blockType[4096];
         sectionCmpd->get("Blocks")->asByteArray()->get(blockType);
         ubyte_t blockData[2048];
@@ -63,12 +62,11 @@ bool Region::getChunk(Chunk *chunk) {
             if (blockType[i] > 0)
                 blockCount++;
             if (i % 2 == 0)
-                blockTypeData[i] = ((blockType[i] & 0xff) << 4) | (blockData[i / 2] & 0xf);
+                section->blockData[i] = ((blockType[i] & 0xff) << 4) | (blockData[i / 2] & 0xf);
             else
-                blockTypeData[i] = ((blockType[i] & 0xff) << 4) | ((blockData[i / 2] >> 4) & 0xf);
+                section->blockData[i] = ((blockType[i] & 0xff) << 4) | ((blockData[i / 2] >> 4) & 0xf);
         }
         section->blockCount = blockCount;
-        section->blockData = blockTypeData;
         sectionCmpd->get("BlockLight")->asByteArray()->get(section->blockLight);
         sectionCmpd->get("SkyLight")->asByteArray()->get(section->skyLight);
         section->initialized = true;

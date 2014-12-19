@@ -1,26 +1,34 @@
 #include "Logger.h"
 
-#include <iomanip>
+#include <chrono>
 #include <fstream>
+
+#define TIMEZONE 1
+
+using namespace std::chrono;
+typedef std::chrono::system_clock Clock;
 
 Logger::Logger(Logger::Level level) {
     lock = std::unique_lock<std::mutex>(mutex);
-    time_t now = ::time(0);
-    tm *ltm = localtime(&now);
-    *this << std::setfill('0') << "[" << std::setw(2) << ltm->tm_hour << ":"
-        << std::setw(2) << ltm->tm_min << ":" << std::setw(2) << ltm->tm_sec << " ";
+    Clock::duration time = Clock::now().time_since_epoch();
+    string_t h = std::to_string((duration_cast<hours>(time).count() + TIMEZONE) % 24);
+    string_t m = std::to_string(duration_cast<minutes>(time).count() % 60);
+    string_t s = std::to_string(duration_cast<seconds>(time).count() % 60);
+    *this << "[" << (h.length() == 1 ? "0" + h : h);
+    *this << ":" << (m.length() == 1 ? "0" + m : m);
+    *this << ":" << (s.length() == 1 ? "0" + s : s);
     switch (level) {
         case Level::INFO:
-            *this << "INFO] ";
+            *this << " INFO] ";
             break;
         case Level::WARNING:
-            *this << "WARNING] ";
+            *this << " WARNING] ";
             break;
         case Level::SEVERE:
-            *this << "SEVERE] ";
+            *this << " SEVERE] ";
             break;
         case Level::DEBUG:
-            *this << "DEBUG] ";
+            *this << " DEBUG] ";
             break;
     }
 }

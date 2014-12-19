@@ -23,7 +23,7 @@ public:
 
 private:
     std::map<string_t, Command*> commands;
-    CommandReader reader;
+    CommandReader *reader;
     CommandQueue queue;
 };
 

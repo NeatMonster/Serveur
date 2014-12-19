@@ -10,7 +10,9 @@
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
-NetworkManager::NetworkManager() : running(false) {}
+NetworkManager::NetworkManager() : running(false), ticks(0) {
+    random = random_t(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
+}
 
 NetworkManager::~NetworkManager() {
     for (PlayerConnection *&connect : connects)
@@ -31,7 +33,6 @@ bool NetworkManager::start() {
         Logger() << "Démarrage du serveur sur " << ip << ":" << port << std::endl;
         running = true;
         thread = std::thread(&NetworkManager::run, this);
-        keepAliveThread = std::thread(&NetworkManager::runKeepAlive, this);
         return true;
     } catch (const ServerSocket::SocketBindException &e) {
         Logger(LogLevel::WARNING) << "IMPOSSIBLE DE SE LIER À L'IP ET AU PORT !" << std::endl;
@@ -64,15 +65,10 @@ void NetworkManager::handlePackets() {
     }
     for (PlayerConnection *&connect : connects)
         connect->handlePackets();
-}
-
-void NetworkManager::runKeepAlive() {
-    random_t rand = random_t(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
-    while (running) {
-        keepAliveId = rand();
+    if (ticks++ % 40 == 0) {
+        keepAliveId = random();
         for (Player *const &player : Server::getPlayers())
             player->sendPacket(new PacketKeepAlive(keepAliveId));
-        std::this_thread::sleep_for(seconds(2));
     }
 }
 

@@ -94,6 +94,7 @@ void PlayerConnection::runRead() {
             readBuffer.setPosition(readBuffer.getLimit());
             readBuffer.put(buffer, rcvd);
             readBuffer.setPosition(position);
+            ClientPacket *packet = nullptr;
             try {
                 while (readBuffer.getPosition() < readBuffer.getLimit()) {
                     varint_t packetLength;
@@ -102,7 +103,7 @@ void PlayerConnection::runRead() {
                         break;
                     varint_t packetId;
                     readBuffer.getVarInt(packetId);
-                    ClientPacket *packet = nullptr;
+                    packet = nullptr;
                     if (phase == HANDSHAKE && packetId == 0x00) {
                         packet = new PacketHandshake();
                         phase = LOGIN;
@@ -123,7 +124,10 @@ void PlayerConnection::runRead() {
                         readBuffer.clear();
                     position = readBuffer.getPosition();
                 }
-            } catch (const ByteBuffer::BufferUnderflowException &e) {}
+            } catch (const ByteBuffer::BufferUnderflowException &e) {
+                if (packet != nullptr)
+                    delete packet;
+            }
         }
     } catch (const ClientSocket::SocketReadException &e) {
         Logger() << "/" << socket->getIP() << ":" << socket->getPort() << " s'est déconnecté" << std::endl;
@@ -142,8 +146,10 @@ void PlayerConnection::runWrite() {
                 << " a reçu un paquet " << typeid(*packet).name() << std::endl;
             writeBuffer.clear();
             writeBuffer.setPosition(5);
-            writeBuffer.putVarInt(packet->getPacketId());
+            varint_t packetId = packet->getPacketId();
+            writeBuffer.putVarInt(packetId);
             packet->write(writeBuffer);
+            delete packet;
             varint_t packetLength = writeBuffer.getLimit() - 5;
             size_t position = 0;
             if (packetLength < 128)
@@ -158,12 +164,10 @@ void PlayerConnection::runWrite() {
             writeBuffer.putVarInt(packetLength);
             writeBuffer.setPosition(position);
             socket->transmit(writeBuffer.getArray() + position, writeBuffer.getLimit() - position);
-            if ((phase == LOGIN && packet->getPacketId() == 0x00)
-                    || (phase == PLAY && packet->getPacketId() == 0x40))
+            if ((phase == LOGIN && packetId == 0x00) || (phase == PLAY && packetId == 0x40))
                 close();
-            else if (phase == PLAY && packet->getPacketId() == 0x00)
+            else if (phase == PLAY && packetId == 0x00)
                 sentKeepAlive = Clock::now();
-            delete packet;
         }
     } catch (const ClientSocket::SocketWriteException &e) {
         Logger() << "/" << socket->getIP() << ":" << socket->getPort() << " s'est déconnecté" << std::endl;

@@ -11,7 +11,7 @@ using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
 int main() {
-    new Server();
+    delete new Server();
     return 0;
 }
 
@@ -85,7 +85,7 @@ World *Server::getWorld() {
 }
 
 void Server::sendMessage(ChatMessage &message) {
-    Logger() << message.getText();
+    Logger() << message.getText() << std::endl;
 }
 
 Server *Server::instance;

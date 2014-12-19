@@ -23,15 +23,14 @@ public:
 
 private:
     bool running;
+    long_t ticks;
+    random_t random;
     std::thread thread;
     ServerSocket *socket;
     std::vector<PlayerConnection*> connects;
     varint_t keepAliveId;
-    std::thread keepAliveThread;
 
     void run();
-
-    void runKeepAlive();
 };
 
 #endif /* defined(__Serveur__NetworkManager__) */
