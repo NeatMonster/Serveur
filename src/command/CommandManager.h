@@ -19,6 +19,8 @@ public:
 
     void processCommand(string_t, CommandSender*);
 
+    void performHelp(CommandSender*);
+
     void handleCommands();
 
 private:

@@ -19,11 +19,13 @@ public:
         WrongUsageException(string_t message) : CommandException(message) {};
     };
 
-    Command(string_t, std::vector<string_t>);
+    Command(string_t, std::vector<string_t>, string_t);
 
     virtual ~Command();
 
     string_t getName();
+
+    string_t getDescription();
 
     std::vector<string_t> getAliases();
 
@@ -31,6 +33,7 @@ public:
 
 private:
     string_t name;
+    string_t description; //Une description se doit être la plus courte possible.
     std::vector<string_t> aliases;
 };
 

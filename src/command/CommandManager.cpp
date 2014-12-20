@@ -34,7 +34,9 @@ void CommandManager::processCommand(string_t s, CommandSender *sender) {
     string_t name = args[0];
     args.erase(args.begin());
     std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-    if (commands.find(name) == commands.end())
+    if (name == "help")
+        performHelp(sender);
+    else if (commands.find(name) == commands.end())
         sender->sendMessage(Chat() << "Commande inconnue. Essayez /help pour une liste des commandes.");
     else
         try {
@@ -44,6 +46,15 @@ void CommandManager::processCommand(string_t s, CommandSender *sender) {
         } catch (const Command::CommandException &e) {
             sender->sendMessage(Chat() << Color::RED << "Erreur : " << e.what());
         }
+}
+
+void CommandManager::performHelp(CommandSender *sender) {
+    sender->sendMessage(Chat() << "Liste des commandes disponibles : ");
+    std::map<string_t,Command*>::iterator it;
+    for(it = commands.begin(); it != commands.end(); it++)
+    {
+        sender->sendMessage(Chat() << " - " << ChatMessage::Style::BOLD << it->second->getName() << ChatMessage::Style::RESET << " : " << it->second->getDescription());
+    }
 }
 
 void CommandManager::handleCommands() {
