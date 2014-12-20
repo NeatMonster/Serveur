@@ -24,7 +24,7 @@ public:
 
     static Player *getPlayer(string_t);
 
-    static std::unordered_set<Player*> getPlayers();
+    static std::unordered_set<Player*> &getPlayers();
 
     Server();
 

@@ -39,7 +39,7 @@ Player *Server::getPlayer(string_t name) {
     return nullptr;
 }
 
-std::unordered_set<Player*> Server::getPlayers() {
+std::unordered_set<Player*> &Server::getPlayers() {
     return instance->players;
 }
 

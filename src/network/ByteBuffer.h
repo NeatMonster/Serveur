@@ -83,6 +83,8 @@ public:
 
     void clear();
 
+    void reserve(size_t);
+
     ubyte_t *getArray();
 
     size_t getLimit();

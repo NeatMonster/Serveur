@@ -32,10 +32,6 @@ void ClientSocket::open() {
 }
 
 size_t ClientSocket::transmit(ubyte_t *buffer, size_t size) {
-    if (buffer == nullptr)
-        throw InvalidArgumentException("Buffer invalide.");
-    else if (size == 0)
-        return 0;
     int count = ::send(handle, buffer, size, 0);
     if (count < 0) {
         if (errno == EWOULDBLOCK)

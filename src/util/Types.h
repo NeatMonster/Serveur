@@ -40,11 +40,7 @@ struct position_t {
         | (((long_t) y & 0xfff) << 26) | (((long_t) z & 0x3ffffff))) {}
 };
 
-typedef std::linear_congruential_engine<std::uint_fast64_t, 0x5deece66d, 0xb, 0xffffffffffff> random_t;
-
-struct InvalidArgumentException : std::runtime_error {
-    InvalidArgumentException(string_t s) : std::runtime_error(s) {}
-};
+typedef std::default_random_engine random_t;
 
 template<class T>
 inline T abs(T x) {
@@ -76,14 +72,6 @@ inline int_t floor_f(float_t x) {
 
 inline long_t floor_d(double_t x) {
     return x >= 0 ? (long_t) x : ((long_t) x) - 1;
-}
-
-template<class T>
-inline bool contains(T x, std::vector<T> vec) {
-    for (T &y : vec)
-        if (x == y)
-            return true;
-    return false;
 }
 
 #endif /* defined(__Serveur__Types__) */

@@ -47,6 +47,8 @@ bool PlayerConnection::isClosed() {
 }
 
 string_t PlayerConnection::getName() {
+    if (handler->name.empty())
+        return "/" + socket->getIP() + ":" + std::to_string(socket->getPort());
     return handler->name;
 }
 
@@ -87,12 +89,11 @@ PacketFactory PlayerConnection::factory;
 
 void PlayerConnection::runRead() {
     try {
-        ubyte_t buffer[BUFFER_SIZE];
         size_t position = 0;
         while (!closed) {
-            size_t rcvd = socket->receive(buffer, sizeof(buffer));
-            readBuffer.setPosition(readBuffer.getLimit());
-            readBuffer.put(buffer, rcvd);
+            readBuffer.reserve(readBuffer.getLimit() + BUFFER_SIZE);
+            size_t rcvd = socket->receive(readBuffer.getArray() + readBuffer.getLimit(), BUFFER_SIZE);
+            readBuffer.setLimit(readBuffer.getLimit() + rcvd);
             readBuffer.setPosition(position);
             ClientPacket *packet = nullptr;
             try {
@@ -117,8 +118,7 @@ void PlayerConnection::runRead() {
                     }
                     packet->setLength(packetLength);
                     packet->read(readBuffer);
-                    Logger(LogLevel::DEBUG) << "/" << socket->getIP() << ":" << socket->getPort()
-                        << " a envoyé un paquet " << typeid(*packet).name() << std::endl;
+                    Logger(LogLevel::DEBUG) << "<" << getName() << " -> Serveur> " << typeid(*packet).name() << std::endl;
                     readQueue.push(packet);
                     if (readBuffer.getPosition() == readBuffer.getLimit())
                         readBuffer.clear();
@@ -130,7 +130,7 @@ void PlayerConnection::runRead() {
             }
         }
     } catch (const ClientSocket::SocketReadException &e) {
-        Logger() << "/" << socket->getIP() << ":" << socket->getPort() << " s'est déconnecté" << std::endl;
+        Logger() << "<" << getName() << " <-> Serveur> s'est déconnecté" << std::endl;
         close();
     }
 }
@@ -142,8 +142,7 @@ void PlayerConnection::runWrite() {
             writeQueue.pop(packet);
             if (closed)
                 break;
-            Logger(LogLevel::DEBUG) << "/" << socket->getIP() << ":" << socket->getPort()
-                << " a reçu un paquet " << typeid(*packet).name() << std::endl;
+            Logger(LogLevel::DEBUG) << "<" << getName() << " <- Serveur> " << typeid(*packet).name() << std::endl;
             writeBuffer.clear();
             writeBuffer.setPosition(5);
             varint_t packetId = packet->getPacketId();
@@ -170,7 +169,7 @@ void PlayerConnection::runWrite() {
                 sentKeepAlive = Clock::now();
         }
     } catch (const ClientSocket::SocketWriteException &e) {
-        Logger() << "/" << socket->getIP() << ":" << socket->getPort() << " s'est déconnecté" << std::endl;
+        Logger() << "<" << getName() << " <-> Serveur> s'est déconnecté" << std::endl;
         close();
     }
 }

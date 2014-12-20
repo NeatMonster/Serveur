@@ -76,8 +76,8 @@ void NetworkManager::run() {
     while (running) {
         try {
             ClientSocket *clientSocket = socket->accept();
-            Logger() << "/" << clientSocket->getIP() << ":" <<
-                clientSocket->getPort() << " s'est connecté" << std::endl;
+            Logger() << "</" << clientSocket->getIP() << ":" <<
+                clientSocket->getPort() << " <-> Serveur> s'est connecté" << std::endl;
             connects.push_back(new PlayerConnection(clientSocket));
         } catch (const ServerSocket::SocketAcceptException &e) {}
     }

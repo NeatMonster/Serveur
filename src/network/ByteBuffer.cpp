@@ -195,6 +195,11 @@ void ByteBuffer::clear() {
     position = limit = 0;
 }
 
+void ByteBuffer::reserve(size_t size) {
+    if (size > buffer.size())
+        setSize(size);
+}
+
 ubyte_t *ByteBuffer::getArray() {
     return buffer.data();
 }

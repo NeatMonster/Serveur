@@ -28,7 +28,7 @@ int_t Chunk::getZ() {
     return z;
 }
 
-std::unordered_set<Player*> Chunk::getPlayers() {
+std::unordered_set<Player*> &Chunk::getPlayers() {
     return players;
 }
 
