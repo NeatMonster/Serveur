@@ -31,7 +31,7 @@ public:
 
     int_t getZ();
 
-    std::unordered_set<Player*> &getPlayers();
+    const std::unordered_set<Player*> &getPlayers();
 
     void addPlayer(Player*);
 
