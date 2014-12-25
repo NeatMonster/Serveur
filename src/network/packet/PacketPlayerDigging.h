@@ -6,7 +6,7 @@
 class PacketPlayerDigging : public ClientPacket {
 public:
     varint_t status;
-    position_t location;
+    Position location;
     ubyte_t face;
 
     void read(ByteBuffer&);

@@ -28,19 +28,19 @@ typedef std::string string_t;
 typedef std::vector<int_t> ints_t;
 typedef std::vector<uint_t> uints_t;
 
-struct position_t {
+struct Position {
     int_t x, y, z;
-    long_t pos;
+    long_t l;
 
-    position_t() {}
+    Position() {}
 
-    position_t(long_t pos) : x(pos >> 38), y((pos >> 26) & 0xfff), z(pos << 38 >> 38), pos(pos) {}
+    Position(long_t l) : x(l >> 38), y((l >> 26) & 0xfff), z(l << 38 >> 38), l(l) {}
 
-    position_t(int_t x, int_t y, int_t z) : x(x), y(y), z(z), pos((((long_t) x & 0x3ffffff) << 38)
+    Position(int_t x, int_t y, int_t z) : x(x), y(y), z(z), l((((long_t) x & 0x3ffffff) << 38)
         | (((long_t) y & 0xfff) << 26) | (((long_t) z & 0x3ffffff))) {}
 };
 
-typedef std::default_random_engine random_t;
+typedef std::default_random_engine Random;
 
 template<class T>
 inline T abs(T x) {

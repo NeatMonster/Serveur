@@ -24,7 +24,7 @@ public:
 private:
     bool running;
     long_t ticks;
-    random_t random;
+    Random random;
     std::thread thread;
     ServerSocket *socket;
     std::vector<PlayerConnection*> connects;

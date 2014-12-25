@@ -10,7 +10,7 @@ public:
     void write(ByteBuffer&);
 
 private:
-    position_t location;
+    Position location;
 };
 
 #endif /* defined(__Serveur__PacketSpawnPosition__) */

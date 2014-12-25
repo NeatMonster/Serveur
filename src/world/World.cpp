@@ -29,12 +29,12 @@ Level *World::getLevel() {
     return level;
 }
 
-std::unordered_set<Player*> World::getPlayers() {
+const std::unordered_set<Player*> &World::getPlayers() {
     return players;
 }
 
 void World::addPlayer(Player *player) {
-    position_t spawn = getLevel()->getSpawn();
+    Position spawn = getLevel()->getSpawn();
     player->setPosition(spawn.x, spawn.y, spawn.z);
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
     int_t zChunk = (int_t) floor(player->getZ()) >> 4;

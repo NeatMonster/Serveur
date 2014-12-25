@@ -22,7 +22,7 @@ public:
 
     string_t getName();
 
-    std::unordered_set<Player*> getPlayers();
+    const std::unordered_set<Player*> &getPlayers();
 
     void addPlayer(Player*);
 

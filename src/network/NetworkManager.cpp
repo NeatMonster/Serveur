@@ -11,7 +11,7 @@ using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
 NetworkManager::NetworkManager() : running(false), ticks(0) {
-    random = random_t(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
+    random = Random(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
 }
 
 NetworkManager::~NetworkManager() {

@@ -19,15 +19,15 @@ public:
 
     void setDayTime(int_t);
 
-    position_t getSpawn();
+    Position getSpawn();
 
-    void setSpawn(position_t);
+    void setSpawn(Position);
 
 private:
     std::fstream file;
     long_t time;
     int_t dayTime;
-    position_t spawn;
+    Position spawn;
 };
 
 #endif /* defined(__Serveur__Level__) */

@@ -161,7 +161,6 @@ void PlayerConnection::runWrite() {
                 position = 1;
             writeBuffer.setPosition(position);
             writeBuffer.putVarInt(packetLength);
-            writeBuffer.setPosition(position);
             socket->transmit(writeBuffer.getArray() + position, writeBuffer.getLimit() - position);
             if ((phase == LOGIN && packetId == 0x00) || (phase == PLAY && packetId == 0x40))
                 close();

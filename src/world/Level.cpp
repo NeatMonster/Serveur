@@ -23,12 +23,12 @@ Level::Level(string_t worldName) {
         int_t spawnX = data->get("SpawnX")->asInt()->get();
         int_t spawnY = data->get("SpawnY")->asInt()->get();
         int_t spawnZ = data->get("SpawnZ")->asInt()->get();
-        spawn = position_t(spawnX, spawnY, spawnZ);
+        spawn = Position(spawnX, spawnY, spawnZ);
         delete root;
         std::free(plain);
     } else {
         time = dayTime = 0;
-        spawn = position_t(8, 4, 8);
+        spawn = Position(8, 4, 8);
     }
 }
 
@@ -50,10 +50,10 @@ void Level::setDayTime(int_t dayTime) {
     this->dayTime = dayTime;
 }
 
-position_t Level::getSpawn() {
+Position Level::getSpawn() {
     return spawn;
 }
 
-void Level::setSpawn(position_t spawn) {
+void Level::setSpawn(Position spawn) {
     this->spawn = spawn;
 }
