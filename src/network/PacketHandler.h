@@ -12,6 +12,7 @@ class PacketPlayer;
 class PacketPlayerLook;
 class PacketPlayerPosition;
 class PacketPlayerPositionLook;
+class PacketCreativeInventoryAction;
 class PlayerConnection;
 
 class PacketHandler {
@@ -37,6 +38,8 @@ public:
     void handlePlayerPositionLook(PacketPlayerPositionLook*);
 
     void handleAnimation(PacketAnimation*);
+
+    void handleCreativeInventoryAction(PacketCreativeInventoryAction*);
 
 private:
     PlayerConnection *connect;

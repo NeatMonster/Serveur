@@ -4,6 +4,7 @@
 #include "ChatMessage.h"
 #include "CommandSender.h"
 #include "LivingEntity.h"
+#include "Inventory.h"
 
 class PlayerConnection;
 class ServerPacket;
@@ -23,7 +24,7 @@ public:
     string_t getUUID();
 
     string_t getName();
-    
+
     string_t getIP();
 
     ushort_t getPort();
@@ -40,9 +41,12 @@ public:
 
     void onQuitGame();
 
+    Inventory &getInventory();
+
     virtual void onTick();
 
 private:
+    Inventory inventory;
     PlayerConnection *connect;
     string_t uuid;
     string_t name;
