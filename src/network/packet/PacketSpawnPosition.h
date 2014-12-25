@@ -7,7 +7,7 @@ class PacketSpawnPosition : public ServerPacket {
 public:
     PacketSpawnPosition(int_t, int_t, int_t);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     Position location;

@@ -32,7 +32,7 @@ public:
 
     virtual ~NBTTag();
 
-    static NBTTag *read(ubyte_t*&);
+    static NBTTagCompound *read(ubyte_t*&);
 
     void write(ubyte_t*&);
 

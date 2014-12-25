@@ -98,8 +98,7 @@ float_t Player::getPing() {
     return connect->getPing();
 }
 
-Inventory &Player::getInventory()
-{
+InventoryPlayer &Player::getInventory() {
     return inventory;
 }
 

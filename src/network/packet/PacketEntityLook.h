@@ -12,7 +12,7 @@ public:
 
     PacketEntityLook();
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketEntityLook__) */

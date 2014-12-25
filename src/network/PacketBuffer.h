@@ -1,17 +1,19 @@
-#ifndef __Serveur__ByteBuffer__
-#define __Serveur__ByteBuffer__
+#ifndef __Serveur__PacketBuffer__
+#define __Serveur__PacketBuffer__
 
+#include "ItemStack.h"
+#include "NBTTagCompound.h"
 #include "Types.h"
 
 #include <stdexcept>
 
-class ByteBuffer {
+class PacketBuffer {
 public:
     struct BufferUnderflowException : public std::runtime_error {
         BufferUnderflowException() : runtime_error("Pas assez de données.") {}
     };
 
-    ByteBuffer();
+    PacketBuffer();
 
     void get(ubyte_t*);
 
@@ -47,6 +49,10 @@ public:
 
     void getString(string_t&);
 
+    void getItemStack(ItemStack*&);
+
+    void getNBT(NBTTagCompound*&);
+
     void put(ubyte_t*);
 
     void put(ubyte_t*, size_t);
@@ -81,6 +87,10 @@ public:
 
     void putString(string_t);
 
+    void putItemStack(ItemStack*);
+
+    void putNBT(NBTTagCompound*);
+
     void clear();
 
     void reserve(size_t);
@@ -104,4 +114,4 @@ private:
     size_t position, limit;
 };
 
-#endif /* defined(__Serveur__ByteBuffer__) */
+#endif /* defined(__Serveur__PacketBuffer__) */

@@ -4,7 +4,7 @@ PacketDestroyEntities::PacketDestroyEntities(std::unordered_set<varint_t> entity
     this->entityIds = entityIds;
 }
 
-void PacketDestroyEntities::write(ByteBuffer &buffer) {
+void PacketDestroyEntities::write(PacketBuffer &buffer) {
     buffer.putVarInt(entityIds.size());
     for (varint_t const &entityId : entityIds)
         buffer.putVarInt(entityId);

@@ -15,9 +15,9 @@ public:
 
     PacketPlayerAbilities();
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketPlayerAbilities__) */

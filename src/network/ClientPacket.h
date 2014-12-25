@@ -1,7 +1,7 @@
 #ifndef __Serveur__ClientPacket__
 #define __Serveur__ClientPacket__
 
-#include "ByteBuffer.h"
+#include "PacketBuffer.h"
 #include "Packet.h"
 
 class PacketHandler;
@@ -10,7 +10,7 @@ class ClientPacket : virtual public Packet {
 public:
     virtual ~ClientPacket();
 
-    virtual void read(ByteBuffer&) = 0;
+    virtual void read(PacketBuffer&) = 0;
 
     virtual void handle(PacketHandler*);
 

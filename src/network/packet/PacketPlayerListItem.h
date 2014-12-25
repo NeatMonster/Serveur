@@ -14,7 +14,7 @@ public:
 
     PacketPlayerListItem(Type, std::unordered_set<Player*>);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     struct Action {

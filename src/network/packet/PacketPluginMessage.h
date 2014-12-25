@@ -8,7 +8,7 @@ public:
     string_t channel;
     ubytes_t data;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketPluginMessage__) */

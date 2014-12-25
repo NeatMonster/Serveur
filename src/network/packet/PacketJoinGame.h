@@ -15,7 +15,7 @@ public:
 
     PacketJoinGame();
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 };
 
 

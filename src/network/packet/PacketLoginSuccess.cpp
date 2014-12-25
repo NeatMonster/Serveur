@@ -5,7 +5,7 @@ PacketLoginSuccess::PacketLoginSuccess(string_t uuid, string_t name) : ServerPac
     this->name = name;
 }
 
-void PacketLoginSuccess::write(ByteBuffer &buffer) {
+void PacketLoginSuccess::write(PacketBuffer &buffer) {
     buffer.putString(uuid);
     buffer.putString(name);
 }

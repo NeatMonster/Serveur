@@ -2,19 +2,18 @@
 #define __Serveur__PacketCreativeInventoryAction__
 
 #include "ClientPacket.h"
-#include "SlotData.h"
+#include "ItemStack.h"
 
-class PacketCreativeInventoryAction : public ClientPacket
-{
+class PacketCreativeInventoryAction : public ClientPacket {
 public:
-    void read(ByteBuffer&);
-
-    void handle(PacketHandler*);
-
     short_t slot;
-    SlotData* clickedItem;
+    ItemStack* item;
 
     ~PacketCreativeInventoryAction();
+
+    void read(PacketBuffer&);
+
+    void handle(PacketHandler*);
 };
 
-#endif
+#endif /* defined(__Serveur__PacketCreativeInventoryAction__) */

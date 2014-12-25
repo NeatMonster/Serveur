@@ -4,6 +4,6 @@ PacketSpawnPosition::PacketSpawnPosition(int_t x, int_t y, int_t z) : ServerPack
     this->location = Position(x, y, z);
 }
 
-void PacketSpawnPosition::write(ByteBuffer &buffer) {
+void PacketSpawnPosition::write(PacketBuffer &buffer) {
     buffer.putLong(location.l);
 }

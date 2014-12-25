@@ -1,5 +1,5 @@
 #include "PacketClientStatus.h"
 
-void PacketClientStatus::read(ByteBuffer &buffer) {
+void PacketClientStatus::read(PacketBuffer &buffer) {
     buffer.getVarInt(actionId);
 }

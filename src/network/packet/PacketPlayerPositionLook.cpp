@@ -4,7 +4,7 @@
 
 PacketPlayerPositionLook::PacketPlayerPositionLook() : ServerPacket(0x08) {};
 
-void PacketPlayerPositionLook::read(ByteBuffer &buffer) {
+void PacketPlayerPositionLook::read(PacketBuffer &buffer) {
     buffer.getDouble(x);
     buffer.getDouble(y);
     buffer.getDouble(z);
@@ -13,7 +13,7 @@ void PacketPlayerPositionLook::read(ByteBuffer &buffer) {
     buffer.getBool(onGround);
 }
 
-void PacketPlayerPositionLook::write(ByteBuffer &buffer) {
+void PacketPlayerPositionLook::write(PacketBuffer &buffer) {
     buffer.putDouble(x);
     buffer.putDouble(y);
     buffer.putDouble(z);

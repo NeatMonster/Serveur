@@ -1,6 +1,6 @@
 #include "PacketUseEntity.h"
 
-void PacketUseEntity::read(ByteBuffer &buffer) {
+void PacketUseEntity::read(PacketBuffer &buffer) {
     buffer.getVarInt(target);
     buffer.getVarInt(type);
     if (type == 2) {

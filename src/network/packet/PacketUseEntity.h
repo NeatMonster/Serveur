@@ -11,7 +11,7 @@ public:
     float_t targetY;
     float_t targetZ;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketUseEntity__) */

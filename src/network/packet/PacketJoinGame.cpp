@@ -2,7 +2,7 @@
 
 PacketJoinGame::PacketJoinGame() : ServerPacket(0x01) {}
 
-void PacketJoinGame::write(ByteBuffer &buffer) {
+void PacketJoinGame::write(PacketBuffer &buffer) {
     buffer.putInt(entityId);
     buffer.putUByte(gameMode);
     buffer.putByte(dimension);

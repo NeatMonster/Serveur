@@ -5,7 +5,7 @@ PacketTimeUpdate::PacketTimeUpdate(long_t time, long_t dayTime) : ServerPacket(0
     this->dayTime = dayTime;
 };
 
-void PacketTimeUpdate::write(ByteBuffer &buffer) {
+void PacketTimeUpdate::write(PacketBuffer &buffer) {
     buffer.putLong(time);
     buffer.putLong(dayTime);
 }

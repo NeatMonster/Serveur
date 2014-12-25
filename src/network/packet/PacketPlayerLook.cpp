@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-void PacketPlayerLook::read(ByteBuffer &buffer) {
+void PacketPlayerLook::read(PacketBuffer &buffer) {
     buffer.getFloat(yaw);
     buffer.getFloat(pitch);
     buffer.getBool(onGround);

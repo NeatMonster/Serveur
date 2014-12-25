@@ -7,7 +7,7 @@ class PacketHeldItemChange : public ClientPacket {
 public:
     short_t slot;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketHeldItemChange__) */

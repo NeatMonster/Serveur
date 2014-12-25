@@ -16,9 +16,9 @@ public:
 
     PacketPlayerPositionLook();
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
     void handle(PacketHandler*);
 };

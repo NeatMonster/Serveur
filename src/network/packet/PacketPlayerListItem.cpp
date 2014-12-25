@@ -17,7 +17,7 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<Player*
     }
 }
 
-void PacketPlayerListItem::write(ByteBuffer &buffer) {
+void PacketPlayerListItem::write(PacketBuffer &buffer) {
     buffer.putVarInt(type);
     buffer.putVarInt(actions.size());
     for (Action const &action : actions) {

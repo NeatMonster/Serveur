@@ -9,9 +9,9 @@ PacketAnimation::PacketAnimation(varint_t entityId, ubyte_t animationId) : Packe
     this->animationId = animationId;
 }
 
-void PacketAnimation::read(ByteBuffer&) {}
+void PacketAnimation::read(PacketBuffer&) {}
 
-void PacketAnimation::write(ByteBuffer &buffer) {
+void PacketAnimation::write(PacketBuffer &buffer) {
     buffer.putVarInt(entityId);
     buffer.putUByte(animationId);
 }

@@ -18,9 +18,9 @@ NBTTag::NBTTag(Type type) : type(type) {}
 
 NBTTag::~NBTTag() {}
 
-NBTTag *NBTTag::read(ubyte_t *&data) {
+NBTTagCompound *NBTTag::read(ubyte_t *&data) {
     Type type = (Type) *(data++);
-    return NBTTag::read(data, type, true);
+    return (NBTTagCompound*) NBTTag::read(data, type, true);
 }
 
 void NBTTag::write(ubyte_t *&data) {

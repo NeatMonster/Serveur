@@ -9,7 +9,7 @@ public:
     varint_t actionId;
     varint_t jumpBoost;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketEntityAction__) */

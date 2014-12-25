@@ -1,7 +1,7 @@
 #ifndef __Serveur__ServerPacket__
 #define __Serveur__ServerPacket__
 
-#include "ByteBuffer.h"
+#include "PacketBuffer.h"
 #include "Packet.h"
 
 class ServerPacket : virtual public Packet {
@@ -10,7 +10,7 @@ public:
 
     virtual ~ServerPacket();
 
-    virtual void write(ByteBuffer&) = 0;
+    virtual void write(PacketBuffer&) = 0;
 
     varint_t getPacketId();
 

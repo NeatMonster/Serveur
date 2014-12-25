@@ -2,7 +2,7 @@
 
 PacketEntityTeleport::PacketEntityTeleport() : ServerPacket(0x18) {}
 
-void PacketEntityTeleport::write(ByteBuffer &buffer) {
+void PacketEntityTeleport::write(PacketBuffer &buffer) {
     buffer.putVarInt(entityId);
     buffer.putInt(x);
     buffer.putInt(y);

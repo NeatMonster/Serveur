@@ -7,7 +7,7 @@ class PacketLoginSuccess : public ServerPacket {
 public:
     PacketLoginSuccess(string_t, string_t);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     string_t uuid;

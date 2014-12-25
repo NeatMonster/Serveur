@@ -1,5 +1,5 @@
 #include "PacketHeldItemChange.h"
 
-void PacketHeldItemChange::read(ByteBuffer &buffer) {
+void PacketHeldItemChange::read(PacketBuffer &buffer) {
     buffer.getShort(slot);
 }

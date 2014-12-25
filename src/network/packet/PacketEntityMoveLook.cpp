@@ -2,7 +2,7 @@
 
 PacketEntityMoveLook::PacketEntityMoveLook() : ServerPacket(0x17) {}
 
-void PacketEntityMoveLook::write(ByteBuffer &buffer) {
+void PacketEntityMoveLook::write(PacketBuffer &buffer) {
     buffer.putVarInt(entityId);
     buffer.putByte(dX);
     buffer.putByte(dY);

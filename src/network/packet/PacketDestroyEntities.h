@@ -9,7 +9,7 @@ class PacketDestroyEntities : public ServerPacket {
 public:
     PacketDestroyEntities(std::unordered_set<varint_t>);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     std::unordered_set<varint_t> entityIds;

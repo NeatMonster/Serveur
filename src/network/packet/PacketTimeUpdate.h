@@ -7,7 +7,7 @@ class PacketTimeUpdate : public ServerPacket {
 public:
     PacketTimeUpdate(long_t, long_t);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     long_t time;

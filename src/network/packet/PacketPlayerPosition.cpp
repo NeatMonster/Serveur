@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-void PacketPlayerPosition::read(ByteBuffer &buffer) {
+void PacketPlayerPosition::read(PacketBuffer &buffer) {
     buffer.getDouble(x);
     buffer.getDouble(y);
     buffer.getDouble(z);

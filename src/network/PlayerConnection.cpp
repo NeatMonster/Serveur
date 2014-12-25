@@ -124,7 +124,7 @@ void PlayerConnection::runRead() {
                         readBuffer.clear();
                     position = readBuffer.getPosition();
                 }
-            } catch (const ByteBuffer::BufferUnderflowException &e) {
+            } catch (const PacketBuffer::BufferUnderflowException &e) {
                 if (packet != nullptr)
                     delete packet;
             }

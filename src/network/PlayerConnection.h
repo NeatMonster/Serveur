@@ -1,7 +1,7 @@
 #ifndef __Serveur__PlayerConnection__
 #define __Serveur__PlayerConnection__
 
-#include "ByteBuffer.h"
+#include "PacketBuffer.h"
 #include "ClientSocket.h"
 #include "PacketFactory.h"
 #include "PacketQueue.h"
@@ -56,8 +56,8 @@ private:
     ClientSocket *socket;
     std::thread readThread;
     std::thread writeThread;
-    ByteBuffer readBuffer;
-    ByteBuffer writeBuffer;
+    PacketBuffer readBuffer;
+    PacketBuffer writeBuffer;
     PacketQueue<ClientPacket*> readQueue;
     PacketQueue<ServerPacket*> writeQueue;
     PacketHandler *handler;

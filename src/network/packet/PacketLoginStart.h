@@ -7,7 +7,7 @@ class PacketLoginStart : public ClientPacket {
 public:
     string_t name;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 
     void handle(PacketHandler*);
 };

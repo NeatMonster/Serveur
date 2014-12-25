@@ -1,6 +1,6 @@
 #include "PacketPlayerDigging.h"
 
-void PacketPlayerDigging::read(ByteBuffer &buffer) {
+void PacketPlayerDigging::read(PacketBuffer &buffer) {
     buffer.getVarInt(status);
     long_t location;
     buffer.getLong(location);

@@ -12,7 +12,7 @@ public:
 
     ~PacketMapChunkBulk();
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     bool skyLight;

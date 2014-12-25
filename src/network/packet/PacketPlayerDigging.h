@@ -9,7 +9,7 @@ public:
     Position location;
     ubyte_t face;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketPlayerDigging__) */

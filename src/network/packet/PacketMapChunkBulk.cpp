@@ -22,7 +22,7 @@ PacketMapChunkBulk::~PacketMapChunkBulk() {
     delete[] data;
 }
 
-void PacketMapChunkBulk::write(ByteBuffer &buffer) {
+void PacketMapChunkBulk::write(PacketBuffer &buffer) {
     buffer.putBool(skyLight);
     buffer.putVarInt(meta.size());
     for (Chunk::Meta &meta : this->meta) {

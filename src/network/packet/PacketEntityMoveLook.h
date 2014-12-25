@@ -15,7 +15,7 @@ public:
 
     PacketEntityMoveLook();
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketEntityMoveLook__) */

@@ -11,7 +11,7 @@ public:
     bool chatColours;
     ubyte_t displayedSkinParts;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketClientSettings__) */

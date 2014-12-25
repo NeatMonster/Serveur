@@ -7,11 +7,11 @@ PacketChatMessage::PacketChatMessage(string_t message) : PacketChatMessage() {
     position = 0;
 };
 
-void PacketChatMessage::read(ByteBuffer &buffer) {
+void PacketChatMessage::read(PacketBuffer &buffer) {
     buffer.getString(message);
 }
 
-void PacketChatMessage::write(ByteBuffer &buffer) {
+void PacketChatMessage::write(PacketBuffer &buffer) {
     buffer.putString(message);
     buffer.putByte(position);
 }

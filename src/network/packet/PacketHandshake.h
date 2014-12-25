@@ -10,7 +10,7 @@ public:
     ushort_t serverPort;
     varint_t nextState;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 
     void handle(PacketHandler*);
 };

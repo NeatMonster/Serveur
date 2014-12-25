@@ -8,11 +8,11 @@ PacketKeepAlive::PacketKeepAlive(varint_t keepAliveId) : PacketKeepAlive() {
     this->keepAliveId = keepAliveId;
 }
 
-void PacketKeepAlive::read(ByteBuffer &buffer) {
+void PacketKeepAlive::read(PacketBuffer &buffer) {
     buffer.getVarInt(keepAliveId);
 }
 
-void PacketKeepAlive::write(ByteBuffer &buffer) {
+void PacketKeepAlive::write(PacketBuffer &buffer) {
     buffer.putVarInt(keepAliveId);
 }
 

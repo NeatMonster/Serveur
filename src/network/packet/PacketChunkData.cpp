@@ -23,7 +23,7 @@ PacketChunkData::~PacketChunkData() {
     delete[] data;
 }
 
-void PacketChunkData::write(ByteBuffer &buffer) {
+void PacketChunkData::write(PacketBuffer &buffer) {
     buffer.putInt(meta.x);
     buffer.putInt(meta.z);
     buffer.putBool(continuous);

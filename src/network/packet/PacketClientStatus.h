@@ -7,7 +7,7 @@ class PacketClientStatus : public ClientPacket {
 public:
     varint_t actionId;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 };
 
 #endif /* defined(__Serveur__PacketClientStatus__) */

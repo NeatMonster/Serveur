@@ -2,7 +2,7 @@
 
 PacketPlayerAbilities::PacketPlayerAbilities() : ServerPacket(0x39) {}
 
-void PacketPlayerAbilities::read(ByteBuffer &buffer) {
+void PacketPlayerAbilities::read(PacketBuffer &buffer) {
     byte_t flags;
     buffer.getByte(flags);
     godMode |= flags << 3;
@@ -13,7 +13,7 @@ void PacketPlayerAbilities::read(ByteBuffer &buffer) {
     buffer.getFloat(walkingSpeed);
 }
 
-void PacketPlayerAbilities::write(ByteBuffer &buffer) {
+void PacketPlayerAbilities::write(PacketBuffer &buffer) {
     byte_t flags = 0;
     flags |= godMode << 3;
     flags |= canFly << 2;

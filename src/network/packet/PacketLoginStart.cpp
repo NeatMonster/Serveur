@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-void PacketLoginStart::read(ByteBuffer &buffer) {
+void PacketLoginStart::read(PacketBuffer &buffer) {
     buffer.getString(name);
 }
 

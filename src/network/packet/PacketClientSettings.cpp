@@ -1,6 +1,6 @@
 #include "PacketClientSettings.h"
 
-void PacketClientSettings::read(ByteBuffer &buffer) {
+void PacketClientSettings::read(PacketBuffer &buffer) {
     buffer.getString(locale);
     buffer.getByte(viewDistance);
     buffer.getByte(chatFlags);

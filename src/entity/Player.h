@@ -4,7 +4,7 @@
 #include "ChatMessage.h"
 #include "CommandSender.h"
 #include "LivingEntity.h"
-#include "Inventory.h"
+#include "InventoryPlayer.h"
 
 class PlayerConnection;
 class ServerPacket;
@@ -31,6 +31,8 @@ public:
 
     float_t getPing();
 
+    InventoryPlayer &getInventory();
+
     void sendMessage(ChatMessage&);
 
     void disconnect(string_t);
@@ -41,12 +43,10 @@ public:
 
     void onQuitGame();
 
-    Inventory &getInventory();
-
     virtual void onTick();
 
 private:
-    Inventory inventory;
+    InventoryPlayer inventory;
     PlayerConnection *connect;
     string_t uuid;
     string_t name;

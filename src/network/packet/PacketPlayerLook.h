@@ -9,7 +9,7 @@ public:
     float_t pitch;
     bool onGround;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 
     void handle(PacketHandler*);
 };

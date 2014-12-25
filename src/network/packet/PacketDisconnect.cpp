@@ -6,6 +6,6 @@ PacketDisconnect::PacketDisconnect(bool auth, string_t reason) : ServerPacket(au
     this->reason = reason;
 }
 
-void PacketDisconnect::write(ByteBuffer &buffer) {
+void PacketDisconnect::write(PacketBuffer &buffer) {
     buffer.putString(reason);
 }

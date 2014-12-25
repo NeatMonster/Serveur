@@ -10,7 +10,7 @@ public:
 
     ~PacketChunkData();
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     Chunk::Meta meta;

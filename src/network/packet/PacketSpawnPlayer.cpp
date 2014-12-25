@@ -20,7 +20,7 @@ PacketSpawnPlayer::PacketSpawnPlayer(Player *player) : ServerPacket(0x0c) {
     metadata[5] = 127;
 }
 
-void PacketSpawnPlayer::write(ByteBuffer &buffer) {
+void PacketSpawnPlayer::write(PacketBuffer &buffer) {
     buffer.putVarInt(entityId);
     buffer.putLong(std::stoull(uuid.substr(0, 8)
                              + uuid.substr(9, 4)

@@ -9,7 +9,7 @@ class PacketSpawnPlayer : public ServerPacket {
 public:
     PacketSpawnPlayer(Player*);
 
-    void write(ByteBuffer&);
+    void write(PacketBuffer&);
 
 private:
     varint_t entityId;

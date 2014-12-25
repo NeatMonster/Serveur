@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-void PacketPlayer::read(ByteBuffer &buffer) {
+void PacketPlayer::read(PacketBuffer &buffer) {
     buffer.getBool(onGround);
 }
 

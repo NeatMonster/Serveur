@@ -2,7 +2,7 @@
 
 #include "PacketHandler.h"
 
-void PacketHandshake::read(ByteBuffer &buffer) {
+void PacketHandshake::read(PacketBuffer &buffer) {
     buffer.getVarInt(protocol);
     buffer.getString(serverIP);
     buffer.getUShort(serverPort);

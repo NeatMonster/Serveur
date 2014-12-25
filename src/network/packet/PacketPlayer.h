@@ -7,7 +7,7 @@ class PacketPlayer : public ClientPacket {
 public:
     bool onGround;
 
-    void read(ByteBuffer&);
+    void read(PacketBuffer&);
 
     void handle(PacketHandler*);
 };
