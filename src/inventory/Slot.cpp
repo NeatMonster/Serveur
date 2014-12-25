@@ -7,5 +7,6 @@ ItemStack *Slot::getStack() {
 }
 
 void Slot::setStack(ItemStack *stack) {
+    delete this->stack;
     this->stack = stack;
 }
