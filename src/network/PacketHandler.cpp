@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "PacketAnimation.h"
 #include "PacketChatMessage.h"
+#include "PacketCreativeInventoryAction.h"
 #include "PacketHandshake.h"
 #include "PacketKeepAlive.h"
 #include "PacketLoginStart.h"
@@ -14,6 +15,7 @@
 #include "Player.h"
 #include "PlayerConnection.h"
 #include "Server.h"
+#include "Item.h"
 
 #include "polarssl/md5.h"
 
@@ -116,4 +118,15 @@ void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
 void PacketHandler::handleAnimation(PacketAnimation*) {
     for (Player *const &watcher : connect->player->getWatchers())
         watcher->sendPacket(new PacketAnimation(connect->player->getEntityId(), 0));
+}
+
+void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
+    Item* item = connect->player->getInventory().quickbar.getItem(0);
+
+    item->setID(packet->clickedItem->itemID);
+    item->setCount(packet->clickedItem->itemCount);
+
+    Logger(Logger::DEBUG) << "Le joueur " << connect->player->getName() << " s'est donné "
+        << connect->player->getInventory().quickbar.getItem(0)->getCount() << " unités de l'item avec l'ID : "
+        << connect->player->getInventory().quickbar.getItem(0)->getID() << std::endl;
 }

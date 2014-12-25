@@ -31,6 +31,8 @@ void CommandManager::processCommand(string_t s, CommandSender *sender) {
     std::istringstream ss(s, std::istringstream::in);
     while (ss >> arg)
         args.push_back(arg);
+    if(args.empty())
+        return;
     string_t name = args[0];
     args.erase(args.begin());
     std::transform(name.begin(), name.end(), name.begin(), ::tolower);

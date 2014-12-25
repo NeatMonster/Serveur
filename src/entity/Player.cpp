@@ -17,7 +17,7 @@
 #include "Server.h"
 #include "World.h"
 
-Player::Player(World *world, PlayerConnection *connect) : LivingEntity(world), connect(connect) {
+Player::Player(World *world, PlayerConnection *connect) : LivingEntity(world), connect(connect), inventory() {
     uuid = connect->getUUID();
     name = connect->getName();
     world->addPlayer(this);
@@ -96,6 +96,11 @@ ushort Player::getPort() {
 
 float_t Player::getPing() {
     return connect->getPing();
+}
+
+Inventory &Player::getInventory()
+{
+    return inventory;
 }
 
 void Player::sendMessage(ChatMessage &message) {
