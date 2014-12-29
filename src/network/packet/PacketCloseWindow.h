@@ -10,4 +10,4 @@ public:
     void read(PacketBuffer&);
 };
 
-#endif // __Serveur__PacketCloseWindow__
+#endif /* defined(__Serveur__PacketCloseWindow__) */
