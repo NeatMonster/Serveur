@@ -3,8 +3,8 @@
 Slot::Slot() : stack(nullptr) {}
 
 Slot::~Slot() {
-    if (this->stack != nullptr)
-        delete this->stack;
+    if (stack != nullptr)
+        delete stack;
 }
 
 ItemStack *Slot::getStack() {
