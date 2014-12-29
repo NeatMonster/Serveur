@@ -2,6 +2,11 @@
 
 NBTTagCompound::NBTTagCompound() : NBTTag(Type::COMPOUND) {}
 
+NBTTagCompound::NBTTagCompound(NBTTagCompound *tag) : NBTTag(tag) {
+    for (auto child : tag->children)
+        children[child.first] = child.second->clone();
+}
+
 NBTTagCompound::~NBTTagCompound() {
     for (auto child : children)
         delete child.second;
@@ -37,4 +42,8 @@ NBTTag *&NBTTagCompound::get(string_t name) {
 
 void NBTTagCompound::set(string_t name, NBTTag *&child) {
     children[name] = child;
+}
+
+NBTTagCompound *NBTTagCompound::clone() {
+    return new NBTTagCompound(this);
 }

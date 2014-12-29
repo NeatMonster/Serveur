@@ -14,6 +14,10 @@ public:
 
     ItemStack(short_t, byte_t, short_t);
 
+    ItemStack(ItemStack*);
+
+    ~ItemStack();
+
     short_t getType();
 
     byte_t getAmount();
@@ -21,6 +25,8 @@ public:
     short_t getDamage();
 
     NBTTagCompound *getNBT();
+
+    ItemStack *clone();
 
 private:
     short_t type;

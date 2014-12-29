@@ -7,6 +7,8 @@ class NBTTagInt : public NBTTag {
 public:
     NBTTagInt();
 
+    NBTTagInt(NBTTagInt*);
+
     void read(ubyte_t*&, bool);
 
     void write(ubyte_t*&, bool);
@@ -16,6 +18,8 @@ public:
     int_t get();
 
     void set(int_t);
+
+    NBTTagInt *clone();
 
 private:
     int_t value;

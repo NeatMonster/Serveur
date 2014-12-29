@@ -7,6 +7,8 @@ class Slot {
 public:
     Slot();
 
+    ~Slot();
+
     ItemStack *getStack();
 
     void setStack(ItemStack*);

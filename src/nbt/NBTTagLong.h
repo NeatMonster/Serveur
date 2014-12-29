@@ -7,6 +7,8 @@ class NBTTagLong : public NBTTag {
 public:
     NBTTagLong();
 
+    NBTTagLong(NBTTagLong*);
+
     void read(ubyte_t*&, bool);
 
     void write(ubyte_t*&, bool);
@@ -16,6 +18,8 @@ public:
     long_t get();
 
     void set(long_t);
+
+    NBTTagLong *clone();
 
 private:
     long_t value;

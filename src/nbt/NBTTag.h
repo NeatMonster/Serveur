@@ -30,6 +30,8 @@ public:
 
     NBTTag(Type);
 
+    NBTTag(NBTTag*);
+
     virtual ~NBTTag();
 
     static NBTTagCompound *read(ubyte_t*&);
@@ -81,6 +83,8 @@ public:
     bool isString();
 
     NBTTagString *asString();
+
+    virtual NBTTag* clone() = 0;
 
 protected:
     Type type;

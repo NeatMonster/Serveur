@@ -7,6 +7,8 @@ class NBTTagShort : public NBTTag {
 public:
     NBTTagShort();
 
+    NBTTagShort(NBTTagShort*);
+
     void read(ubyte_t*&, bool);
 
     void write(ubyte_t*&, bool);
@@ -16,6 +18,8 @@ public:
     short_t get();
 
     void set(short_t);
+
+    NBTTagShort *clone();
 
 private:
     short_t value;

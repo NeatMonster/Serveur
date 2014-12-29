@@ -2,6 +2,8 @@
 
 NBTTagByte::NBTTagByte() : NBTTag(Type::BYTE) {}
 
+NBTTagByte::NBTTagByte(NBTTagByte *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagByte::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     value = *(data++);
@@ -23,4 +25,8 @@ byte_t NBTTagByte::get() {
 
 void NBTTagByte::set(byte_t value) {
     this->value = value;
+}
+
+NBTTagByte *NBTTagByte::clone() {
+    return new NBTTagByte(this);
 }

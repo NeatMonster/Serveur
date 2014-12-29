@@ -2,6 +2,8 @@
 
 NBTTagInt::NBTTagInt() : NBTTag(Type::INT) {}
 
+NBTTagInt::NBTTagInt(NBTTagInt *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagInt::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     *(((ubyte_t*) &value) + 3) = *(data++);
@@ -29,4 +31,8 @@ int_t NBTTagInt::get() {
 
 void NBTTagInt::set(int_t value) {
     this->value = value;
+}
+
+NBTTagInt *NBTTagInt::clone() {
+    return new NBTTagInt(this);
 }

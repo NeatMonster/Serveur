@@ -4,6 +4,8 @@
 
 NBTTagIntArray::NBTTagIntArray() : NBTTag(Type::INT_ARRAY) {}
 
+NBTTagIntArray::NBTTagIntArray(NBTTagIntArray *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagIntArray::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     int_t size;
@@ -56,4 +58,8 @@ void NBTTagIntArray::get(int_t *dst) {
 void NBTTagIntArray::set(int_t *frm, int_t size) {
     value = ints_t(size);
     std::memcpy(value.data(), frm, 4 * size);
+}
+
+NBTTagIntArray *NBTTagIntArray::clone() {
+    return new NBTTagIntArray(this);
 }

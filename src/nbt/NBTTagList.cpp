@@ -2,6 +2,11 @@
 
 NBTTagList::NBTTagList() : NBTTag(Type::LIST) {}
 
+NBTTagList::NBTTagList(NBTTagList *tag) : NBTTag(tag) {
+    for (auto child : tag->children)
+        children.push_back(child->clone());
+}
+
 NBTTagList::~NBTTagList() {
     for (auto child : children)
         delete child;
@@ -48,4 +53,8 @@ std::vector<NBTTag*>::iterator NBTTagList::begin() {
 
 std::vector<NBTTag*>::iterator NBTTagList::end() {
     return children.end();
+}
+
+NBTTagList *NBTTagList::clone() {
+    return new NBTTagList(this);
 }

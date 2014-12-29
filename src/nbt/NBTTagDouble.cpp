@@ -2,6 +2,8 @@
 
 NBTTagDouble::NBTTagDouble() : NBTTag(Type::DOUBLE) {}
 
+NBTTagDouble::NBTTagDouble(NBTTagDouble *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagDouble::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     *(((ubyte_t*) &value) + 7) = *(data++);
@@ -37,4 +39,8 @@ double_t NBTTagDouble::get() {
 
 void NBTTagDouble::set(double_t value) {
     this->value = value;
+}
+
+NBTTagDouble *NBTTagDouble::clone() {
+    return new NBTTagDouble(this);
 }

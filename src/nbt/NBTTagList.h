@@ -10,6 +10,8 @@ class NBTTagList : public NBTTag {
 public:
     NBTTagList();
 
+    NBTTagList(NBTTagList*);
+
     ~NBTTagList();
 
     void read(ubyte_t*&, bool);
@@ -21,6 +23,8 @@ public:
     std::vector<NBTTag*>::iterator begin();
 
     std::vector<NBTTag*>::iterator end();
+
+    NBTTagList *clone();
 
 private:
     std::vector<NBTTag*> children;

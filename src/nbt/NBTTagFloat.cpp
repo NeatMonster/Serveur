@@ -2,6 +2,8 @@
 
 NBTTagFloat::NBTTagFloat() : NBTTag(Type::FLOAT) {}
 
+NBTTagFloat::NBTTagFloat(NBTTagFloat *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagFloat::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     *(((ubyte_t*) &value) + 3) = *(data++);
@@ -29,4 +31,8 @@ float_t NBTTagFloat::get() {
 
 void NBTTagFloat::set(float_t value) {
     this->value = value;
+}
+
+NBTTagFloat *NBTTagFloat::clone() {
+    return new NBTTagFloat(this);
 }
