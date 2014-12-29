@@ -5,6 +5,7 @@
 #include "PacketCreativeInventoryAction.h"
 #include "PacketClientSettings.h"
 #include "PacketClientStatus.h"
+#include "PacketCloseWindow.h"
 #include "PacketEntityAction.h"
 #include "PacketHeldItemChange.h"
 #include "PacketKeepAlive.h"
@@ -30,6 +31,7 @@ PacketFactory::PacketFactory() {
     registerPacket<PacketCreativeInventoryAction>(0x10);
     registerPacket<PacketAnimation>(0x0a);
     registerPacket<PacketEntityAction>(0x0b);
+    registerPacket<PacketCloseWindow>(0x0d);
     registerPacket<PacketPlayerAbilities>(0x13);
     registerPacket<PacketClientSettings>(0x15);
     registerPacket<PacketClientStatus>(0x16);
