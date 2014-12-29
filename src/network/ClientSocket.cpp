@@ -32,7 +32,7 @@ void ClientSocket::open() {
 }
 
 size_t ClientSocket::transmit(ubyte_t *buffer, size_t size) {
-    int count = ::send(handle, buffer, size, 0);
+    int count = ::send(handle, buffer, size, MSG_NOSIGNAL);
     if (count < 0) {
         if (errno == EWOULDBLOCK)
             return 0;
@@ -45,7 +45,7 @@ size_t ClientSocket::transmit(ubyte_t *buffer, size_t size) {
 size_t ClientSocket::receive(ubyte_t *buffer, size_t size) {
     if (dataLength <= 0) {
         readPointer = readBuffer;
-        dataLength = ::recv(handle, readBuffer, sizeof(readBuffer), 0);
+        dataLength = ::recv(handle, readBuffer, sizeof(readBuffer), MSG_NOSIGNAL);
         if (dataLength <= 0) {
             if (errno != EWOULDBLOCK)
                 throw SocketReadException(errno);

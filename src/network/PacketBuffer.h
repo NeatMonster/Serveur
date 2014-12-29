@@ -99,11 +99,15 @@ public:
 
     size_t getLimit();
 
+    size_t getMark();
+
     size_t getPosition();
 
     size_t getSize();
 
     void setLimit(size_t);
+
+    void setMark(size_t);
 
     void setPosition(size_t);
 
@@ -111,7 +115,7 @@ public:
 
 private:
     ubytes_t buffer;
-    size_t position, limit;
+    size_t position, limit, mark;
 };
 
 #endif /* defined(__Serveur__PacketBuffer__) */

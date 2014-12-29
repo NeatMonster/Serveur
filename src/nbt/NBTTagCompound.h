@@ -8,6 +8,8 @@ class NBTTagCompound : public NBTTag {
 public:
     NBTTagCompound();
 
+    NBTTagCompound(NBTTagCompound*);
+
     ~NBTTagCompound();
 
     void read(ubyte_t *&, bool);
@@ -19,6 +21,8 @@ public:
     NBTTag *&get(string_t);
 
     void set(string_t, NBTTag*&);
+
+    NBTTagCompound *clone();
 
 private:
     std::unordered_map<string_t, NBTTag*> children;

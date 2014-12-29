@@ -120,9 +120,9 @@ void PacketHandler::handleAnimation(PacketAnimation*) {
 }
 
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
-    //TODO Faire des vérifications et gérer les drops
-    if(packet->slot != -1)
-        connect->player->getInventory().putStack(packet->slot, packet->item);
-    else
-        delete packet->item;//Gérer le DROP
+    //TODO Faire des vérifications
+    if (packet->item == nullptr) {
+        connect->player->getInventory().putStack(packet->slot, nullptr);
+    } else
+        connect->player->getInventory().putStack(packet->slot, packet->item->clone());
 }

@@ -4,6 +4,8 @@
 
 NBTTagString::NBTTagString() : NBTTag(Type::STRING) {}
 
+NBTTagString::NBTTagString(NBTTagString *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagString::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     ushort_t size;
@@ -35,4 +37,8 @@ string_t NBTTagString::get() {
 
 void NBTTagString::set(string_t value) {
     this->value = value;
+}
+
+NBTTagString *NBTTagString::clone() {
+    return new NBTTagString(this);
 }

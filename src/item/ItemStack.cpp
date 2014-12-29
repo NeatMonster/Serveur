@@ -4,12 +4,15 @@ ItemStack::ItemStack(short_t type) : ItemStack(type, 0, 0) {}
 
 ItemStack::ItemStack(short_t type, byte_t amount) : ItemStack(type, amount, 0) {}
 
-ItemStack::ItemStack(short_t type, byte_t amount, short_t damage) : type(type), amount(amount), damage(damage),
-    nbt(nullptr) {}
+ItemStack::ItemStack(short_t type, byte_t amount, short_t damage) : type(type), amount(amount), damage(damage), nbt(nullptr) {}
 
-ItemStack::~ItemStack()
-{
-    delete nbt;
+ItemStack::ItemStack(ItemStack *stack) : type(stack->type), amount(stack->amount), damage(stack->damage) {
+    nbt = (stack->nbt == nullptr) ? nullptr : stack->nbt->clone();
+};
+
+ItemStack::~ItemStack() {
+    if (nbt != nullptr)
+        delete nbt;
 }
 
 short_t ItemStack::getType() {
@@ -26,4 +29,8 @@ short_t ItemStack::getDamage() {
 
 NBTTagCompound *ItemStack::getNBT() {
     return nbt;
+}
+
+ItemStack *ItemStack::clone() {
+    return new ItemStack(this);
 }

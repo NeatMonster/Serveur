@@ -5,7 +5,7 @@
 
 PacketBuffer::PacketBuffer() {
     buffer = ubytes_t(BUFFER_SIZE);
-    position = limit = 0;
+    position = limit = mark = 0;
 }
 
 void PacketBuffer::get(ubyte_t *b) {
@@ -223,7 +223,7 @@ void PacketBuffer::putItemStack(ItemStack *item) {
 }
 
 void PacketBuffer::clear() {
-    position = limit = 0;
+    position = limit = mark = 0;
 }
 
 void PacketBuffer::reserve(size_t size) {
@@ -239,6 +239,10 @@ size_t PacketBuffer::getLimit() {
     return limit;
 }
 
+size_t PacketBuffer::getMark() {
+    return mark;
+}
+
 size_t PacketBuffer::getPosition() {
     return position;
 }
@@ -251,6 +255,10 @@ void PacketBuffer::setLimit(size_t limit) {
     if (limit > buffer.size())
         setSize(limit);
     this->limit = limit;
+}
+
+void PacketBuffer::setMark(size_t mark) {
+    this->mark = mark;
 }
 
 void PacketBuffer::setPosition(size_t position) {

@@ -16,6 +16,8 @@
 
 NBTTag::NBTTag(Type type) : type(type) {}
 
+NBTTag::NBTTag(NBTTag *tag) : type(tag->type), name(tag->name) {}
+
 NBTTag::~NBTTag() {}
 
 NBTTagCompound *NBTTag::read(ubyte_t *&data) {

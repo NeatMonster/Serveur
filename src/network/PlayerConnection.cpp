@@ -150,18 +150,19 @@ void PlayerConnection::runWrite() {
             packet->write(writeBuffer);
             delete packet;
             varint_t packetLength = writeBuffer.getLimit() - 5;
-            size_t position = 0;
             if (packetLength < 128)
-                position = 4;
+                writeBuffer.setMark(4);
             else if (packetLength < 16384)
-                position = 3;
+                writeBuffer.setMark(3);
             else if (packetLength < 2097152)
-                position = 2;
+                writeBuffer.setMark(2);
             else if (packetLength < 268435456)
-                position = 1;
-            writeBuffer.setPosition(position);
+                writeBuffer.setMark(1);
+            else
+                writeBuffer.setMark(0);
+            writeBuffer.setPosition(writeBuffer.getMark());
             writeBuffer.putVarInt(packetLength);
-            socket->transmit(writeBuffer.getArray() + position, writeBuffer.getLimit() - position);
+            socket->transmit(writeBuffer.getArray() + writeBuffer.getMark(), writeBuffer.getLimit() - writeBuffer.getMark());
             if ((phase == LOGIN && packetId == 0x00) || (phase == PLAY && packetId == 0x40))
                 close();
             else if (phase == PLAY && packetId == 0x00)

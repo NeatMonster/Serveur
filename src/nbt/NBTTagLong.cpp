@@ -2,6 +2,8 @@
 
 NBTTagLong::NBTTagLong() : NBTTag(Type::LONG) {}
 
+NBTTagLong::NBTTagLong(NBTTagLong *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagLong::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     *(((ubyte_t*) &value) + 7) = *(data++);
@@ -37,4 +39,8 @@ long_t NBTTagLong::get() {
 
 void NBTTagLong::set(long_t value) {
     this->value = value;
+}
+
+NBTTagLong *NBTTagLong::clone() {
+    return new NBTTagLong(this);
 }

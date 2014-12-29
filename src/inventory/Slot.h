@@ -14,7 +14,7 @@ public:
     void setStack(ItemStack*);
 
 private:
-    ItemStack *m_stack;
+    ItemStack *stack;
 };
 
 #endif /* defined(__Serveur__Slot__) */

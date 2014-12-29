@@ -53,7 +53,7 @@ void CommandManager::processCommand(string_t s, CommandSender *sender) {
 void CommandManager::performHelp(CommandSender *sender) {
     //TODO Gérer plusieurs pages
     sender->sendMessage(Chat() << "--- Affichage de la page 1 sur 1 ---");
-    for(std::map<string_t,Command*>::iterator it = commands.begin(); it != commands.end(); it++)
+    for (std::map<string_t,Command*>::iterator it = commands.begin(); it != commands.end(); it++)
         sender->sendMessage(Chat() << ChatMessage::Style::BOLD << it->second->getName()
                             << ChatMessage::Style::RESET << " : " << it->second->getDescription());
 }

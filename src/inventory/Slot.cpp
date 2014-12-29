@@ -1,18 +1,18 @@
 #include "Slot.h"
 
-Slot::Slot() : m_stack(nullptr) {}
+Slot::Slot() : stack(nullptr) {}
 
-Slot::~Slot()
-{
-    delete m_stack;
+Slot::~Slot() {
+    if (this->stack != nullptr)
+        delete this->stack;
 }
 
 ItemStack *Slot::getStack() {
-    return m_stack;
+    return this->stack;
 }
 
 void Slot::setStack(ItemStack *stack) {
-    if(m_stack != nullptr)
-        delete m_stack;
-    m_stack = stack;
+    if (this->stack != nullptr)
+        delete this->stack;
+    this->stack = stack;
 }

@@ -2,6 +2,8 @@
 
 NBTTagShort::NBTTagShort() : NBTTag(Type::SHORT) {}
 
+NBTTagShort::NBTTagShort(NBTTagShort *tag) : NBTTag(tag), value(tag->value) {}
+
 void NBTTagShort::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     *(((ubyte_t*) &value) + 1) = *(data++);
@@ -25,4 +27,8 @@ short_t NBTTagShort::get() {
 
 void NBTTagShort::set(short_t value) {
     this->value = value;
+}
+
+NBTTagShort *NBTTagShort::clone() {
+    return new NBTTagShort(this);
 }
