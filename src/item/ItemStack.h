@@ -14,6 +14,8 @@ public:
 
     ItemStack(short_t, byte_t, short_t);
 
+    ~ItemStack();
+
     short_t getType();
 
     byte_t getAmount();

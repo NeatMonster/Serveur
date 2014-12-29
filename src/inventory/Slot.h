@@ -7,12 +7,14 @@ class Slot {
 public:
     Slot();
 
+    ~Slot();
+
     ItemStack *getStack();
 
     void setStack(ItemStack*);
 
 private:
-    ItemStack *stack;
+    ItemStack *m_stack;
 };
 
 #endif /* defined(__Serveur__Slot__) */

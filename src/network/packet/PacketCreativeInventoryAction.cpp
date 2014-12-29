@@ -2,9 +2,7 @@
 
 #include "PacketHandler.h"
 
-PacketCreativeInventoryAction::~PacketCreativeInventoryAction() {
-    delete item;
-}
+PacketCreativeInventoryAction::~PacketCreativeInventoryAction() {}
 
 void PacketCreativeInventoryAction::read(PacketBuffer &buffer) {
     buffer.getShort(slot);
