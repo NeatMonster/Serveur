@@ -1,8 +1,8 @@
 #ifndef __Serveur__ServerPacket__
 #define __Serveur__ServerPacket__
 
-#include "PacketBuffer.h"
 #include "Packet.h"
+#include "PacketBuffer.h"
 
 class ServerPacket : virtual public Packet {
 public:

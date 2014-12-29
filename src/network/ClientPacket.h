@@ -1,8 +1,8 @@
 #ifndef __Serveur__ClientPacket__
 #define __Serveur__ClientPacket__
 
-#include "PacketBuffer.h"
 #include "Packet.h"
+#include "PacketBuffer.h"
 
 class PacketHandler;
 

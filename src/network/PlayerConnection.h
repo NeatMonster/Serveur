@@ -1,8 +1,8 @@
 #ifndef __Serveur__PlayerConnection__
 #define __Serveur__PlayerConnection__
 
-#include "PacketBuffer.h"
 #include "ClientSocket.h"
+#include "PacketBuffer.h"
 #include "PacketFactory.h"
 #include "PacketQueue.h"
 

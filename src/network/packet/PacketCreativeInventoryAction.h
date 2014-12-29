@@ -7,7 +7,7 @@
 class PacketCreativeInventoryAction : public ClientPacket {
 public:
     short_t slot;
-    ItemStack* item;
+    ItemStack* stack;
 
     ~PacketCreativeInventoryAction();
 
