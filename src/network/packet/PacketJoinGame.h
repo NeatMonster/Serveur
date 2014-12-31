@@ -18,5 +18,4 @@ public:
     void write(PacketBuffer&);
 };
 
-
 #endif /* defined(__Serveur__PacketJoinGame__) */

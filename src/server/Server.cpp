@@ -24,12 +24,16 @@ void Server::broadcast(ChatMessage &message) {
         player->sendMessage(message);
 }
 
-NetworkManager *Server::getNetwork() {
-    return instance->network;
-}
-
 CommandManager *Server::getCommands() {
     return getServer()->commands;
+}
+
+ConfigManager *Server::getConfig() {
+    return getServer()->config;
+}
+
+NetworkManager *Server::getNetwork() {
+    return instance->network;
 }
 
 Player *Server::getPlayer(string_t name) {
@@ -47,6 +51,7 @@ Server::Server() : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
     commands = new CommandManager();
+    config = new ConfigManager();
     network = new NetworkManager();
     world = new World("world");
     if (network->start()) {
@@ -57,6 +62,7 @@ Server::Server() : running(true), ticks(0) {
 
 Server::~Server() {
     delete commands;
+    delete config;
     delete network;
     delete world;
 }

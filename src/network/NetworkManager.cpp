@@ -25,8 +25,8 @@ varint_t NetworkManager::getKeepAliveId() {
 }
 
 bool NetworkManager::start() {
-    string_t ip = "0.0.0.0";
-    ushort port = 25566;
+    string_t ip = Server::getConfig()->getServerIP();
+    ushort port = Server::getConfig()->getServerPort();
     try {
         socket = new ServerSocket(Socket::SocketAddress(ip, port));
         socket->open();

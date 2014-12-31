@@ -20,5 +20,4 @@ public:
     void handle(PacketHandler*);
 };
 
-
 #endif /* defined(__Serveur__PacketAnimation__) */

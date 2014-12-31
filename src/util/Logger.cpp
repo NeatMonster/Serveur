@@ -35,7 +35,7 @@ Logger::Logger(Logger::Level level) {
 
 Logger::~Logger() {
     std::cout << str();
-    std::ofstream logFile("log.txt", std::ios::app | std::ios::ate);
+    std::ofstream logFile("server.log", std::ios::app | std::ios::ate);
     logFile << str();
     logFile.close();
     lock.unlock();
