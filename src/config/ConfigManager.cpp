@@ -37,6 +37,6 @@ string_t ConfigManager::getServerIP() {
     return serverIP;
 }
 
-int_t ConfigManager::getServerPort() {
+ushort_t ConfigManager::getServerPort() {
     return serverPort;
 }

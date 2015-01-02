@@ -44,7 +44,7 @@ bool NetworkManager::start() {
 
 bool NetworkManager::stop() {
     for (PlayerConnection *&connect : connects) {
-        connect->disconnect("Serveur en cours d'extinction");
+        connect->disconnect("Serveur fermé");
         connect->close();
         connect->join();
     }

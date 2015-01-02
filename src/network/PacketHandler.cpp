@@ -12,6 +12,7 @@
 #include "PacketPlayerLook.h"
 #include "PacketPlayerPosition.h"
 #include "PacketPlayerPositionLook.h"
+#include "PacketPluginMessage.h"
 #include "Player.h"
 #include "PlayerConnection.h"
 #include "Server.h"
@@ -92,6 +93,25 @@ void PacketHandler::handleChatMessage(PacketChatMessage *packet) {
         Server::getCommands()->processCommand(packet->message.substr(1), connect->player);
     else
         Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->message);
+}
+
+void PacketHandler::handlePluginMessage(PacketPluginMessage *packet) {
+    if (packet->channel == "MF|GetServers") {
+        PacketBuffer buffer;
+        buffer.putUBytes(packet->data);
+        buffer.setPosition(0);
+        varint_t size;
+        buffer.getVarInt(size);
+        string_t server, servers = "Liste des serveurs : ";
+        for (size_t i = 0; i < size; i++) {
+            buffer.getString(server);
+            if (i > 0)
+                servers += ", ";
+            servers += server;
+        }
+        servers += ".";
+        connect->player->sendMessage(Chat() << Color::YELLOW << servers);
+    }
 }
 
 void PacketHandler::handlePlayer(PacketPlayer *packet) {

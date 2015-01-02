@@ -12,6 +12,7 @@ class PacketPlayer;
 class PacketPlayerLook;
 class PacketPlayerPosition;
 class PacketPlayerPositionLook;
+class PacketPluginMessage;
 class PacketCreativeInventoryAction;
 class PlayerConnection;
 
@@ -28,6 +29,8 @@ public:
     void handleKeepAlive(PacketKeepAlive*);
 
     void handleChatMessage(PacketChatMessage*);
+
+    void handlePluginMessage(PacketPluginMessage*);
 
     void handlePlayer(PacketPlayer*);
 

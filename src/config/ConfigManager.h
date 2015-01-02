@@ -13,11 +13,11 @@ public:
 
     string_t getServerIP();
 
-    int_t getServerPort();
+    ushort_t getServerPort();
 
 private:
     string_t serverIP = "0.0.0.0";
-    int_t serverPort = 25566;
+    ushort_t serverPort = 25566;
 };
 
 #endif /* defined(__Serveur__ConfigManager__) */

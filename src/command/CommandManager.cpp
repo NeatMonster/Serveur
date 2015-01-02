@@ -1,6 +1,7 @@
 #include "CommandManager.h"
 
 #include "ChatMessage.h"
+#include "CommandServer.h"
 #include "CommandStop.h"
 #include "Server.h"
 
@@ -10,6 +11,7 @@
 
 CommandManager::CommandManager() {
     reader = new CommandReader(&queue);
+    registerCommand(new CommandServer());
     registerCommand(new CommandStop());
 };
 
@@ -46,7 +48,8 @@ void CommandManager::processCommand(string_t s, CommandSender *sender) {
         } catch (const Command::WrongUsageException &e) {
             sender->sendMessage(Chat() << Color::RED << "Usage : " << e.what());
         } catch (const Command::CommandException &e) {
-            sender->sendMessage(Chat() << Color::RED << "Erreur : " << e.what());
+            sender->sendMessage(Chat() << Color::RED << "Une erreur est survenue lors de l'exécution de la commande.");
+            sender->sendMessage(Chat() << Color::RED << e.what());
         }
 }
 

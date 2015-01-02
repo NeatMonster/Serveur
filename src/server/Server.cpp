@@ -25,11 +25,11 @@ void Server::broadcast(ChatMessage &message) {
 }
 
 CommandManager *Server::getCommands() {
-    return getServer()->commands;
+    return instance->commands;
 }
 
 ConfigManager *Server::getConfig() {
-    return getServer()->config;
+    return instance->config;
 }
 
 NetworkManager *Server::getNetwork() {
@@ -68,8 +68,6 @@ Server::~Server() {
 }
 
 void Server::stop() {
-    for (Player *player : players)
-        player->disconnect("Serveur fermé");
     running = false;
     Logger() << "Extinction du serveur" << std::endl;
 }
