@@ -10,7 +10,7 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<Player*
         Action action;
         action.uuid = player->getUUID();
         action.name = player->getName();
-        action.gameMode = 1;
+        action.gamemode = 1;
         action.ping = player->getPing();
         action.hasDisplayName = false;
         actions.push_back(action);
@@ -31,7 +31,7 @@ void PacketPlayerListItem::write(PacketBuffer &buffer) {
                 buffer.putVarInt(0);
         }
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_GAMEMODE)
-            buffer.putVarInt(action.gameMode);
+            buffer.putVarInt(action.gamemode);
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_LATENCY)
             buffer.putVarInt(action.ping);
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_DISPLAY_NAME) {

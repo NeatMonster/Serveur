@@ -111,6 +111,14 @@ void PacketHandler::handlePluginMessage(PacketPluginMessage *packet) {
         }
         servers += ".";
         connect->player->sendMessage(Chat() << Color::YELLOW << servers);
+    } else if (packet->channel == "MF|Connect") {
+        PacketBuffer buffer;
+        buffer.putUBytes(packet->data);
+        buffer.setPosition(0);
+        string_t message;
+        buffer.getString(message);
+        connect->player->sendMessage(Chat() << Color::RED << "Une erreur est survenue lors de l'exécution de la commande.");
+        connect->player->sendMessage(Chat() << Color::RED << message);
     }
 }
 

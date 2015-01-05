@@ -20,7 +20,7 @@ private:
     struct Action {
         string_t uuid;
         string_t name;
-        varint_t gameMode;
+        varint_t gamemode;
         varint_t ping;
         bool hasDisplayName;
         string_t displayName;

@@ -119,7 +119,7 @@ void Player::sendPacket(ServerPacket *packet) {
 void Player::onJoinGame() {
     PacketJoinGame *joinPacket = new PacketJoinGame();
     joinPacket->entityId = entityId;
-    joinPacket->gameMode = 1;
+    joinPacket->gamemode = 1;
     joinPacket->dimension = 0;
     joinPacket->difficulty = 0;
     joinPacket->maxPlayers = 20;
