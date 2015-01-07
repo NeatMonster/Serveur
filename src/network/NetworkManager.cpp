@@ -10,14 +10,15 @@
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
-NetworkManager::NetworkManager() : running(false), ticks(0) {
+NetworkManager::NetworkManager() : running(false), socket(nullptr), ticks(0) {
     random = Random(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
 }
 
 NetworkManager::~NetworkManager() {
     for (PlayerConnection *&connect : connects)
         delete connect;
-    delete socket;
+    if (socket != nullptr)
+        delete socket;
 }
 
 varint_t NetworkManager::getKeepAliveId() {

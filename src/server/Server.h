@@ -5,6 +5,7 @@
 #include "CommandManager.h"
 #include "CommandSender.h"
 #include "ConfigManager.h"
+#include "Database.h"
 #include "NetworkManager.h"
 #include "Types.h"
 
@@ -22,6 +23,8 @@ public:
     static CommandManager *getCommands();
 
     static ConfigManager *getConfig();
+
+    static Database *getDatabase();
 
     static NetworkManager *getNetwork();
 
@@ -49,6 +52,7 @@ private:
     static Server *instance;
     CommandManager *commands;
     ConfigManager *config;
+    Database *database;
     NetworkManager *network;
     bool running;
     long_t ticks;
