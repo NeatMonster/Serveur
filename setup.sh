@@ -1,13 +1,13 @@
 #!/bin/bash
 cd lib
-#wget http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.gz
-#tar -zxvf boost_1_57_0.tar.gz
-#rm boost_1_57_0.tar.gz
-#mv boost_1_57_0 boost-tmp
-#cd boost-tmp
-#./bootstrap.sh
-#./b2
-#cd ..
+wget http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.gz
+tar -zxvf boost_1_57_0.tar.gz
+rm boost_1_57_0.tar.gz
+mv boost_1_57_0 boost-tmp
+cd boost-tmp
+./bootstrap.sh
+./b2 install
+cd ..
 wget https://github.com/mongodb/mongo-cxx-driver/archive/legacy-1.0.0-rc3.tar.gz
 tar -zxvf legacy-1.0.0-rc3.tar.gz
 rm legacy-1.0.0-rc3.tar.gz
