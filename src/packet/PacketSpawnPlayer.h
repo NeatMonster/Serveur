@@ -3,11 +3,11 @@
 
 #include "ServerPacket.h"
 
-class Player;
+class EntityPlayer;
 
 class PacketSpawnPlayer : public ServerPacket {
 public:
-    PacketSpawnPlayer(Player*);
+    PacketSpawnPlayer(EntityPlayer*);
 
     void write(PacketBuffer&);
 

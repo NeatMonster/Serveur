@@ -6,7 +6,7 @@
 #include <unordered_set>
 
 class Entity;
-class Player;
+class EntityPlayer;
 class Section;
 class World;
 
@@ -31,11 +31,11 @@ public:
 
     int_t getZ();
 
-    const std::unordered_set<Player*> &getPlayers();
+    const std::unordered_set<EntityPlayer*> &getPlayers();
 
-    void addPlayer(Player*);
+    void addPlayer(EntityPlayer*);
 
-    void removePlayer(Player*);
+    void removePlayer(EntityPlayer*);
 
     Meta getMeta();
 
@@ -48,7 +48,7 @@ private:
     ubyte_t biomes[256];
     int_t heightMap[256];
     Section *sections[16];
-    std::unordered_set<Player*> players;
+    std::unordered_set<EntityPlayer*> players;
 };
 
 #endif /* defined(__Serveur__Chunk__) */

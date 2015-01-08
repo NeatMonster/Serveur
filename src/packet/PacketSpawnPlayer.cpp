@@ -1,10 +1,10 @@
 #include "PacketSpawnPlayer.h"
 
-#include "Player.h"
+#include "EntityPlayer.h"
 
 #include <cstring>
 
-PacketSpawnPlayer::PacketSpawnPlayer(Player *player) : ServerPacket(0x0c) {
+PacketSpawnPlayer::PacketSpawnPlayer(EntityPlayer *player) : ServerPacket(0x0c) {
     entityId = player->getEntityId();
     uuid = player->getUUID();
     x = (int_t) floor_d(player->getX() * 32.);

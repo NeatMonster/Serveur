@@ -6,7 +6,7 @@
 #include <unordered_set>
 
 class Chunk;
-class Player;
+class EntityPlayer;
 class World;
 
 class Entity {
@@ -27,7 +27,7 @@ public:
 
     World *getWorld();
 
-    std::unordered_set<Player*> getWatchers();
+    std::unordered_set<EntityPlayer*> getWatchers();
 
     double_t getX();
 

@@ -1,9 +1,9 @@
 #include "World.h"
 
 #include "Chunk.h"
+#include "EntityPlayer.h"
 #include "Level.h"
 #include "PacketTimeUpdate.h"
-#include "Player.h"
 #include "Region.h"
 #include "Section.h"
 
@@ -29,11 +29,11 @@ Level *World::getLevel() {
     return level;
 }
 
-const std::unordered_set<Player*> &World::getPlayers() {
+const std::unordered_set<EntityPlayer*> &World::getPlayers() {
     return players;
 }
 
-void World::addPlayer(Player *player) {
+void World::addPlayer(EntityPlayer *player) {
     Position spawn = getLevel()->getSpawn();
     player->setPosition(spawn.x, spawn.y, spawn.z);
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
@@ -45,7 +45,7 @@ void World::addPlayer(Player *player) {
     player->getChunk()->addPlayer(player);
 }
 
-void World::removePlayer(Player *player) {
+void World::removePlayer(EntityPlayer *player) {
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
     int_t zChunk = (int_t) floor(player->getZ()) >> 4;
     player->getChunk()->removePlayer(player);
@@ -134,11 +134,11 @@ void World::tryUnloadChunk(int_t x, int_t z) {
 }
 
 void World::onTick() {
-    for (Player *const &player : players)
+    for (EntityPlayer *const &player : players)
         player->onTick();
     level->setTime(level->getTime() + 1);
     level->setDayTime(level->getDayTime() + 1);
     if (level->getTime() % 20 == 0)
-        for (Player *const &player : players)
+        for (EntityPlayer *const &player : players)
             player->sendPacket(new PacketTimeUpdate(level->getTime(), level->getDayTime()));
 }

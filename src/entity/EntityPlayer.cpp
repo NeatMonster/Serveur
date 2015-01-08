@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "EntityPlayer.h"
 
 #include "Chunk.h"
 #include "Level.h"
@@ -17,7 +17,7 @@
 #include "Server.h"
 #include "World.h"
 
-Player::Player(World *world, PlayerConnection *connect) : LivingEntity(world), connect(connect), inventory() {
+EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect), inventory() {
     uuid = connect->getUUID();
     name = connect->getName();
     world->addPlayer(this);
@@ -25,24 +25,24 @@ Player::Player(World *world, PlayerConnection *connect) : LivingEntity(world), c
     Server::getServer()->addPlayer(this);
 }
 
-Player::~Player() {
+EntityPlayer::~EntityPlayer() {
     Server::getServer()->removePlayer(this);
     world->removePlayer(this);
     onQuitGame();
 }
 
-Entity::Type Player::getType() {
+Entity::Type EntityPlayer::getType() {
     return Type::PLAYER;
 }
 
-World *Player::getWorld() {
+World *EntityPlayer::getWorld() {
     return Entity::getWorld();
 }
 
-void Player::move(double_t x, double_t y, double_t z) {
+void EntityPlayer::move(double_t x, double_t y, double_t z) {
     int_t xOld = (int_t) floor(this->x) >> 4;
     int_t zOld = (int_t) floor(this->z) >> 4;
-    LivingEntity::move(x, y, z);
+    EntityLiving::move(x, y, z);
     int_t xNew = (int_t) floor(x) >> 4;
     int_t zNew = (int_t) floor(z) >> 4;
     if (xOld == xNew && zOld == zNew)
@@ -55,7 +55,7 @@ void Player::move(double_t x, double_t y, double_t z) {
                     || zNew + z < zOld - VIEW_DISTANCE || zNew + z > zOld + VIEW_DISTANCE) {
                 Chunk *chunk = world->getChunk(xNew + x, zNew + z);
                 sendPacket(new PacketChunkData(chunk, false));
-                for (Player *const &player : chunk->getPlayers())
+                for (EntityPlayer *const &player : chunk->getPlayers())
                     if (player != this) {
                         sendPacket(new PacketSpawnPlayer(player));
                         player->sendPacket(new PacketSpawnPlayer(this));
@@ -68,7 +68,7 @@ void Player::move(double_t x, double_t y, double_t z) {
                 Chunk *chunk = world->getChunk(xOld + x, zOld + z);
                 sendPacket(new PacketChunkData(chunk, true));
                 std::unordered_set<varint_t> entitiesIds;
-                for (Player *const &player : chunk->getPlayers())
+                for (EntityPlayer *const &player : chunk->getPlayers())
                     if (player != this) {
                         entitiesIds.insert(player->getEntityId());
                         player->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
@@ -78,45 +78,45 @@ void Player::move(double_t x, double_t y, double_t z) {
             }
 }
 
-string_t Player::getUUID() {
+string_t EntityPlayer::getUUID() {
     return uuid;
 }
 
-string_t Player::getName() {
+string_t EntityPlayer::getName() {
     return name;
 }
 
-string_t Player::getIP() {
+string_t EntityPlayer::getIP() {
     return connect->getIP();
 }
 
-ushort Player::getPort() {
+ushort EntityPlayer::getPort() {
     return connect->getPort();
 }
 
-float_t Player::getPing() {
+float_t EntityPlayer::getPing() {
     return connect->getPing();
 }
 
-InventoryPlayer &Player::getInventory() {
+InventoryPlayer &EntityPlayer::getInventory() {
     return inventory;
 }
 
-void Player::sendMessage(ChatMessage &message) {
+void EntityPlayer::sendMessage(ChatMessage &message) {
     sendPacket(new PacketChatMessage(message.getJSON()));
 }
 
-void Player::disconnect(string_t reason) {
+void EntityPlayer::disconnect(string_t reason) {
     if (connect != nullptr)
         connect->disconnect(reason);
 }
 
-void Player::sendPacket(ServerPacket *packet) {
+void EntityPlayer::sendPacket(ServerPacket *packet) {
     if (connect != nullptr)
         connect->sendPacket(packet);
 }
 
-void Player::onJoinGame() {
+void EntityPlayer::onJoinGame() {
     PacketJoinGame *joinPacket = new PacketJoinGame();
     joinPacket->entityId = entityId;
     joinPacket->gamemode = 1;
@@ -140,8 +140,8 @@ void Player::onJoinGame() {
 
     Server::broadcast(Chat() << Color::YELLOW << name << " a rejoint la partie");
 
-    std::unordered_set<Player*> players = Server::getPlayers();
-    for (Player *const &player : players)
+    std::unordered_set<EntityPlayer*> players = Server::getPlayers();
+    for (EntityPlayer *const &player : players)
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
     players.insert(this);
     sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, players));
@@ -174,7 +174,7 @@ void Player::onJoinGame() {
         if (packetChunks.size() == 10) {
             sendPacket(new PacketMapChunkBulk(packetChunks));
             for (Chunk *&packetChunk : packetChunks)
-                for (Player *const &player : packetChunk->getPlayers())
+                for (EntityPlayer *const &player : packetChunk->getPlayers())
                     if (player != this) {
                         sendPacket(new PacketSpawnPlayer(player));
                         player->sendPacket(new PacketSpawnPlayer(this));
@@ -186,23 +186,23 @@ void Player::onJoinGame() {
     if (!packetChunks.empty()) {
         sendPacket(new PacketMapChunkBulk(packetChunks));
         for (Chunk *&packetChunk : packetChunks)
-            for (Player *const &player : packetChunk->getPlayers())
+            for (EntityPlayer *const &player : packetChunk->getPlayers())
                 if (player != this) {
                     sendPacket(new PacketSpawnPlayer(player));
                     player->sendPacket(new PacketSpawnPlayer(this));
                 }
     }
 }
-void Player::onQuitGame() {
-    for (Player *const &watcher : getWatchers())
+void EntityPlayer::onQuitGame() {
+    for (EntityPlayer *const &watcher : getWatchers())
         watcher->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
 
     Server::broadcast(Chat() << Color::YELLOW << name << " a quitté la partie");
 
-    for (Player *const &player : Server::getPlayers())
+    for (EntityPlayer *const &player : Server::getPlayers())
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));
 }
 
-void Player::onTick() {
-    LivingEntity::onTick();
+void EntityPlayer::onTick() {
+    EntityLiving::onTick();
 }

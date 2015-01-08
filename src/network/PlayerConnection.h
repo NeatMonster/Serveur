@@ -11,8 +11,8 @@
 #include <thread>
 
 class ClientPacket;
+class EntityPlayer;
 class PacketHandler;
-class Player;
 class ServerPacket;
 
 class PlayerConnection {
@@ -63,7 +63,7 @@ private:
     PacketHandler *handler;
     std::atomic<bool> closed;
     std::atomic<Phase> phase;
-    Player *player;
+    EntityPlayer *player;
     Clock::time_point sentKeepAlive;
     Clock::time_point rcvdKeepAlive;
     float_t ping;

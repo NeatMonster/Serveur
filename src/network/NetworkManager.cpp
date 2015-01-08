@@ -1,8 +1,8 @@
 #include "NetworkManager.h"
 
+#include "EntityPlayer.h"
 #include "Logger.h"
 #include "PacketKeepAlive.h"
-#include "Player.h"
 #include "Server.h"
 
 #include <chrono>
@@ -68,7 +68,7 @@ void NetworkManager::handlePackets() {
         connect->handlePackets();
     if (ticks++ % 40 == 0) {
         keepAliveId = random();
-        for (Player *const &player : Server::getPlayers())
+        for (EntityPlayer *const &player : Server::getPlayers())
             player->sendPacket(new PacketKeepAlive(keepAliveId));
     }
 }

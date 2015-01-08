@@ -8,8 +8,8 @@
 
 class Chunk;
 class Entity;
+class EntityPlayer;
 class Level;
-class Player;
 class Region;
 
 class World {
@@ -22,11 +22,11 @@ public:
 
     string_t getName();
 
-    const std::unordered_set<Player*> &getPlayers();
+    const std::unordered_set<EntityPlayer*> &getPlayers();
 
-    void addPlayer(Player*);
+    void addPlayer(EntityPlayer*);
 
-    void removePlayer(Player*);
+    void removePlayer(EntityPlayer*);
 
     Region *getRegion(int_t, int_t);
 
@@ -49,7 +49,7 @@ public:
 private:
     Level *level;
     string_t name;
-    std::unordered_set<Player*> players;
+    std::unordered_set<EntityPlayer*> players;
     std::unordered_map<long_t, Chunk*> chunks;
     std::unordered_map<long_t, Region*> regions;
 

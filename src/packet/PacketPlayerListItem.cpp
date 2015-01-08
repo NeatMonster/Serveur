@@ -1,12 +1,12 @@
 #include "PacketPlayerListItem.h"
 
-#include "Player.h"
+#include "EntityPlayer.h"
 
 #include <iomanip>
 
-PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<Player*> players) : ServerPacket(0x38) {
+PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<EntityPlayer*> players) : ServerPacket(0x38) {
     this->type = type;
-    for (Player *const &player : players) {
+    for (EntityPlayer *const &player : players) {
         Action action;
         action.uuid = player->getUUID();
         action.name = player->getName();

@@ -1,8 +1,8 @@
 #include "Server.h"
 
+#include "EntityPlayer.h"
 #include "Logger.h"
 #include "PacketChatMessage.h"
-#include "Player.h"
 #include "World.h"
 
 #include <chrono>
@@ -20,7 +20,7 @@ Server *Server::getServer() {
 }
 
 void Server::broadcast(ChatMessage &message) {
-    for (Player *const &player : instance->players)
+    for (EntityPlayer *const &player : instance->players)
         player->sendMessage(message);
 }
 
@@ -40,14 +40,14 @@ NetworkManager *Server::getNetwork() {
     return instance->network;
 }
 
-Player *Server::getPlayer(string_t name) {
-    for (Player *const &player : instance->players)
+EntityPlayer *Server::getPlayer(string_t name) {
+    for (EntityPlayer *const &player : instance->players)
         if (player->getName() == name)
             return player;
     return nullptr;
 }
 
-const std::unordered_set<Player*> &Server::getPlayers() {
+const std::unordered_set<EntityPlayer*> &Server::getPlayers() {
     return instance->players;
 }
 
@@ -78,11 +78,11 @@ void Server::stop() {
     Logger() << "Extinction du serveur" << std::endl;
 }
 
-void Server::addPlayer(Player *player) {
+void Server::addPlayer(EntityPlayer *player) {
     players.insert(player);
 }
 
-void Server::removePlayer(Player *player) {
+void Server::removePlayer(EntityPlayer *player) {
     players.erase(player);
 }
 

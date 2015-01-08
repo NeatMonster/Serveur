@@ -1,11 +1,11 @@
 #include "Entity.h"
 
 #include "Chunk.h"
+#include "EntityPlayer.h"
 #include "PacketEntityLook.h"
 #include "PacketEntityMove.h"
 #include "PacketEntityMoveLook.h"
 #include "PacketEntityTeleport.h"
-#include "Player.h"
 #include "World.h"
 
 Entity::Entity(World *world) : world(world), ticks(0), dead(false), x(0), y(0), z(0), yaw(0), pitch(0), onGround(false),
@@ -27,15 +27,15 @@ World *Entity::getWorld() {
     return world;
 }
 
-std::unordered_set<Player*> Entity::getWatchers() {
-    std::unordered_set<Player*> watchers;
+std::unordered_set<EntityPlayer*> Entity::getWatchers() {
+    std::unordered_set<EntityPlayer*> watchers;
     int_t xChunk = (int_t) floor(x) >> 4;
     int_t zChunk = (int_t) floor(z) >> 4;
     for (int x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++) {
             Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
             if (chunk != nullptr)
-                for (Player *const &watcher : chunk->getPlayers())
+                for (EntityPlayer *const &watcher : chunk->getPlayers())
                     if (watcher->getEntityId() != getEntityId())
                         watchers.insert(watcher);
         }
@@ -101,7 +101,7 @@ void Entity::onTick() {
     bool isRelative = abs<int_t>(x - lastX) < 128 && abs<int_t>(y - lastY) < 128
         && abs<int_t>(z - lastZ) < 128 && onGround != lastOnGround && ticks % 60 > 0;
     if (hasMoved && isRelative && !hasRotated)
-        for (Player *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : getWatchers()) {
             PacketEntityMove *packet = new PacketEntityMove();
             packet->entityId = entityId;
             packet->dX = x - lastX;
@@ -111,7 +111,7 @@ void Entity::onTick() {
             watcher->sendPacket(packet);
         }
     else if (!hasMoved && hasRotated)
-        for (Player *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : getWatchers()) {
             PacketEntityLook *packet = new PacketEntityLook();
             packet->entityId = entityId;
             packet->yaw = yaw;
@@ -120,7 +120,7 @@ void Entity::onTick() {
             watcher->sendPacket(packet);
         }
     else if (hasMoved && isRelative && hasRotated)
-        for (Player *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : getWatchers()) {
             PacketEntityMoveLook *packet = new PacketEntityMoveLook();
             packet->entityId = entityId;
             packet->dX = x - lastX;
@@ -132,7 +132,7 @@ void Entity::onTick() {
             watcher->sendPacket(packet);
         }
     else if (hasMoved && !isRelative) {
-        for (Player *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : getWatchers()) {
             PacketEntityTeleport *packet = new PacketEntityTeleport();
             packet->entityId = entityId;
             packet->x = x;

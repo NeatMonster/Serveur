@@ -1,5 +1,6 @@
 #include "PacketHandler.h"
 
+#include "EntityPlayer.h"
 #include "Logger.h"
 #include "PacketAnimation.h"
 #include "PacketChatMessage.h"
@@ -13,7 +14,6 @@
 #include "PacketPlayerPosition.h"
 #include "PacketPlayerPositionLook.h"
 #include "PacketPluginMessage.h"
-#include "Player.h"
 #include "PlayerConnection.h"
 #include "Server.h"
 
@@ -47,11 +47,11 @@ void PacketHandler::handleHandshake(PacketHandshake *packet) {
 void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     profile = Server::getDatabase()->getProfile(packet->name);
     connect->sendPacket(new PacketLoginSuccess(profile->getUUID(), profile->getName()));
-    for (Player *const &player : Server::getPlayers())
+    for (EntityPlayer *const &player : Server::getPlayers())
         if (player->getUUID() == profile->getUUID())
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
-    Player *player = new Player(Server::getServer()->getWorld(), connect);
+    EntityPlayer *player = new EntityPlayer(Server::getServer()->getWorld(), connect);
     connect->player = player;
     Logger() << player->getName() << " [/" << player->getIP() << ":" << player->getPort()
         << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
@@ -124,7 +124,7 @@ void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
 }
 
 void PacketHandler::handleAnimation(PacketAnimation*) {
-    for (Player *const &watcher : connect->player->getWatchers())
+    for (EntityPlayer *const &watcher : connect->player->getWatchers())
         watcher->sendPacket(new PacketAnimation(connect->player->getEntityId(), 0));
 }
 

@@ -3,12 +3,12 @@
 #include "ChatMessage.h"
 #include "ClientPacket.h"
 #include "ClientSocket.h"
+#include "EntityPlayer.h"
 #include "PacketDisconnect.h"
 #include "PacketHandler.h"
 #include "PacketHandshake.h"
 #include "PacketLoginStart.h"
 #include "PacketQueue.cpp"
-#include "Player.h"
 #include "ServerPacket.h"
 #include "Logger.h"
 

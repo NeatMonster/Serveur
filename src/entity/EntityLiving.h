@@ -1,13 +1,13 @@
-#ifndef __Serveur__LivingEntity__
-#define __Serveur__LivingEntity__
+#ifndef __Serveur__EntityLiving__
+#define __Serveur__EntityLiving__
 
 #include "Entity.h"
 
-class LivingEntity : public Entity {
+class EntityLiving : public Entity {
 public:
-    LivingEntity(World*);
+    EntityLiving(World*);
 
-    virtual ~LivingEntity();
+    virtual ~EntityLiving();
 
     virtual Type getType() = 0;
 
@@ -25,4 +25,4 @@ protected:
     int_t headYaw, lastHeadYaw;
 };
 
-#endif /* defined(__Serveur__LivingEntity__) */
+#endif /* defined(__Serveur__EntityLiving__) */

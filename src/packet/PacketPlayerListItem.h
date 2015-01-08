@@ -6,13 +6,13 @@
 #include <unordered_set>
 #include <vector>
 
-class Player;
+class EntityPlayer;
 
 class PacketPlayerListItem : public ServerPacket {
 public:
     enum Type {ADD_PLAYER, UPDATE_GAMEMODE, UPDATE_LATENCY, UPDATE_DISPLAY_NAME, REMOVE_PLAYER};
 
-    PacketPlayerListItem(Type, std::unordered_set<Player*>);
+    PacketPlayerListItem(Type, std::unordered_set<EntityPlayer*>);
 
     void write(PacketBuffer&);
 

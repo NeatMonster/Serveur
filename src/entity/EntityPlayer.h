@@ -1,19 +1,19 @@
-#ifndef __Serveur__Player__
-#define __Serveur__Player__
+#ifndef __Serveur__EntityPlayer__
+#define __Serveur__EntityPlayer__
 
 #include "ChatMessage.h"
 #include "CommandSender.h"
-#include "LivingEntity.h"
+#include "EntityLiving.h"
 #include "InventoryPlayer.h"
 
 class PlayerConnection;
 class ServerPacket;
 
-class Player : public LivingEntity, public CommandSender {
+class EntityPlayer : public EntityLiving, public CommandSender {
 public:
-    Player(World*, PlayerConnection*);
+    EntityPlayer(World*, PlayerConnection*);
 
-    virtual ~Player();
+    virtual ~EntityPlayer();
 
     virtual Type getType();
 
@@ -46,10 +46,10 @@ public:
     virtual void onTick();
 
 private:
-    InventoryPlayer inventory;
     PlayerConnection *connect;
+    InventoryPlayer inventory;
     string_t uuid;
     string_t name;
 };
 
-#endif /* defined(__Serveur__Player__) */
+#endif /* defined(__Serveur__EntityPlayer__) */

@@ -28,9 +28,9 @@ public:
 
     static NetworkManager *getNetwork();
 
-    static Player *getPlayer(string_t);
+    static EntityPlayer *getPlayer(string_t);
 
-    static const std::unordered_set<Player*> &getPlayers();
+    static const std::unordered_set<EntityPlayer*> &getPlayers();
 
     Server();
 
@@ -38,9 +38,9 @@ public:
 
     void stop();
 
-    void addPlayer(Player*);
+    void addPlayer(EntityPlayer*);
 
-    void removePlayer(Player*);
+    void removePlayer(EntityPlayer*);
 
     string_t getName();
 
@@ -57,7 +57,7 @@ private:
     bool running;
     long_t ticks;
     World *world;
-    std::unordered_set<Player*> players;
+    std::unordered_set<EntityPlayer*> players;
 
     void run();
 };

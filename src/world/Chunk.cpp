@@ -28,15 +28,15 @@ int_t Chunk::getZ() {
     return z;
 }
 
-const std::unordered_set<Player*> &Chunk::getPlayers() {
+const std::unordered_set<EntityPlayer*> &Chunk::getPlayers() {
     return players;
 }
 
-void Chunk::addPlayer(Player *player) {
+void Chunk::addPlayer(EntityPlayer *player) {
     players.insert(player);
 }
 
-void Chunk::removePlayer(Player *player) {
+void Chunk::removePlayer(EntityPlayer *player) {
     players.erase(player);
 }
 
