@@ -47,13 +47,13 @@ bool PlayerConnection::isClosed() {
 }
 
 string_t PlayerConnection::getName() {
-    if (handler->name.empty())
+    if (handler->profile == nullptr)
         return "/" + socket->getIP() + ":" + std::to_string(socket->getPort());
-    return handler->name;
+    return handler->profile->getName();
 }
 
 string_t PlayerConnection::getUUID() {
-    return handler->uuid;
+    return handler->profile->getUUID();
 }
 
 string_t PlayerConnection::getIP() {

@@ -26,7 +26,7 @@
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
-PacketHandler::PacketHandler(PlayerConnection *connect) : connect(connect) {}
+PacketHandler::PacketHandler(PlayerConnection *connect) : connect(connect), profile(nullptr) {}
 
 void PacketHandler::handleHandshake(PacketHandshake *packet) {
     switch (packet->nextState) {
@@ -45,29 +45,10 @@ void PacketHandler::handleHandshake(PacketHandshake *packet) {
 }
 
 void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
-    name = packet->name;
-    string_t s = "OfflinePlayer:" + name;
-    md5_context ctx;
-    md5_init(&ctx);
-    md5_starts(&ctx);
-    md5_update(&ctx, (ubyte_t*) s.data(), s.size());
-    ubytes_t hash(16);
-    md5_finish(&ctx, hash.data());
-    md5_free(&ctx);
-    hash[6] &= 0x0f;
-    hash[6] |= 0x30;
-    hash[8] &= 0x3f;
-    hash[8] |= 0x80;
-    std::stringstream ss;
-    for (int i = 0; i < 16; i++) {
-        if (i == 4 || i == 6 || i == 8 || i == 10)
-            ss << "-";
-        ss << std::setw(2) << std::hex << std::setfill('0') << (int) hash[i];
-    }
-    uuid = ss.str();
-    connect->sendPacket(new PacketLoginSuccess(uuid, name));
+    profile = Server::getDatabase()->getProfile(packet->name);
+    connect->sendPacket(new PacketLoginSuccess(profile->getUUID(), profile->getName()));
     for (Player *const &player : Server::getPlayers())
-        if (player->getUUID() == uuid)
+        if (player->getUUID() == profile->getUUID())
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
     Player *player = new Player(Server::getServer()->getWorld(), connect);
