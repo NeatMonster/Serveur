@@ -29,7 +29,7 @@ public:
 
     static const std::unordered_set<EntityPlayer*> &getPlayers();
 
-    Server();
+    Server(ushort_t);
 
     virtual ~Server();
 

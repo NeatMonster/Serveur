@@ -25,13 +25,11 @@ varint_t NetworkManager::getKeepAliveId() {
     return keepAliveId;
 }
 
-bool NetworkManager::start() {
-    string_t ip = "0.0.0.0";
-    ushort port = 25566;
+bool NetworkManager::start(ushort_t port) {
     try {
-        socket = new ServerSocket(Socket::SocketAddress(ip, port));
+        socket = new ServerSocket(Socket::SocketAddress("0.0.0.0", port));
         socket->open();
-        Logger() << "Démarrage du serveur sur " << ip << ":" << port << std::endl;
+        Logger() << "Démarrage du serveur sur le port " << port << std::endl;
         running = true;
         thread = std::thread(&NetworkManager::run, this);
         return true;

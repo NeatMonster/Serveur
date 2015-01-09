@@ -15,7 +15,7 @@ public:
 
     varint_t getKeepAliveId();
 
-    bool start();
+    bool start(ushort_t);
 
     bool stop();
 

@@ -3,6 +3,7 @@
 #include "EntityPlayer.h"
 #include "Logger.h"
 #include "PacketChatMessage.h"
+#include "Types.h"
 #include "World.h"
 
 #include <chrono>
@@ -10,8 +11,29 @@
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
-int main() {
-    delete new Server();
+int main(int argc, char* argv[]) {
+    ushort_t port = 25566;
+    for (int i = 1; i < argc; i++) {
+        string_t arg = string_t(argv[i]);
+        if (arg == "-h" || arg == "--help") {
+            std::cout << "Usage : " << string_t(argv[0]) << " [options]" << std::endl;
+            std::cout << "Options : " << std::endl;
+            std::cout << "\t-h,--help\t\tAffiche l'aide" << std::endl;
+            std::cout << "\t-p,--port\t\tSpécifie le port" << std::endl;
+            return 0;
+        } else if (arg == "-p" || arg == "--port") {
+            try {
+                port = std::stoi(string_t(argv[++i]));
+            } catch (const std::exception &e) {
+                std::cout << "Le port spécifié est invalide" << std::endl;
+                return 0;
+            }
+        } else {
+            std::cout << "Option '" << arg << "' non reconnue." << std::endl;
+            return 0;
+        }
+    }
+    delete new Server(port);
     return 0;
 }
 
@@ -47,14 +69,14 @@ const std::unordered_set<EntityPlayer*> &Server::getPlayers() {
     return instance->players;
 }
 
-Server::Server() : running(true), ticks(0) {
+Server::Server(ushort_t port) : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
     commands = new CommandManager();
     database = new Database();
     network = new NetworkManager();
     world = new World("world");
-    if (database->run() && network->start()) {
+    if (database->run() && network->start(port)) {
         run();
         network->stop();
     }
