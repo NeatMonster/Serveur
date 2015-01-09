@@ -4,7 +4,6 @@
 #include "ChatMessage.h"
 #include "CommandManager.h"
 #include "CommandSender.h"
-#include "ConfigManager.h"
 #include "Database.h"
 #include "NetworkManager.h"
 #include "Types.h"
@@ -21,8 +20,6 @@ public:
     static void broadcast(ChatMessage&);
 
     static CommandManager *getCommands();
-
-    static ConfigManager *getConfig();
 
     static Database *getDatabase();
 
@@ -51,7 +48,6 @@ public:
 private:
     static Server *instance;
     CommandManager *commands;
-    ConfigManager *config;
     Database *database;
     NetworkManager *network;
     bool running;

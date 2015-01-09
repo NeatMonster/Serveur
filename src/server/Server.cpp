@@ -28,10 +28,6 @@ CommandManager *Server::getCommands() {
     return instance->commands;
 }
 
-ConfigManager *Server::getConfig() {
-    return instance->config;
-}
-
 Database *Server::getDatabase() {
     return instance->database;
 }
@@ -55,7 +51,6 @@ Server::Server() : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
     commands = new CommandManager();
-    config = new ConfigManager();
     database = new Database();
     network = new NetworkManager();
     world = new World("world");
@@ -67,7 +62,6 @@ Server::Server() : running(true), ticks(0) {
 
 Server::~Server() {
     delete commands;
-    delete config;
     delete database;
     delete network;
     delete world;
