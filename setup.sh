@@ -24,17 +24,6 @@ cd ..
 rm legacy-1.0.0-rc3.tar.gz
 rm -rf mongo-cxx-driver-legacy-1.0.0-rc3
 
-#echo "Installation de PolarSSL..."
-#wget https://github.com/polarssl/polarssl/archive/polarssl-1.3.9.tar.gz
-#tar -zxvf polarssl-1.3.9.tar.gz
-#cd polarssl-polarssl-1.3.9
-#make
-#cp -r include/polarssl/ ../include/polarssl
-#cp library/libpolarssl.a ../lib
-#cd ..
-#rm polarssl-1.3.9.tar.gz
-#rm -rf polarssl-polarssl-1.3.9
-
 echo "Installation de zlib..."
 wget https://github.com/madler/zlib/archive/v1.2.8.tar.gz
 tar -zxvf v1.2.8.tar.gz
