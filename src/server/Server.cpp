@@ -77,7 +77,9 @@ Server::Server(ushort_t port) : running(true), ticks(0) {
     network = new NetworkManager();
     world = new World("world");
     if (database->run() && network->start(port)) {
+        database->addServer(port);
         run();
+        database->removeServer();
         network->stop();
     }
 }

@@ -14,7 +14,12 @@ public:
 
     Profile *getProfile(string_t);
 
+    void addServer(ushort_t);
+
+    void removeServer();
+
 private:
+    mongo::OID _id;
     mongo::DBClientConnection c;
 };
 
