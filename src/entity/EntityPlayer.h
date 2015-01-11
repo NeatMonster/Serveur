@@ -13,29 +13,23 @@ class EntityPlayer : public EntityLiving, public CommandSender {
 public:
     EntityPlayer(World*, PlayerConnection*);
 
-    virtual ~EntityPlayer();
-
-    virtual Type getType();
+    Type getType();
 
     World *getWorld();
 
-    virtual void move(double_t, double_t, double_t);
+    void move(double_t, double_t, double_t);
 
     string_t getUUID();
 
     string_t getName();
 
-    string_t getIP();
-
-    ushort_t getPort();
-
-    float_t getPing();
+    PlayerConnection *getConnection();
 
     InventoryPlayer &getInventory();
 
-    void sendMessage(ChatMessage&);
-
     void disconnect(string_t);
+
+    void sendMessage(ChatMessage&);
 
     void sendPacket(ServerPacket*);
 
@@ -43,7 +37,7 @@ public:
 
     void onQuitGame();
 
-    virtual void onTick();
+    ServerPacket *getSpawnPacket();
 
 private:
     PlayerConnection *connect;

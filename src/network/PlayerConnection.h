@@ -5,6 +5,7 @@
 #include "PacketBuffer.h"
 #include "PacketFactory.h"
 #include "PacketQueue.h"
+#include "Profile.h"
 
 #include <atomic>
 #include <chrono>
@@ -35,9 +36,7 @@ public:
 
     bool isClosed();
 
-    string_t getName();
-
-    string_t getUUID();
+    Profile *getProfile();
 
     string_t getIP();
 
@@ -64,9 +63,12 @@ private:
     std::atomic<bool> closed;
     std::atomic<Phase> phase;
     EntityPlayer *player;
+    Profile *profile;
     Clock::time_point sentKeepAlive;
     Clock::time_point rcvdKeepAlive;
     float_t ping;
+
+    string_t getName();
 
     void runRead();
 

@@ -7,6 +7,7 @@
 #include <vector>
 
 class EntityPlayer;
+class Profile;
 
 class PacketPlayerListItem : public ServerPacket {
 public:
@@ -19,7 +20,7 @@ public:
 private:
     struct Action {
         string_t uuid;
-        string_t name;
+        Profile *profile;
         varint_t gamemode;
         varint_t ping;
         bool hasDisplayName;

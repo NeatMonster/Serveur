@@ -7,13 +7,14 @@
 
 class Chunk;
 class EntityPlayer;
+class ServerPacket;
 class World;
 
 class Entity {
     friend class PacketHandler;
 
 public:
-    enum Type { PLAYER };
+    enum Type { PLAYER, ITEM = 2 };
 
     Entity(World*);
 
@@ -21,13 +22,13 @@ public:
 
     virtual Type getType() = 0;
 
-    int_t getEntityId();
+    varint_t getEntityId();
 
-    Chunk *getChunk();
+    bool isDead();
+
+    void setDead();
 
     World *getWorld();
-
-    std::unordered_set<EntityPlayer*> getWatchers();
 
     double_t getX();
 
@@ -47,16 +48,18 @@ public:
 
     virtual void rotate(float_t, float_t);
 
-    bool isDead();
+    Chunk *getChunk();
 
-    void setDead();
+    std::unordered_set<EntityPlayer*> getWatchers();
+
+    virtual ServerPacket *getSpawnPacket() = 0;
 
     virtual void onTick();
 
 protected:
     Type type;
     World *world;
-    int_t entityId;
+    varint_t entityId;
     int_t ticks;
     bool dead;
 

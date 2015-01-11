@@ -18,17 +18,8 @@
 #include "World.h"
 
 EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect), inventory() {
-    uuid = connect->getUUID();
-    name = connect->getName();
-    world->addPlayer(this);
-    onJoinGame();
-    Server::getServer()->addPlayer(this);
-}
-
-EntityPlayer::~EntityPlayer() {
-    Server::getServer()->removePlayer(this);
-    world->removePlayer(this);
-    onQuitGame();
+    uuid = connect->getProfile()->getUUID();
+    name = connect->getProfile()->getName();
 }
 
 Entity::Type EntityPlayer::getType() {
@@ -86,16 +77,8 @@ string_t EntityPlayer::getName() {
     return name;
 }
 
-string_t EntityPlayer::getIP() {
-    return connect->getIP();
-}
-
-ushort EntityPlayer::getPort() {
-    return connect->getPort();
-}
-
-float_t EntityPlayer::getPing() {
-    return connect->getPing();
+PlayerConnection *EntityPlayer::getConnection() {
+    return connect;
 }
 
 InventoryPlayer &EntityPlayer::getInventory() {
@@ -145,6 +128,7 @@ void EntityPlayer::onJoinGame() {
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
     players.insert(this);
     sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, players));
+    Server::getServer()->addPlayer(this);
 
     PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
     posPacket->x = x;
@@ -175,10 +159,8 @@ void EntityPlayer::onJoinGame() {
             sendPacket(new PacketMapChunkBulk(packetChunks));
             for (Chunk *&packetChunk : packetChunks)
                 for (EntityPlayer *const &player : packetChunk->getPlayers())
-                    if (player != this) {
+                    if (player != this)
                         sendPacket(new PacketSpawnPlayer(player));
-                        player->sendPacket(new PacketSpawnPlayer(this));
-                    }
             packetChunks.clear();
         }
         packetChunks.push_back(chunk);
@@ -187,22 +169,20 @@ void EntityPlayer::onJoinGame() {
         sendPacket(new PacketMapChunkBulk(packetChunks));
         for (Chunk *&packetChunk : packetChunks)
             for (EntityPlayer *const &player : packetChunk->getPlayers())
-                if (player != this) {
+                if (player != this)
                     sendPacket(new PacketSpawnPlayer(player));
-                    player->sendPacket(new PacketSpawnPlayer(this));
-                }
     }
+    packetChunks.clear();
 }
-void EntityPlayer::onQuitGame() {
-    for (EntityPlayer *const &watcher : getWatchers())
-        watcher->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
 
+void EntityPlayer::onQuitGame() {
+    Server::getServer()->removePlayer(this);
     Server::broadcast(Chat() << Color::YELLOW << name << " a quitté la partie");
 
     for (EntityPlayer *const &player : Server::getPlayers())
         player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));
 }
 
-void EntityPlayer::onTick() {
-    EntityLiving::onTick();
+ServerPacket *EntityPlayer::getSpawnPacket() {
+    return new PacketSpawnPlayer(this);
 }

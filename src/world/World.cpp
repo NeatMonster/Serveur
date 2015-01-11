@@ -3,6 +3,7 @@
 #include "Chunk.h"
 #include "EntityPlayer.h"
 #include "Level.h"
+#include "PacketDestroyEntities.h"
 #include "PacketTimeUpdate.h"
 #include "Region.h"
 #include "Section.h"
@@ -29,30 +30,54 @@ Level *World::getLevel() {
     return level;
 }
 
+const std::unordered_set<Entity*> &World::getEntities() {
+    return entities;
+}
+
+void World::addEntity(Entity *entity) {
+    entities.insert(entity);
+    entity->getChunk()->addEntity(entity);
+    EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
+    if (player != nullptr)
+        addPlayer(player);
+    for (EntityPlayer *const watcher : entity->getWatchers())
+        watcher->sendPacket(entity->getSpawnPacket());
+}
+
+void World::removeEntity(Entity *entity) {
+    for (EntityPlayer *const watcher : entity->getWatchers())
+        watcher->sendPacket(new PacketDestroyEntities({entity->getEntityId()}));
+    EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
+    if (player != nullptr)
+        removePlayer(player);
+    entity->getChunk()->removeEntity(entity);
+    entities.erase(entity);
+}
+
 const std::unordered_set<EntityPlayer*> &World::getPlayers() {
     return players;
 }
 
 void World::addPlayer(EntityPlayer *player) {
-    Position spawn = getLevel()->getSpawn();
-    player->setPosition(spawn.x, spawn.y, spawn.z);
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
     int_t zChunk = (int_t) floor(player->getZ()) >> 4;
-    players.insert(player);
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
             tryLoadChunk(xChunk + x, zChunk + z);
+    players.insert(player);
     player->getChunk()->addPlayer(player);
+    player->onJoinGame();
 }
 
 void World::removePlayer(EntityPlayer *player) {
+    player->onQuitGame();
+    player->getChunk()->removePlayer(player);
+    players.erase(player);
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
     int_t zChunk = (int_t) floor(player->getZ()) >> 4;
-    player->getChunk()->removePlayer(player);
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
         for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
             tryUnloadChunk(xChunk + x, zChunk + z);
-    players.erase(player);
 }
 
 Region *World::getRegion(int_t x, int_t z) {
@@ -134,8 +159,13 @@ void World::tryUnloadChunk(int_t x, int_t z) {
 }
 
 void World::onTick() {
-    for (EntityPlayer *const &player : players)
-        player->onTick();
+    for (Entity *const &entity : std::unordered_set<Entity*>(entities)) {
+        entity->onTick();
+        if (entity->isDead()) {
+            removeEntity(entity);
+            delete entity;
+        }
+    }
     level->setTime(level->getTime() + 1);
     level->setDayTime(level->getDayTime() + 1);
     if (level->getTime() % 20 == 0)

@@ -17,9 +17,9 @@ public:
 
     void setHeadRotation(float_t);
 
-    virtual void rotateHead(float_t);
+    void rotateHead(float_t);
 
-    virtual void onTick();
+    void onTick();
 
 protected:
     int_t headYaw, lastHeadYaw;

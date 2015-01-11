@@ -15,31 +15,20 @@ Entity::Entity(World *world) : world(world), ticks(0), dead(false), x(0), y(0), 
 
 Entity::~Entity() {}
 
-int_t Entity::getEntityId() {
+varint_t Entity::getEntityId() {
     return entityId;
 }
 
-Chunk *Entity::getChunk() {
-    return world->getChunk((int_t) floor_d(x) >> 4, (int_t) floor_d(z) >> 4);
+bool Entity::isDead() {
+    return dead;
+}
+
+void Entity::setDead() {
+    dead = true;
 }
 
 World *Entity::getWorld() {
     return world;
-}
-
-std::unordered_set<EntityPlayer*> Entity::getWatchers() {
-    std::unordered_set<EntityPlayer*> watchers;
-    int_t xChunk = (int_t) floor(x) >> 4;
-    int_t zChunk = (int_t) floor(z) >> 4;
-    for (int x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++) {
-            Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
-            if (chunk != nullptr)
-                for (EntityPlayer *const &watcher : chunk->getPlayers())
-                    if (watcher->getEntityId() != getEntityId())
-                        watchers.insert(watcher);
-        }
-    return watchers;
 }
 
 double_t Entity::getX() {
@@ -69,6 +58,14 @@ void Entity::setPosition(double_t x, double_t y, double_t z) {
 }
 
 void Entity::move(double_t x, double_t y, double_t z) {
+    int_t xOld = (int_t) floor(this->x) >> 4;
+    int_t zOld = (int_t) floor(this->z) >> 4;
+    int_t xNew = (int_t) floor(x) >> 4;
+    int_t zNew = (int_t) floor(z) >> 4;
+    if (xOld != xNew || zOld != zNew) {
+        world->getChunk(xOld, zOld)->removeEntity(this);
+        world->getChunk(xNew, zNew)->addEntity(this);
+    }
     setPosition(x, y, z);
 }
 
@@ -81,12 +78,23 @@ void Entity::rotate(float_t yaw, float_t pitch) {
     setRotation(yaw, pitch);
 }
 
-bool Entity::isDead() {
-    return dead;
+Chunk *Entity::getChunk() {
+    return world->getChunk((int_t) floor_d(x) >> 4, (int_t) floor_d(z) >> 4);
 }
 
-void Entity::setDead() {
-    dead = true;
+std::unordered_set<EntityPlayer*> Entity::getWatchers() {
+    std::unordered_set<EntityPlayer*> watchers;
+    int_t xChunk = (int_t) floor(x) >> 4;
+    int_t zChunk = (int_t) floor(z) >> 4;
+    for (int x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
+        for (int z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++) {
+            Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
+            if (chunk != nullptr)
+                for (EntityPlayer *const &watcher : chunk->getPlayers())
+                    if (watcher->getEntityId() != getEntityId())
+                        watchers.insert(watcher);
+        }
+    return watchers;
 }
 
 void Entity::onTick() {

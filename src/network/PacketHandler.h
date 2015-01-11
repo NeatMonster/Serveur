@@ -1,7 +1,6 @@
 #ifndef __Serveur__PacketHandler__
 #define __Serveur__PacketHandler__
 
-#include "Profile.h"
 #include "Types.h"
 
 class PacketAnimation;
@@ -47,7 +46,6 @@ public:
 
 private:
     PlayerConnection *connect;
-    Profile *profile;
 };
 
 #endif /* defined(__Serveur__PacketHandler__) */

@@ -31,6 +31,12 @@ public:
 
     int_t getZ();
 
+    const std::unordered_set<Entity*> &getEntities();
+
+    void addEntity(Entity*);
+
+    void removeEntity(Entity*);
+
     const std::unordered_set<EntityPlayer*> &getPlayers();
 
     void addPlayer(EntityPlayer*);
@@ -48,6 +54,7 @@ private:
     ubyte_t biomes[256];
     int_t heightMap[256];
     Section *sections[16];
+    std::unordered_set<Entity*> entities;
     std::unordered_set<EntityPlayer*> players;
 };
 

@@ -22,6 +22,12 @@ public:
 
     string_t getName();
 
+    const std::unordered_set<Entity*> &getEntities();
+
+    void addEntity(Entity*);
+
+    void removeEntity(Entity*);
+
     const std::unordered_set<EntityPlayer*> &getPlayers();
 
     void addPlayer(EntityPlayer*);
@@ -49,6 +55,7 @@ public:
 private:
     Level *level;
     string_t name;
+    std::unordered_set<Entity*> entities;
     std::unordered_set<EntityPlayer*> players;
     std::unordered_map<long_t, Chunk*> chunks;
     std::unordered_map<long_t, Region*> regions;

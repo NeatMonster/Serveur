@@ -13,7 +13,7 @@
 #include "Logger.h"
 
 PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket),
-        closed(false), phase(HANDSHAKE), player(nullptr), ping(0) {
+        closed(false), phase(HANDSHAKE), player(nullptr), profile(nullptr), ping(0) {
     handler = new PacketHandler(this);
     readThread = std::thread(&PlayerConnection::runRead, this);
     writeThread = std::thread(&PlayerConnection::runWrite, this);
@@ -22,7 +22,9 @@ PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket),
 
 PlayerConnection::~PlayerConnection() {
     if (player != nullptr)
-        delete player;
+        player->setDead();
+    if (profile != nullptr)
+        delete profile;
     delete handler;
     delete socket;
 }
@@ -46,21 +48,15 @@ bool PlayerConnection::isClosed() {
     return closed;
 }
 
-string_t PlayerConnection::getName() {
-    if (handler->profile == nullptr)
-        return "/" + socket->getIP() + ":" + std::to_string(socket->getPort());
-    return handler->profile->getName();
-}
-
-string_t PlayerConnection::getUUID() {
-    return handler->profile->getUUID();
+Profile *PlayerConnection::getProfile() {
+    return profile;
 }
 
 string_t PlayerConnection::getIP() {
     return socket->getIP();
 }
 
-ushort PlayerConnection::getPort() {
+ushort_t PlayerConnection::getPort() {
     return socket->getPort();
 }
 
@@ -86,6 +82,12 @@ void PlayerConnection::disconnect(string_t reason) {
 }
 
 PacketFactory PlayerConnection::factory;
+
+string_t PlayerConnection::getName() {
+    if (profile == nullptr)
+        return "/" + socket->getIP() + ":" + std::to_string(socket->getPort());
+    return profile->getName();
+}
 
 void PlayerConnection::runRead() {
     try {

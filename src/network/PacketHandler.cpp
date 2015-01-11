@@ -1,6 +1,8 @@
 #include "PacketHandler.h"
 
+#include "EntityItem.h"
 #include "EntityPlayer.h"
+#include "Level.h"
 #include "Logger.h"
 #include "PacketAnimation.h"
 #include "PacketChatMessage.h"
@@ -16,6 +18,7 @@
 #include "PacketPluginMessage.h"
 #include "PlayerConnection.h"
 #include "Server.h"
+#include "World.h"
 
 #include <chrono>
 #include <iomanip>
@@ -24,7 +27,7 @@
 using namespace std::chrono;
 typedef std::chrono::high_resolution_clock Clock;
 
-PacketHandler::PacketHandler(PlayerConnection *connect) : connect(connect), profile(nullptr) {}
+PacketHandler::PacketHandler(PlayerConnection *connect) : connect(connect) {}
 
 void PacketHandler::handleHandshake(PacketHandshake *packet) {
     switch (packet->nextState) {
@@ -43,15 +46,20 @@ void PacketHandler::handleHandshake(PacketHandshake *packet) {
 }
 
 void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
-    profile = Server::getDatabase()->getProfile(packet->name);
+    Profile *profile = Server::getDatabase()->getProfile(packet->name);
+    connect->profile = profile;
     connect->sendPacket(new PacketLoginSuccess(profile->getUUID(), profile->getName()));
     for (EntityPlayer *const &player : Server::getPlayers())
         if (player->getUUID() == profile->getUUID())
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
-    EntityPlayer *player = new EntityPlayer(Server::getServer()->getWorld(), connect);
+    World *world = Server::getServer()->getWorld();
+    EntityPlayer *player = new EntityPlayer(world, connect);
+    Position spawn = world->getLevel()->getSpawn();
+    player->setPosition(spawn.x, spawn.y, spawn.z);
+    world->addEntity(player);
     connect->player = player;
-    Logger() << player->getName() << " [/" << player->getIP() << ":" << player->getPort()
+    Logger() << player->getName() << " [/" << player->getConnection()->getIP() << ":" << player->getConnection()->getPort()
         << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
         << " en (" << player->getX() << ", " << player->getY() << ", " << player->getZ() << ")" << std::endl;
 }
@@ -127,8 +135,11 @@ void PacketHandler::handleAnimation(PacketAnimation*) {
 }
 
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
-    if(packet->slot == -1) {
-        //TODO Gérer le drop
+    if (packet->slot == -1) {
+        EntityPlayer *player = connect->player;
+        EntityItem *entity = new EntityItem(player->getWorld(), packet->stack->clone());
+        entity->setPosition(player->getX(), player->getY(), player->getZ());
+        player->getWorld()->addEntity(entity);
     } else if (packet->stack == nullptr) {
         connect->player->getInventory().putStack(packet->slot, nullptr);
     } else
