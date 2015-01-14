@@ -39,6 +39,8 @@ public:
 
     ServerPacket *getSpawnPacket();
 
+    ServerPacket *getMetadataPacket();
+
 private:
     PlayerConnection *connect;
     InventoryPlayer inventory;

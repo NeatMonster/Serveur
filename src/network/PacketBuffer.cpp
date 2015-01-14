@@ -116,8 +116,12 @@ void PacketBuffer::getItemStack(ItemStack *&item) {
 
 void PacketBuffer::getNBT(NBTTagCompound *&tag) {
     ubyte_t *data = buffer.data() + position;
-    tag = NBTTag::read(data);
-    position += data - buffer.data() - position;
+    byte_t nbt;
+    getByte(nbt);
+    if (nbt != 0) {
+        tag = NBTTag::read(data);
+        position = data - buffer.data();
+    }
 }
 
 void PacketBuffer::put(ubyte_t *b) {
@@ -218,7 +222,17 @@ void PacketBuffer::putItemStack(ItemStack *item) {
         putShort(item->getType());
         putByte(item->getAmount());
         putShort(item->getDamage());
-        //TODO Écrire les tags NBT
+        putNBT(item->nbt);
+    }
+}
+
+void PacketBuffer::putNBT(NBTTagCompound *tag) {
+    if (tag == nullptr)
+        putByte(0);
+    else {
+        ubyte_t *data = buffer.data() + position;
+        tag->NBTTag::write(data);
+        position = data - buffer.data();
     }
 }
 

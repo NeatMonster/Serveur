@@ -54,6 +54,8 @@ public:
 
     virtual ServerPacket *getSpawnPacket() = 0;
 
+    virtual ServerPacket *getMetadataPacket() = 0;
+
     virtual void onTick();
 
 protected:

@@ -14,6 +14,8 @@ public:
 
     ServerPacket *getSpawnPacket();
 
+    ServerPacket *getMetadataPacket();
+
     void onTick();
 
 private:

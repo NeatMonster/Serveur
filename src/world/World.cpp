@@ -40,8 +40,12 @@ void World::addEntity(Entity *entity) {
     EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
     if (player != nullptr)
         addPlayer(player);
-    for (EntityPlayer *const watcher : entity->getWatchers())
+    for (EntityPlayer *const watcher : entity->getWatchers()) {
         watcher->sendPacket(entity->getSpawnPacket());
+        ServerPacket *metaPacket = entity->getMetadataPacket();
+        if (metaPacket != nullptr)
+            watcher->sendPacket(metaPacket);
+    }
 }
 
 void World::removeEntity(Entity *entity) {

@@ -186,3 +186,7 @@ void EntityPlayer::onQuitGame() {
 ServerPacket *EntityPlayer::getSpawnPacket() {
     return new PacketSpawnPlayer(this);
 }
+
+ServerPacket *EntityPlayer::getMetadataPacket() {
+    return nullptr;
+}
