@@ -65,11 +65,13 @@ protected:
     int_t ticks;
     bool dead;
 
-    double_t x, y, z;
-    float_t yaw, pitch;
+    double_t posX, posY, posZ;
+    float_t rotYaw, rotPitch;
+    double_t motX, motY, motZ;
     bool onGround;
-    int_t lastX, lastY, lastZ;
-    int_t lastYaw, lastPitch;
+    int_t lastPosX, lastPosY, lastPosZ;
+    int_t lastRotYaw, lastRotPitch;
+    int_t lastMotX, lastMotY, lastMotZ;
     bool lastOnGround;
 
 private:

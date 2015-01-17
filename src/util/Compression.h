@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <stdexcept>
+
 class Compression {
 public:
     class CompressionException: public std::runtime_error {
