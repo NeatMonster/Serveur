@@ -20,6 +20,7 @@
 EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect), inventory() {
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
+    setSize(0.6, 1.8);
 }
 
 Entity::Type EntityPlayer::getType() {

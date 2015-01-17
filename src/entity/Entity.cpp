@@ -9,9 +9,9 @@
 #include "PacketEntityVelocity.h"
 #include "World.h"
 
-Entity::Entity(World *world) : world(world), ticks(0), dead(false), posX(0), posY(0), posZ(0), rotYaw(0), rotPitch(0),
-    motX(0), motY(0), motZ(0), onGround(false), lastPosX(0), lastPosY(0), lastPosZ(0), lastRotYaw(0), lastRotPitch(0),
-    lastMotX(0), lastMotY(0), lastMotZ(0), lastOnGround(false) {
+Entity::Entity(World *world) : world(world), ticks(0), dead(false), boundingBox({0, 0, 0, 0, 0, 0}), posX(0), posY(0),
+    posZ(0), rotYaw(0), rotPitch(0), motX(0), motY(0), motZ(0), onGround(false), lastPosX(0), lastPosY(0), lastPosZ(0),
+    lastRotYaw(0), lastRotPitch(0), lastMotX(0), lastMotY(0), lastMotZ(0), lastOnGround(false) {
     entityId = nextEntityId++;
 }
 
@@ -27,6 +27,10 @@ bool Entity::isDead() {
 
 void Entity::setDead() {
     dead = true;
+}
+
+AxisAlignedBB Entity::getBoundingBox() {
+    return boundingBox;
 }
 
 World *Entity::getWorld() {
@@ -57,6 +61,7 @@ void Entity::setPosition(double_t x, double_t y, double_t z) {
     posX = x;
     posY = y;
     posZ = z;
+    boundingBox.setPosition(x, y, z);
 }
 
 void Entity::move(double_t x, double_t y, double_t z) {
@@ -173,6 +178,10 @@ void Entity::onTick() {
     lastRotYaw = rotYaw;
     lastRotPitch = rotPitch;
     lastOnGround = onGround;
+}
+
+void Entity::setSize(float_t width, float_t height) {
+    boundingBox.setDimension(width, height, width);
 }
 
 int_t Entity::nextEntityId = 0;
