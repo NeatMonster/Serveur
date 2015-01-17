@@ -26,6 +26,10 @@ private:
     static std::unordered_map<ushort_t, Item*> idToItem;
     static std::unordered_map<string_t, ushort_t> nameToId;
     static std::unordered_map<string_t, Item*> nameToItem;
+
+protected:
+    int maxStackSize = 64;
+    int maxDamage;
 };
 
 #endif /* defined(__Serveur__Item__) */
