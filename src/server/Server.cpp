@@ -89,8 +89,8 @@ Server::Server(ushort_t port) : running(true), ticks(0) {
 }
 
 Server::~Server() {
-    Item::deRegisterItems();
-    Block::deRegisterBlocks();
+    Item::deregisterItems();
+    Block::deregisterBlocks();
     delete commands;
     delete database;
     delete network;

@@ -199,7 +199,7 @@ void Item::registerItems() {
     registerItem(2267, "record_wait", new Item());
 }
 
-void Item::deRegisterItems() {
+void Item::deregisterItems() {
     std::unordered_map<string_t, Item*>::iterator it;
 
     for(it = nameToItem.begin(); it != nameToItem.end(); ++it)
