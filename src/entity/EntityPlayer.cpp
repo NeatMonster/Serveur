@@ -20,6 +20,7 @@
 EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect), inventory() {
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
+    setSize(0.6, 1.8);
 }
 
 Entity::Type EntityPlayer::getType() {
@@ -31,8 +32,8 @@ World *EntityPlayer::getWorld() {
 }
 
 void EntityPlayer::move(double_t x, double_t y, double_t z) {
-    int_t xOld = (int_t) floor(this->x) >> 4;
-    int_t zOld = (int_t) floor(this->z) >> 4;
+    int_t xOld = (int_t) floor(this->posX) >> 4;
+    int_t zOld = (int_t) floor(this->posZ) >> 4;
     EntityLiving::move(x, y, z);
     int_t xNew = (int_t) floor(x) >> 4;
     int_t zNew = (int_t) floor(z) >> 4;
@@ -110,7 +111,7 @@ void EntityPlayer::onJoinGame() {
     joinPacket->reducedDebugInfo = false;
     sendPacket(joinPacket);
 
-    sendPacket(new PacketSpawnPosition(x, y, z));
+    sendPacket(new PacketSpawnPosition(posX, posY, posZ));
 
     PacketPlayerAbilities *abilPacket = new PacketPlayerAbilities();
     abilPacket->godMode = true;
@@ -131,17 +132,17 @@ void EntityPlayer::onJoinGame() {
     Server::getServer()->addPlayer(this);
 
     PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
-    posPacket->x = x;
-    posPacket->y = y;
-    posPacket->z = z;
-    posPacket->yaw = yaw;
-    posPacket->pitch = pitch;
+    posPacket->x = posX;
+    posPacket->y = posY;
+    posPacket->z = posZ;
+    posPacket->yaw = rotYaw;
+    posPacket->pitch = rotPitch;
     posPacket->flags = 0;
     sendPacket(posPacket);
 
     sendPacket(new PacketTimeUpdate(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
-    int_t xChunk = (int_t) floor(x) >> 4;
-    int_t zChunk = (int_t) floor(z) >> 4;
+    int_t xChunk = (int_t) floor(posX) >> 4;
+    int_t zChunk = (int_t) floor(posZ) >> 4;
     std::vector<Chunk*> chunks = {world->getChunk(xChunk, zChunk)};
     for (int_t distance = 1; distance <= VIEW_DISTANCE; distance++) {
         for (int_t x = -distance; x < distance; x++)

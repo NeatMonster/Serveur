@@ -20,6 +20,8 @@ World::~World() {
         delete region.second;
     for (auto &chunk : chunks)
         delete chunk.second;
+    for (auto &entity : entities)
+        delete entity;
 }
 
 string_t World::getName() {

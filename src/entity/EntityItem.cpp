@@ -4,7 +4,9 @@
 #include "PacketEntityMetadata.h"
 #include "PacketSpawnObject.h"
 
-EntityItem::EntityItem(World *world, ItemStack *stack) : Entity(world), stack(stack) {}
+EntityItem::EntityItem(World *world, ItemStack *stack) : Entity(world), stack(stack) {
+    setSize(0.25, 0.25);
+}
 
 EntityItem::~EntityItem() {
     delete stack;
