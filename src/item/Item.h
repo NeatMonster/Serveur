@@ -11,6 +11,8 @@ public:
 
     static void registerItems();
 
+    static void deRegisterItems();
+
     static Item *getItem(ubyte_t);
 
     static Item *getItem(string_t);

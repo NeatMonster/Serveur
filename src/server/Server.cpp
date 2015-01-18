@@ -1,6 +1,8 @@
 #include "Server.h"
 
+#include "Block.h"
 #include "EntityPlayer.h"
+#include "Item.h"
 #include "Logger.h"
 #include "PacketChatMessage.h"
 #include "Types.h"
@@ -72,6 +74,8 @@ const std::unordered_set<EntityPlayer*> &Server::getPlayers() {
 Server::Server(ushort_t port) : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
+    Item::registerItems();
+    Block::registerBlocks();
     commands = new CommandManager();
     database = new Database();
     network = new NetworkManager();
@@ -85,6 +89,8 @@ Server::Server(ushort_t port) : running(true), ticks(0) {
 }
 
 Server::~Server() {
+    Item::deRegisterItems();
+    Block::deRegisterBlocks();
     delete commands;
     delete database;
     delete network;

@@ -199,6 +199,13 @@ void Item::registerItems() {
     registerItem(2267, "record_wait", new Item());
 }
 
+void Item::deRegisterItems() {
+    std::unordered_map<string_t, Item*>::iterator it;
+
+    for(it = nameToItem.begin(); it != nameToItem.end(); ++it)
+        delete it->second;
+}
+
 Item *Item::getItem(ubyte_t id) {
     return idToItem[id];
 }

@@ -9,50 +9,95 @@ void Block::registerBlock(ubyte_t id, string_t name, Block *block) {
 
 void Block::registerBlocks() {
     registerBlock(0, "air", new Block());
+    air = *getBlock("air");
     registerBlock(1, "stone", new Block());
+    stone = *getBlock("stone");
     registerBlock(2, "grass", new Block());
+    grass = *getBlock("grass");
     registerBlock(3, "dirt", new Block());
+    dirt = *getBlock("dirt");
     registerBlock(4, "cobblestone", new Block());
+    cobblestone = *getBlock("cobblestone");
     registerBlock(5, "planks", new Block());
+    planks = *getBlock("planks");
     registerBlock(6, "sapling", new Block());
+    sapling = *getBlock("sapling");
     registerBlock(7, "bedrock", new Block());
+    bedrock = *getBlock("bedrock");
     registerBlock(8, "flowing_water", new Block());
+    flowing_water = *getBlock("flowing_water");
     registerBlock(9, "water", new Block());
+    water = *getBlock("water");
     registerBlock(10, "flowing_lava", new Block());
+    flowing_lava = *getBlock("flowing_lava");
     registerBlock(11, "lava", new Block());
+    lava = *getBlock("lava");
     registerBlock(12, "sand", new Block());
+    sand = *getBlock("sand");
     registerBlock(13, "gravel", new Block());
+    gravel = *getBlock("gravel");
     registerBlock(14, "gold_ore", new Block());
+    gold_ore = *getBlock("gold_ore");
     registerBlock(15, "iron_ore", new Block());
+    iron_ore = *getBlock("iron_ore");
     registerBlock(16, "coal_ore", new Block());
+    coal_ore = *getBlock("coal_ore");
     registerBlock(17, "log", new Block());
+    log = *getBlock("log");
     registerBlock(18, "leaves", new Block());
+    leaves = *getBlock("leaves");
     registerBlock(19, "sponge", new Block());
+    sponge = *getBlock("sponge");
     registerBlock(20, "glass", new Block());
+    glass = *getBlock("glass");
     registerBlock(21, "lapis_ore", new Block());
+    lapis_ore = *getBlock("lapis_ore");
     registerBlock(22, "lapis_block", new Block());
+    lapis_block = *getBlock("lapis_block");
     registerBlock(23, "dispenser", new Block());
+    dispenser = *getBlock("dispenser");
     registerBlock(24, "sandstone", new Block());
+    sandstone = *getBlock("sandstone");
     registerBlock(25, "noteblock", new Block());
+    noteblock = *getBlock("noteblock");
     registerBlock(26, "bed", new Block());
+    bed = *getBlock("bed");
     registerBlock(27, "golden_rail", new Block());
+    golden_rail = *getBlock("golden_rail");
     registerBlock(28, "detector_rail", new Block());
+    detector_rail = *getBlock("detector_rail");
     registerBlock(29, "sticky_piston", new Block());
+    sticky_piston = *getBlock("sticky_piston");
     registerBlock(30, "web", new Block());
+    web = *getBlock("web");
     registerBlock(31, "tallgrass", new Block());
+    tallgrass = *getBlock("tallgrass");
     registerBlock(32, "deadbush", new Block());
+    deadbush = *getBlock("deadbush");
     registerBlock(33, "piston", new Block());
+    piston = *getBlock("piston");
     registerBlock(34, "piston_head", new Block());
+    piston_head = *getBlock("piston_head");
     registerBlock(35, "wool", new Block());
+    wool = *getBlock("wool");
     registerBlock(36, "piston_extension", new Block());
+    piston_extension = *getBlock("piston_extension");
     registerBlock(37, "yellow_flower", new Block());
+    yellow_flower = *getBlock("yellow_flower");
     registerBlock(38, "red_flower", new Block());
+    red_flower = *getBlock("red_flower");
     registerBlock(39, "brown_mushroom", new Block());
+    brown_mushroom = *getBlock("brown_mushroom");
     registerBlock(40, "red_mushroom", new Block());
+    red_mushroom = *getBlock("red_mushroom");
     registerBlock(41, "gold_block", new Block());
+    gold_block = *getBlock("gold_block");
     registerBlock(42, "iron_block", new Block());
+    iron_block = *getBlock("iron_block");
     registerBlock(43, "double_stone_slab", new Block());
+    double_stone_slab = *getBlock("double_stone_slab");
     registerBlock(44, "stone_slab", new Block());
+    stone_slab = *getBlock("stone_slab");
     registerBlock(45, "brick_block", new Block());
     registerBlock(46, "tnt", new Block());
     registerBlock(47, "bookshelf", new Block());
@@ -206,6 +251,13 @@ void Block::registerBlocks() {
     registerBlock(195, "jungle_door", new Block());
     registerBlock(196, "acacia_door", new Block());
     registerBlock(197, "dark_oak_door", new Block());
+}
+
+void Block::deRegisterBlocks() {
+    std::unordered_map<string_t, Block*>::iterator it;
+
+    for(it = nameToBlock.begin(); it != nameToBlock.end(); ++it)
+        delete it->second;
 }
 
 Block *Block::getBlock(ubyte_t id) {
