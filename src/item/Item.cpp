@@ -1,5 +1,7 @@
 #include "Item.h"
 
+#include "ItemPickaxe.h"
+
 void Item::registerItem(ushort_t id, string_t name, Item *item) {
     idToName.insert({id, name});
     idToItem.insert({id, item});
@@ -9,7 +11,7 @@ void Item::registerItem(ushort_t id, string_t name, Item *item) {
 
 void Item::registerItems() {
     registerItem(256, "iron_shovel", new Item());
-    registerItem(257, "iron_pickaxe", new Item());
+    registerItem(257, "iron_pickaxe", new ItemPickaxe(ToolMaterial::IRON));
     registerItem(258, "iron_axe", new Item());
     registerItem(259, "flint_and_steel", new Item());
     registerItem(260, "apple", new Item());
@@ -22,22 +24,22 @@ void Item::registerItems() {
     registerItem(267, "iron_sword", new Item());
     registerItem(268, "wooden_sword", new Item());
     registerItem(269, "wooden_shovel", new Item());
-    registerItem(270, "wooden_pickaxe", new Item());
+    registerItem(270, "wooden_pickaxe", new ItemPickaxe(ToolMaterial::WOOD));
     registerItem(271, "wooden_axe", new Item());
     registerItem(272, "stone_sword", new Item());
     registerItem(273, "stone_shovel", new Item());
-    registerItem(274, "stone_pickaxe", new Item());
+    registerItem(274, "stone_pickaxe", new ItemPickaxe(ToolMaterial::STONE));
     registerItem(275, "stone_axe", new Item());
     registerItem(276, "diamond_sword", new Item());
     registerItem(277, "diamond_shovel", new Item());
-    registerItem(278, "diamond_pickaxe", new Item());
+    registerItem(278, "diamond_pickaxe", new ItemPickaxe(ToolMaterial::EMERALD));
     registerItem(279, "diamond_axe", new Item());
     registerItem(280, "stick", new Item());
     registerItem(281, "bowl", new Item());
     registerItem(282, "mushroom_stew", new Item());
     registerItem(283, "golden_sword", new Item());
     registerItem(284, "golden_shovel", new Item());
-    registerItem(285, "golden_pickaxe", new Item());
+    registerItem(285, "golden_pickaxe", new ItemPickaxe(ToolMaterial::GOLD));
     registerItem(286, "golden_axe", new Item());
     registerItem(287, "string", new Item());
     registerItem(288, "feather", new Item());

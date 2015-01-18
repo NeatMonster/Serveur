@@ -33,12 +33,6 @@ class ToolMaterial {
         int_t getEnchantability();
 };
 
-const ToolMaterial ToolMaterial::WOOD = ToolMaterial(0, 59, 2.0F, 0.0F, 15);
-const ToolMaterial ToolMaterial::STONE = ToolMaterial(1, 131, 4.0F, 1.0F, 5);
-const ToolMaterial ToolMaterial::IRON = ToolMaterial(2, 250, 6.0F, 2.0F, 14);
-const ToolMaterial ToolMaterial::EMERALD = ToolMaterial(3, 1561, 8.0F, 3.0F, 10);
-const ToolMaterial ToolMaterial::GOLD = ToolMaterial(0, 32, 12.0F, 0.0F, 22);
-
 
 //----------------------------------------ItemTool---------------------------------------------
 
@@ -55,6 +49,12 @@ class ItemTool : public Item
     private:
         float_t damageVsEntity;
         std::set<Block> effectiveBlocks;
+
+    public:
+        ToolMaterial getToolMaterial();
+        float_t getEfficiency();
+        float_t getDamageVsEntity();
+        std::set<Block> getEffectiveBlocks();
 };
 
 #endif // __Serveur__ItemTool__
