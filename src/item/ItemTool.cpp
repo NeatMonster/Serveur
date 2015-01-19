@@ -1,45 +1,46 @@
 #include "ItemTool.h"
 
-int_t ToolMaterial::getHarvestLevel() {
+const ItemTool::ToolMaterial ItemTool::ToolMaterial::WOOD(0, 59, 2., 0., 15);
+const ItemTool::ToolMaterial ItemTool::ToolMaterial::STONE(1, 131, 4., 1., 5);
+const ItemTool::ToolMaterial ItemTool::ToolMaterial::IRON(2, 250, 6., 2., 14);
+const ItemTool::ToolMaterial ItemTool::ToolMaterial::DIAMOND(3, 1561, 8., 3., 10);
+const ItemTool::ToolMaterial ItemTool::ToolMaterial::GOLD(0, 32, 12., 0., 22);
+
+
+ItemTool::ToolMaterial::ToolMaterial(int_t harvestLevel, int_t maxUses, float_t efficiency,
+                                     float_t damageVsEntity, int_t enchantability)
+    : harvestLevel(harvestLevel), maxUses(maxUses), efficiency(efficiency),
+      damageVsEntity(damageVsEntity), enchantability(enchantability) {}
+
+int_t ItemTool::ToolMaterial::getHarvestLevel() {
     return harvestLevel;
 }
 
-int_t ToolMaterial::getMaxUses() {
+int_t ItemTool::ToolMaterial::getMaxUses() {
     return maxUses;
 }
 
-float_t ToolMaterial::getEfficiency(){
+float_t ItemTool::ToolMaterial::getEfficiency(){
     return efficiency;
 }
 
-float_t ToolMaterial::getDamageVsEntity() {
+float_t ItemTool::ToolMaterial::getDamageVsEntity() {
     return damageVsEntity;
 }
 
-int_t ToolMaterial::getEnchantability() {
+int_t ItemTool::ToolMaterial::getEnchantability() {
     return enchantability;
 }
 
-const ToolMaterial ToolMaterial::WOOD = ToolMaterial(0, 59, 2.0F, 0.0F, 15);
-const ToolMaterial ToolMaterial::STONE = ToolMaterial(1, 131, 4.0F, 1.0F, 5);
-const ToolMaterial ToolMaterial::IRON = ToolMaterial(2, 250, 6.0F, 2.0F, 14);
-const ToolMaterial ToolMaterial::EMERALD = ToolMaterial(3, 1561, 8.0F, 3.0F, 10);
-const ToolMaterial ToolMaterial::GOLD = ToolMaterial(0, 32, 12.0F, 0.0F, 22);
-
-
-// -------------------------------------- Item Tool ------------------------------------------------
-
-
-ItemTool::ItemTool(float_t damageVsEntity, ToolMaterial material, std::set<Block> effectiveBlocks) : toolMaterial(material){
-    this->damageVsEntity = this->toolMaterial.getDamageVsEntity() + damageVsEntity;
-    this->maxStackSize = 1;
-    this->maxDamage = this->toolMaterial.getMaxUses();
-    this->efficiency = material.getEfficiency();
-    this->effectiveBlocks = effectiveBlocks;
-    //TODO : Associer le bon onglet CreativeTab
+ItemTool::ItemTool(float_t damageVsEntity, ToolMaterial material, std::set<Block*> effectiveBlocks) :
+                   toolMaterial(material), effectiveBlocks(effectiveBlocks) {
+    maxStackSize = 1;
+    maxDamage = material.getMaxUses();
+    this->damageVsEntity = damageVsEntity + material.getDamageVsEntity();
+    efficiency = material.getEfficiency();
 }
 
-ToolMaterial ItemTool::getToolMaterial() {
+ItemTool::ToolMaterial ItemTool::getToolMaterial() {
     return toolMaterial;
 }
 
@@ -51,6 +52,6 @@ float_t ItemTool::getDamageVsEntity() {
     return damageVsEntity;
 }
 
-std::set<Block> ItemTool::getEffectiveBlocks() {
+std::set<Block*> ItemTool::getEffectiveBlocks() {
     return effectiveBlocks;
 }

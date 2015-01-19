@@ -3,13 +3,12 @@
 
 #include "ItemTool.h"
 
-class ItemPickaxe : public ItemTool
-{
-    public:
-        ItemPickaxe(ToolMaterial);
+class ItemPickaxe : public ItemTool {
+public:
+    ItemPickaxe(ToolMaterial);
 
-    private:
-        std::set<Block> effectiveBlocks; // TO DEFINE
+private:
+    static const std::set<Block*> effectiveBlocks;
 };
 
 #endif // __Serveur__ItemPickaxe__

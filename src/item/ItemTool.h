@@ -6,12 +6,14 @@
 #include "Item.h"
 #include "Block.h"
 
-class ToolMaterial {
+class ItemTool : public Item {
+public:
+    class ToolMaterial {
     public:
         static const ToolMaterial WOOD;
         static const ToolMaterial STONE;
         static const ToolMaterial IRON;
-        static const ToolMaterial EMERALD;
+        static const ToolMaterial DIAMOND;
         static const ToolMaterial GOLD;
 
     private:
@@ -21,40 +23,37 @@ class ToolMaterial {
         const float_t damageVsEntity;
         const int_t enchantability;
 
-        ToolMaterial(int_t harvestLevel, int_t maxUses, float_t efficiency, float_t damageVsEntity, int_t enchantability) :
-            harvestLevel(harvestLevel), maxUses(maxUses), efficiency(efficiency), damageVsEntity(damageVsEntity), enchantability(enchantability)
-        {}
+        ToolMaterial(int_t, int_t, float_t, float_t, int_t);
 
     public:
         int_t getHarvestLevel();
+
         int_t getMaxUses();
+
         float_t getEfficiency();
+
         float_t getDamageVsEntity();
+        
         int_t getEnchantability();
-};
+    };
 
+    ItemTool(float_t, ToolMaterial, std::set<Block*>);
 
-//----------------------------------------ItemTool---------------------------------------------
+    ToolMaterial getToolMaterial();
 
+    float_t getEfficiency();
 
-class ItemTool : public Item
-{
-    public:
-        ItemTool(float_t, ToolMaterial, std::set<Block>);
+    float_t getDamageVsEntity();
 
-    protected:
-        ToolMaterial toolMaterial;
-        float_t efficiency;
+    std::set<Block*> getEffectiveBlocks();
 
-    private:
-        float_t damageVsEntity;
-        std::set<Block> effectiveBlocks;
+protected:
+    ToolMaterial toolMaterial;
+    float_t efficiency;
 
-    public:
-        ToolMaterial getToolMaterial();
-        float_t getEfficiency();
-        float_t getDamageVsEntity();
-        std::set<Block> getEffectiveBlocks();
+private:
+    float_t damageVsEntity;
+    std::set<Block*> effectiveBlocks;
 };
 
 #endif // __Serveur__ItemTool__
