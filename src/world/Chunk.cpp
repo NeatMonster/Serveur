@@ -1,5 +1,6 @@
 #include "Chunk.h"
 
+#include "Block.h"
 #include "Section.h"
 
 #include <cstring>
@@ -50,6 +51,10 @@ void Chunk::addPlayer(EntityPlayer *player) {
 
 void Chunk::removePlayer(EntityPlayer *player) {
     players.erase(player);
+}
+
+Block *Chunk::getBlock(int_t x, int_t y, int_t z) {
+    return Block::getBlock(sections[y / 16]->getBlockType(x + z * 16 + (y % 16) * 256));
 }
 
 Chunk::Meta Chunk::getMeta() {

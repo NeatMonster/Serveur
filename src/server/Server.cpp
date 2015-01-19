@@ -74,8 +74,8 @@ const std::unordered_set<EntityPlayer*> &Server::getPlayers() {
 Server::Server(ushort_t port) : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
-    Item::registerItems();
     Block::registerBlocks();
+    Item::registerItems();
     commands = new CommandManager();
     database = new Database();
     network = new NetworkManager();

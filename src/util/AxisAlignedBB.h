@@ -14,6 +14,8 @@ struct AxisAlignedBB {
     void setDimension(double_t, double_t, double_t);
 
     void setPosition(double_t, double_t, double_t);
+
+    bool intersects(AxisAlignedBB);
 };
 
 #endif /* defined(__Serveur__AxisAlignedBB__) */

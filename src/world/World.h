@@ -1,11 +1,14 @@
 #ifndef __Serveur__World__
 #define __Serveur__World__
 
+#include "AxisAlignedBB.h"
 #include "Types.h"
 
 #include <unordered_set>
 #include <unordered_map>
+#include <vector>
 
+class Block;
 class Chunk;
 class Entity;
 class EntityPlayer;
@@ -49,6 +52,10 @@ public:
     void unloadChunk(int_t, int_t);
 
     void tryUnloadChunk(int_t, int_t);
+
+    Block *getBlock(int_t, int_t, int_t);
+
+    std::vector<AxisAlignedBB> getColliding(Entity*, AxisAlignedBB);
 
     void onTick();
 

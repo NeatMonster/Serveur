@@ -429,7 +429,11 @@ string_t Block::getBlockName(ubyte_t id) {
     return idToName[id];
 }
 
-Block::Block() {}
+Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}) {}
+
+AxisAlignedBB Block::getBoundingBox() {
+    return boundingBox;
+}
 
 std::unordered_map<ubyte_t, string_t> Block::idToName;
 std::unordered_map<ubyte_t, Block*> Block::idToBlock;

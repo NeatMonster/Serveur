@@ -1,6 +1,7 @@
 #ifndef __Serveur__Block__
 #define __Serveur__Block__
 
+#include "AxisAlignedBB.h"
 #include "Types.h"
 
 #include <unordered_map>
@@ -222,11 +223,15 @@ public:
 
     Block();
 
+    AxisAlignedBB getBoundingBox();
+
 private:
     static std::unordered_map<ubyte_t, string_t> idToName;
     static std::unordered_map<ubyte_t, Block*> idToBlock;
     static std::unordered_map<string_t, ubyte_t> nameToId;
     static std::unordered_map<string_t, Block*> nameToBlock;
+
+    AxisAlignedBB boundingBox;
 };
 
 #endif /* defined(__Serveur__Block__) */
