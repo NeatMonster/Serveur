@@ -33,7 +33,7 @@ public:
         float_t getEfficiency();
 
         float_t getDamageVsEntity();
-        
+
         int_t getEnchantability();
     };
 

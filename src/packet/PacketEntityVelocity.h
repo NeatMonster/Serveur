@@ -11,7 +11,7 @@ public:
     short_t velocityZ;
 
     PacketEntityVelocity();
-        
+
     void write(PacketBuffer&);
 };
 
