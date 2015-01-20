@@ -4,9 +4,11 @@
 
 #include "Types.h"
 
+#include <stdexcept>
+
 class Compression {
 public:
-    class CompressionException: public std::runtime_error {
+    class CompressionException : public std::runtime_error {
     public:
         CompressionException(string_t s) : std::runtime_error(s) {}
     };

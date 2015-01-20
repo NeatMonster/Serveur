@@ -5,6 +5,7 @@
 
 #include <unordered_set>
 
+class Block;
 class Entity;
 class EntityPlayer;
 class Section;
@@ -42,6 +43,8 @@ public:
     void addPlayer(EntityPlayer*);
 
     void removePlayer(EntityPlayer*);
+
+    Block *getBlock(int_t, int_t, int_t);
 
     Meta getMeta();
 
