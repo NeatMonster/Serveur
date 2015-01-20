@@ -2,6 +2,7 @@
 #define __Serveur__Block__
 
 #include "AxisAlignedBB.h"
+#include "Material.h"
 #include "Types.h"
 
 #include <unordered_map>
@@ -221,7 +222,20 @@ public:
 
     static string_t getBlockName(ubyte_t);
 
+    /*
+
+    A propos des constructeurs :
+    Seul le constructeur Block(Material) est accepté.
+    Cependant, étant donné que l'initialisation des blocks ne pourra se faire correctement
+    que lorsque toutes les classes de Block auront été implémentées (ce qui va prendre du temps),
+    je laisse ici ce constructeur Block(). Il devra être remplacé soit par Block(Material),
+    soit par les constructeurs spécifiques des blocks qui ont une classe spécifique.
+    Si vous ne comprenez pas, go sur le repo avec le code du NMS dans la classe Block.
+
+    */
     Block();
+
+    Block(Material*);
 
     AxisAlignedBB getBoundingBox();
 
@@ -232,6 +246,8 @@ private:
     static std::unordered_map<string_t, Block*> nameToBlock;
 
     AxisAlignedBB boundingBox;
+
+    Material* blockMaterial;
 };
 
 #endif /* defined(__Serveur__Block__) */

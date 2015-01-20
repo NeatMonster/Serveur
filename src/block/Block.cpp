@@ -204,10 +204,10 @@ void Block::registerBlocks() {
     registerBlock(1, "stone", stone = new Block());
     registerBlock(2, "grass", grass = new Block());
     registerBlock(3, "dirt", dirt = new Block());
-    registerBlock(4, "cobblestone", cobblestone = new Block());
+    registerBlock(4, "cobblestone", cobblestone = new Block(Material::rock));
     registerBlock(5, "planks", planks = new Block());
     registerBlock(6, "sapling", sapling = new Block());
-    registerBlock(7, "bedrock", bedrock = new Block());
+    registerBlock(7, "bedrock", bedrock = new Block(Material::rock));
     registerBlock(8, "flowing_water", flowing_water = new Block());
     registerBlock(9, "water", water = new Block());
     registerBlock(10, "flowing_lava", flowing_lava = new Block());
@@ -245,10 +245,10 @@ void Block::registerBlocks() {
     registerBlock(42, "iron_block", iron_block = new Block());
     registerBlock(43, "double_stone_slab", double_stone_slab = new Block());
     registerBlock(44, "stone_slab", stone_slab = new Block());
-    registerBlock(45, "brick_block", brick_block = new Block());
+    registerBlock(45, "brick_block", brick_block = new Block(Material::rock));
     registerBlock(46, "tnt", tnt = new Block());
     registerBlock(47, "bookshelf", bookshelf = new Block());
-    registerBlock(48, "mossy_cobblestone", mossy_cobblestone = new Block());
+    registerBlock(48, "mossy_cobblestone", mossy_cobblestone = new Block(Material::rock));
     registerBlock(49, "obsidian", obsidian = new Block());
     registerBlock(50, "torch", torch = new Block());
     registerBlock(51, "fire", fire = new Block());
@@ -321,7 +321,7 @@ void Block::registerBlocks() {
     registerBlock(118, "cauldron", cauldron = new Block());
     registerBlock(119, "end_portal", end_portal = new Block());
     registerBlock(120, "end_portal_frame", end_portal_frame = new Block());
-    registerBlock(121, "end_stone", end_stone = new Block());
+    registerBlock(121, "end_stone", end_stone = new Block(Material::rock));
     registerBlock(122, "dragon_egg", dragon_egg = new Block());
     registerBlock(123, "redstone_lamp", redstone_lamp = new Block());
     registerBlock(124, "lit_redstone_lamp", lit_redstone_lamp = new Block());
@@ -373,7 +373,7 @@ void Block::registerBlocks() {
     registerBlock(170, "hay_bale", hay_bale = new Block());
     registerBlock(171, "carpet", carpet = new Block());
     registerBlock(172, "hardened_clay", hardened_clay = new Block());
-    registerBlock(173, "coal_block", coal_block = new Block());
+    registerBlock(173, "coal_block", coal_block = new Block(Material::rock));
     registerBlock(174, "packed_ice", packed_ice = new Block());
     registerBlock(175, "double_plant", double_plant = new Block());
     registerBlock(176, "standing_banner", standing_banner = new Block());
@@ -430,6 +430,13 @@ string_t Block::getBlockName(ubyte_t id) {
 }
 
 Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}) {}
+
+Block::Block(Material* materialIn) : boundingBox({0, 0, 0, 1, 1, 1}) {
+    if(materialIn != nullptr)
+        blockMaterial = materialIn;
+    else
+        blockMaterial = Material::air;
+}
 
 AxisAlignedBB Block::getBoundingBox() {
     return boundingBox;

@@ -4,41 +4,41 @@
 
 class Material {
 public:
-    static const Material* air;
-    static const Material* grass;
-    static const Material* ground;
-    static const Material* wood;
-    static const Material* rock;
-    static const Material* iron;
-    static const Material* anvil;
-    static const Material* water;
-    static const Material* lava;
-    static const Material* leaves;
-    static const Material* plants;
-    static const Material* vine;
-    static const Material* sponge;
-    static const Material* cloth;
-    static const Material* fire;
-    static const Material* sand;
-    static const Material* circuits;
-    static const Material* carpet;
-    static const Material* glass;
-    static const Material* redstoneLight;
-    static const Material* tnt;
-    static const Material* coral;
-    static const Material* ice;
-    static const Material* packedIce;
-    static const Material* snow;
-    static const Material* craftedSnow;
-    static const Material* cactus;
-    static const Material* clay;
-    static const Material* gourd;
-    static const Material* dragonEgg;
-    static const Material* portal;
-    static const Material* cake;
-    static const Material* web;
-    static const Material* piston;
-    static const Material* barrier;
+    static Material* air;
+    static Material* grass;
+    static Material* ground;
+    static Material* wood;
+    static Material* rock;
+    static Material* iron;
+    static Material* anvil;
+    static Material* water;
+    static Material* lava;
+    static Material* leaves;
+    static Material* plants;
+    static Material* vine;
+    static Material* sponge;
+    static Material* cloth;
+    static Material* fire;
+    static Material* sand;
+    static Material* circuits;
+    static Material* carpet;
+    static Material* glass;
+    static Material* redstoneLight;
+    static Material* tnt;
+    static Material* coral;
+    static Material* ice;
+    static Material* packedIce;
+    static Material* snow;
+    static Material* craftedSnow;
+    static Material* cactus;
+    static Material* clay;
+    static Material* gourd;
+    static Material* dragonEgg;
+    static Material* portal;
+    static Material* cake;
+    static Material* web;
+    static Material* piston;
+    static Material* barrier;
 
     Material(); //TODO Ajouter la MapColor (pas prioritaire)
 
