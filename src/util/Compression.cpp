@@ -2,7 +2,6 @@
 
 #include "zlib/zlib.h"
 
-#include <stdexcept>
 #include <cstring>
 
 Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
