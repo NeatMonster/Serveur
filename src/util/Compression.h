@@ -1,6 +1,7 @@
 #ifndef __Serveur__Compression__
 #define __Serveur__Compression__
 
+
 #include "Types.h"
 
 class Compression {

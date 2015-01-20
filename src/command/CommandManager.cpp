@@ -3,6 +3,7 @@
 #include "ChatMessage.h"
 #include "CommandServer.h"
 #include "CommandStop.h"
+#include "CommandGameMode.h"
 #include "Server.h"
 
 #include <algorithm>
@@ -13,6 +14,7 @@ CommandManager::CommandManager() {
     reader = new CommandReader(&queue);
     registerCommand(new CommandServer());
     registerCommand(new CommandStop());
+    registerCommand(new CommandGameMode());
 };
 
 CommandManager::~CommandManager() {
