@@ -200,6 +200,7 @@ Block* Block::acacia_door;
 Block* Block::dark_oak_door;
 
 void Block::registerBlocks() {
+    Material::registerMaterials();
     registerBlock(0, "air", air = new Block());
     registerBlock(1, "stone", stone = new Block());
     registerBlock(2, "grass", grass = new Block());
@@ -411,6 +412,7 @@ void Block::deregisterBlocks() {
     std::unordered_map<string_t, Block*>::iterator it;
     for (it = nameToBlock.begin(); it != nameToBlock.end(); ++it)
         delete it->second;
+    Material::deregisterMaterials();
 }
 
 Block *Block::getBlock(ubyte_t id) {

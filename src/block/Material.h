@@ -1,6 +1,7 @@
 #ifndef __Serveur__Material__
 #define __Serveur__Material__
 
+#include <vector>
 
 class Material {
 public:
@@ -40,6 +41,10 @@ public:
     static Material* piston;
     static Material* barrier;
 
+    static void registerMaterials();
+
+    static void deregisterMaterials();
+
     Material(); //TODO Ajouter la MapColor (pas prioritaire)
 
 private:
@@ -49,6 +54,8 @@ private:
     bool requiresNoTool = true;
     bool isAdventureModeExempt;
     int mobilityFlag;
+
+    static std::vector<Material*> materialList;
 
 protected:
     Material* setBurning();
