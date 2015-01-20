@@ -103,7 +103,7 @@ void EntityPlayer::sendPacket(ServerPacket *packet) {
 void EntityPlayer::onJoinGame() {
     PacketJoinGame *joinPacket = new PacketJoinGame();
     joinPacket->entityId = entityId;
-    joinPacket->gamemode = 1;
+    joinPacket->gamemode = EntityPlayer::GameMode::SURVIVAL;
     joinPacket->dimension = 0;
     joinPacket->difficulty = 0;
     joinPacket->maxPlayers = 20;
@@ -191,3 +191,5 @@ ServerPacket *EntityPlayer::getSpawnPacket() {
 ServerPacket *EntityPlayer::getMetadataPacket() {
     return nullptr;
 }
+
+

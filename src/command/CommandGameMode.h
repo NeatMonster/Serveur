@@ -8,6 +8,8 @@ public:
     CommandGameMode();
 
     void perform(CommandSender*, std::vector<string_t>);
+
+
 };
 
 #endif /* defined(__Serveur__CommandGameMode__) */

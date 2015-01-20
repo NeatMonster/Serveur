@@ -11,6 +11,8 @@ class ServerPacket;
 
 class EntityPlayer : public EntityLiving, public CommandSender {
 public:
+    enum GameMode { SURVIVAL, CREATIVE, ADVENTURE, SPECTATOR };
+
     EntityPlayer(World*, PlayerConnection*);
 
     Type getType();
@@ -41,11 +43,16 @@ public:
 
     ServerPacket *getMetadataPacket();
 
+    inline GameMode getGameMode() const {return gameMode;}
+    inline void setGameMode(GameMode newGameMode) {gameMode=newGameMode;}
+
 private:
     PlayerConnection *connect;
     InventoryPlayer inventory;
     string_t uuid;
     string_t name;
+    GameMode gameMode;
+
 };
 
 #endif /* defined(__Serveur__EntityPlayer__) */

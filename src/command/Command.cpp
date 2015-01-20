@@ -14,5 +14,5 @@ string_t Command::getDescription() {
 }
 
 std::vector<string_t > Command::getAliases() {
-    return std::vector<string_t>();
+    return aliases;
 }
