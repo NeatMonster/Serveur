@@ -1,14 +1,14 @@
 #ifndef __Serveur__StringUtils__
 #define __Serveur__StringUtils__
 
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace StringUtils
 {
     /** @brief convert string to any type T	**/
 	template <typename T>
-	T FromString( const std::string & str )
+	T FromString( const string_t & str )
 	{
 		std::istringstream iss( str );
 		T n;
@@ -18,7 +18,7 @@ namespace StringUtils
 
 	/** @brief convert any type T into a string	**/
 	template < typename T >
-	std::string ToString( const T & value )
+	string_t ToString( const T & value )
 	{
 		std::ostringstream oss;
 		oss << value;

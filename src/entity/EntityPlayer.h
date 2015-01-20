@@ -43,8 +43,8 @@ public:
 
     ServerPacket *getMetadataPacket();
 
-    inline GameMode getGameMode() const {return gameMode;}
-    inline void setGameMode(GameMode newGameMode) {gameMode=newGameMode;}
+    GameMode getGameMode() const;
+    void setGameMode(GameMode newGameMode);
 
 private:
     PlayerConnection *connect;
@@ -52,7 +52,6 @@ private:
     string_t uuid;
     string_t name;
     GameMode gameMode;
-
 };
 
 #endif /* defined(__Serveur__EntityPlayer__) */

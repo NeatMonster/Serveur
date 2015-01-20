@@ -1,8 +1,9 @@
 #include "Compression.h"
 
+#include <cstring>
+
 #include "zlib/zlib.h"
 
-#include <cstring>
 
 Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
     z_stream stream;

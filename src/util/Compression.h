@@ -1,10 +1,9 @@
 #ifndef __Serveur__Compression__
 #define __Serveur__Compression__
 
+#include <stdexcept>
 
 #include "Types.h"
-
-#include <stdexcept>
 
 class Compression {
 public:

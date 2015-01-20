@@ -192,4 +192,12 @@ ServerPacket *EntityPlayer::getMetadataPacket() {
     return nullptr;
 }
 
+EntityPlayer::GameMode EntityPlayer::getGameMode() const
+{
+    return gameMode;
+}
 
+void EntityPlayer::setGameMode(EntityPlayer::GameMode newGameMode)
+{
+    gameMode = newGameMode;
+}
