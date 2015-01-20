@@ -4,6 +4,7 @@
 #include "Chunk.h"
 #include "EntityPlayer.h"
 #include "Level.h"
+#include "MathUtils.h"
 #include "PacketDestroyEntities.h"
 #include "PacketTimeUpdate.h"
 #include "Region.h"
@@ -116,7 +117,7 @@ Chunk *World::tryGetChunk(int_t x, int_t z) {
 
 Chunk *World::loadChunk(int_t x, int_t z) {
     Chunk *chunk = new Chunk(this, x, z);
-    Region *region = getRegion(floor_d(x / 32.), floor_d(z / 32.));
+    Region *region = getRegion(MathUtils::floor_d(x / 32.), MathUtils::floor_d(z / 32.));
     if (!region->getChunk(chunk)) {
         Section *section = chunk->sections[0];
         section->blockCount = 1024;
@@ -166,14 +167,14 @@ void World::tryUnloadChunk(int_t x, int_t z) {
 }
 
 Block *World::getBlock(int_t x, int_t y, int_t z) {
-    return getChunk((int_t) floor_d(x) >> 4, (int_t) floor_d(z) >> 4)->getBlock(x % 16, y, z % 16);
+    return getChunk((int_t) MathUtils::floor_d(x) >> 4, (int_t) MathUtils::floor_d(z) >> 4)->getBlock(x % 16, y, z % 16);
 }
 
 std::vector<AxisAlignedBB> World::getColliding(Entity *entity, AxisAlignedBB boundingBox) {
     std::vector<AxisAlignedBB> colliding;
-    for (int_t x = floor_d(boundingBox.minX); x < floor_d(boundingBox.minX + 1); x++)
-        for (int_t y = floor_d(boundingBox.minY); y < floor_d(boundingBox.minY + 1); y++)
-            for (int_t z = floor_d(boundingBox.minZ); z < floor_d(boundingBox.minZ + 1); z++) {
+    for (int_t x = MathUtils::floor_d(boundingBox.minX); x < MathUtils::floor_d(boundingBox.minX + 1); x++)
+        for (int_t y = MathUtils::floor_d(boundingBox.minY); y < MathUtils::floor_d(boundingBox.minY + 1); y++)
+            for (int_t z = MathUtils::floor_d(boundingBox.minZ); z < MathUtils::floor_d(boundingBox.minZ + 1); z++) {
                 AxisAlignedBB otherBoundingBox = getBlock(x, y, z)->getBoundingBox();
                 if (otherBoundingBox.intersects(boundingBox))
                     colliding.push_back(otherBoundingBox);

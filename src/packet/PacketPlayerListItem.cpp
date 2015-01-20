@@ -14,7 +14,7 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<EntityP
         if (type == Type::ADD_PLAYER)
             action.profile = player->getConnection()->getProfile();
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_GAMEMODE)
-            action.gamemode = 1;
+            action.gameMode = 1;
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_LATENCY)
             action.ping = player->getConnection()->getPing();
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_DISPLAY_NAME) {
@@ -45,7 +45,7 @@ void PacketPlayerListItem::write(PacketBuffer &buffer) {
             }
         }
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_GAMEMODE)
-            buffer.putVarInt(action.gamemode);
+            buffer.putVarInt(action.gameMode);
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_LATENCY)
             buffer.putVarInt(action.ping);
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_DISPLAY_NAME) {

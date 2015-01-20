@@ -6,7 +6,6 @@ const ItemTool::ToolMaterial ItemTool::ToolMaterial::IRON(2, 250, 6., 2., 14);
 const ItemTool::ToolMaterial ItemTool::ToolMaterial::DIAMOND(3, 1561, 8., 3., 10);
 const ItemTool::ToolMaterial ItemTool::ToolMaterial::GOLD(0, 32, 12., 0., 22);
 
-
 ItemTool::ToolMaterial::ToolMaterial(int_t harvestLevel, int_t maxUses, float_t efficiency,
                                      float_t damageVsEntity, int_t enchantability)
     : harvestLevel(harvestLevel), maxUses(maxUses), efficiency(efficiency),

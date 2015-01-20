@@ -6,7 +6,7 @@
 class PacketJoinGame : public ServerPacket {
 public:
     int_t entityId;
-    ubyte_t gamemode;
+    ubyte_t gameMode;
     byte_t dimension;
     ubyte_t difficulty;
     ubyte_t maxPlayers;

@@ -6,39 +6,21 @@
 #include "StringUtils.h"
 #include "Types.h"
 
-
-CommandGameMode::CommandGameMode()
-: Command("gamemode", "Change le gamemode d'un joueur", {"gamemode", "gm"})
-{}
+CommandGameMode::CommandGameMode() : Command("gamemode", "Change le gamemode d'un joueur", {"gm"}) {}
 
 void CommandGameMode::perform(CommandSender *sender, std::vector<string_t> args) {
-
-    if (args.size() != 1) {
-        throw WrongUsageException("/gamemode [gamemode]");
-    }
-    else {
+    if (args.size() == 1) {
         EntityPlayer *player = dynamic_cast<EntityPlayer*>(sender);
         if (player == nullptr)
             throw CommandException("Cette commande est pour les joueurs uniquement.");
 
-        int_t gamemode = StringUtils::FromString<int_t>(args[0]);
-        if ( gamemode < static_cast<int_t>(EntityPlayer::GameMode::SURVIVAL) || gamemode > static_cast<int_t>(EntityPlayer::GameMode::SPECTATOR) )
-        {
-            std::stringstream message;
-            message << "Valeur (" << gamemode << ") invalide pour la commande gamemode";
-            throw CommandException(message.str());
-        }
+        int_t gameMode = StringUtils::fromString<int_t>(args[0]);
+        if (gameMode < EntityPlayer::GameMode::SURVIVAL || gameMode > EntityPlayer::GameMode::SPECTATOR)
+            gameMode = EntityPlayer::GameMode::SURVIVAL;
 
-        player->setGameMode((EntityPlayer::GameMode)gamemode);
-
-        std::stringstream logMessage;
-        logMessage << "player " << player->getName() << " (id: " << player->getEntityId() << ") set to gamemode " << gamemode;
-        Logger() << logMessage.str() << std::endl;
-
-        std::stringstream ssMessage;
-        ssMessage<< "gamemode modifié (" << gamemode << ")";
-        ChatMessage messageSentToPLayer;
-        messageSentToPLayer << ssMessage.str();
-        player->sendMessage(messageSentToPLayer);
-    }
+        player->setGameMode((EntityPlayer::GameMode) gameMode);
+        player->sendMessage(Chat() << Color::YELLOW << "Votre mode de jeu a été changé");
+        Logger() << "[" << player->getName() << " : " << "Mode de jeu changé en " << gameMode << "]" << std::endl;
+    } else
+        throw WrongUsageException("/gamemode <mode>");
 }

@@ -17,7 +17,8 @@
 #include "Server.h"
 #include "World.h"
 
-EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect), inventory() {
+EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect),
+        gameMode(SURVIVAL) {
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
     setSize(0.6, 1.8);
@@ -86,6 +87,14 @@ InventoryPlayer &EntityPlayer::getInventory() {
     return inventory;
 }
 
+EntityPlayer::GameMode EntityPlayer::getGameMode() {
+    return gameMode;
+}
+
+void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
+    this->gameMode = gameMode;
+}
+
 void EntityPlayer::sendMessage(ChatMessage &message) {
     sendPacket(new PacketChatMessage(message.getJSON()));
 }
@@ -103,7 +112,7 @@ void EntityPlayer::sendPacket(ServerPacket *packet) {
 void EntityPlayer::onJoinGame() {
     PacketJoinGame *joinPacket = new PacketJoinGame();
     joinPacket->entityId = entityId;
-    joinPacket->gamemode = EntityPlayer::GameMode::SURVIVAL;
+    joinPacket->gameMode = gameMode;
     joinPacket->dimension = 0;
     joinPacket->difficulty = 0;
     joinPacket->maxPlayers = 20;
@@ -190,14 +199,4 @@ ServerPacket *EntityPlayer::getSpawnPacket() {
 
 ServerPacket *EntityPlayer::getMetadataPacket() {
     return nullptr;
-}
-
-EntityPlayer::GameMode EntityPlayer::getGameMode() const
-{
-    return gameMode;
-}
-
-void EntityPlayer::setGameMode(EntityPlayer::GameMode newGameMode)
-{
-    gameMode = newGameMode;
 }

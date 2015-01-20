@@ -21,7 +21,7 @@ private:
     struct Action {
         string_t uuid;
         Profile *profile;
-        varint_t gamemode;
+        varint_t gameMode;
         varint_t ping;
         bool hasDisplayName;
         string_t displayName;

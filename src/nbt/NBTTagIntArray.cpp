@@ -1,5 +1,7 @@
 #include "NBTTagIntArray.h"
 
+#include "MathUtils.h"
+
 #include <cstring>
 
 NBTTagIntArray::NBTTagIntArray() : NBTTag(Type::INT_ARRAY) {}
@@ -41,7 +43,7 @@ void NBTTagIntArray::write(ubyte_t *&data, bool header) {
 void NBTTagIntArray::print(int tab, bool header) {
     NBTTag::print(tab, header);
     std::cout << "TAG_IntArray(" << (header ? ("'" + name + "'") : "None") << "): [";
-    for (int_t i = 0; i < min<int_t>(10, value.size()); i++) {
+    for (int_t i = 0; i < MathUtils::min<int_t>(10, value.size()); i++) {
         if (i > 0)
             std::cout << ", ";
         std::cout << value[i];

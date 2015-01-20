@@ -1,9 +1,9 @@
 #include "CommandManager.h"
 
 #include "ChatMessage.h"
+#include "CommandGameMode.h"
 #include "CommandServer.h"
 #include "CommandStop.h"
-#include "CommandGameMode.h"
 #include "Server.h"
 
 #include <algorithm>
@@ -12,15 +12,16 @@
 
 CommandManager::CommandManager() {
     reader = new CommandReader(&queue);
+    registerCommand(new CommandGameMode());
     registerCommand(new CommandServer());
     registerCommand(new CommandStop());
-    registerCommand(new CommandGameMode());
 };
 
 CommandManager::~CommandManager() {
     delete reader;
     for (auto command : commands)
-        delete command.second;
+        if (command.first == command.second->getName())
+            delete command.second;
 };
 
 void CommandManager::registerCommand(Command *command) {

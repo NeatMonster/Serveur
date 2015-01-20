@@ -1,7 +1,8 @@
 #include "EntityLiving.h"
 
-#include "PacketEntityHeadLook.h"
 #include "EntityPlayer.h"
+#include "MathUtils.h"
+#include "PacketEntityHeadLook.h"
 
 EntityLiving::EntityLiving(World *world) : Entity(world), headYaw(0), lastHeadYaw(0) {}
 
@@ -17,7 +18,7 @@ void EntityLiving::rotate(float_t yaw, float_t pitch) {
 }
 
 void EntityLiving::setHeadRotation(float_t headYaw) {
-    this->headYaw = mod<float_t>(headYaw, 360.);
+    this->headYaw = MathUtils::mod<float_t>(headYaw, 360.);
 }
 
 void EntityLiving::rotateHead(float_t headYaw) {
@@ -26,7 +27,7 @@ void EntityLiving::rotateHead(float_t headYaw) {
 
 void EntityLiving::onTick() {
     Entity::onTick();
-    int_t headYaw = (int_t) floor_f(this->headYaw / 360. * 256.);
+    int_t headYaw = (int_t) MathUtils::floor_f(this->headYaw / 360. * 256.);
     if (headYaw != lastHeadYaw)
         for (EntityPlayer *const &watcher : getWatchers()) {
             PacketEntityHeadLook *packet = new PacketEntityHeadLook();

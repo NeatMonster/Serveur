@@ -29,6 +29,10 @@ public:
 
     InventoryPlayer &getInventory();
 
+    GameMode getGameMode();
+
+    void setGameMode(GameMode);
+
     void disconnect(string_t);
 
     void sendMessage(ChatMessage&);
@@ -42,9 +46,6 @@ public:
     ServerPacket *getSpawnPacket();
 
     ServerPacket *getMetadataPacket();
-
-    GameMode getGameMode() const;
-    void setGameMode(GameMode newGameMode);
 
 private:
     PlayerConnection *connect;

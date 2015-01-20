@@ -1,17 +1,18 @@
 #include "PacketSpawnPlayer.h"
 
 #include "EntityPlayer.h"
+#include "MathUtils.h"
 
 #include <cstring>
 
 PacketSpawnPlayer::PacketSpawnPlayer(EntityPlayer *player) : ServerPacket(0x0c) {
     entityId = player->getEntityId();
     uuid = player->getUUID();
-    x = (int_t) floor_d(player->getX() * 32.);
-    y = (int_t) floor_d(player->getY() * 32.);
-    z = (int_t) floor_d(player->getZ() * 32.);
-    yaw = (byte_t) floor_f(player->getYaw() / 360. * 255.);
-    pitch = (byte_t) floor_f(player->getPitch() / 360. * 255.);
+    x = (int_t) MathUtils::floor_d(player->getX() * 32.);
+    y = (int_t) MathUtils::floor_d(player->getY() * 32.);
+    z = (int_t) MathUtils::floor_d(player->getZ() * 32.);
+    yaw = (byte_t) MathUtils::floor_f(player->getYaw() / 360. * 255.);
+    pitch = (byte_t) MathUtils::floor_f(player->getPitch() / 360. * 255.);
     currentItem = 0;
     metadata = ubytes_t(6);
     metadata[0] = 102;

@@ -1,6 +1,7 @@
 #include "Region.h"
 
 #include "Compression.h"
+#include "MathUtils.h"
 #include "NBTTag.h"
 #include "NBTTagByte.h"
 #include "NBTTagByteArray.h"
@@ -34,7 +35,7 @@ Region::~Region() {
 }
 
 bool Region::getChunk(Chunk *chunk) {
-    int_t offset = locations[mod(chunk->getX(), 32) + 32 * mod(chunk->getZ(), 32)] >> 8;
+    int_t offset = locations[MathUtils::mod(chunk->getX(), 32) + 32 * MathUtils::mod(chunk->getZ(), 32)] >> 8;
     if (offset == 0)
         return false;
     file.seekg(offset * 4096);

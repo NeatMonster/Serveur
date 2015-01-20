@@ -2,6 +2,7 @@
 
 #include "Chunk.h"
 #include "EntityPlayer.h"
+#include "MathUtils.h"
 #include "PacketEntityLook.h"
 #include "PacketEntityMove.h"
 #include "PacketEntityMoveLook.h"
@@ -77,8 +78,8 @@ void Entity::move(double_t x, double_t y, double_t z) {
 }
 
 void Entity::setRotation(float_t yaw, float_t pitch) {
-    rotYaw = mod<float_t>(yaw, 360.);
-    rotPitch = mod<float_t>(pitch, 360.);
+    rotYaw = MathUtils::mod<float_t>(yaw, 360.);
+    rotPitch = MathUtils::mod<float_t>(pitch, 360.);
 }
 
 void Entity::rotate(float_t yaw, float_t pitch) {
@@ -86,7 +87,7 @@ void Entity::rotate(float_t yaw, float_t pitch) {
 }
 
 Chunk *Entity::getChunk() {
-    return world->getChunk((int_t) floor_d(posX) >> 4, (int_t) floor_d(posZ) >> 4);
+    return world->getChunk((int_t) MathUtils::floor_d(posX) >> 4, (int_t) MathUtils::floor_d(posZ) >> 4);
 }
 
 std::unordered_set<EntityPlayer*> Entity::getWatchers() {
@@ -106,18 +107,18 @@ std::unordered_set<EntityPlayer*> Entity::getWatchers() {
 
 void Entity::onTick() {
     ticks++;
-    int_t posX = (int_t) floor_d(this->posX * 32.);
-    int_t posY = (int_t) floor_d(this->posY * 32.);
-    int_t posZ = (int_t) floor_d(this->posZ * 32.);
-    byte_t rotYaw = (byte_t) floor_f(this->rotYaw / 360. * 256.);
-    byte_t rotPitch = (byte_t) floor_f(this->rotPitch / 360. * 256.);
-    short_t motX = (short_t) floor_d(this->motX * 8000.);
-    short_t motY = (short_t) floor_d(this->motY * 8000.);
-    short_t motZ = (short_t) floor_d(this->motZ * 8000.);
+    int_t posX = (int_t) MathUtils::floor_d(this->posX * 32.);
+    int_t posY = (int_t) MathUtils::floor_d(this->posY * 32.);
+    int_t posZ = (int_t) MathUtils::floor_d(this->posZ * 32.);
+    byte_t rotYaw = (byte_t) MathUtils::floor_f(this->rotYaw / 360. * 256.);
+    byte_t rotPitch = (byte_t) MathUtils::floor_f(this->rotPitch / 360. * 256.);
+    short_t motX = (short_t) MathUtils::floor_d(this->motX * 8000.);
+    short_t motY = (short_t) MathUtils::floor_d(this->motY * 8000.);
+    short_t motZ = (short_t) MathUtils::floor_d(this->motZ * 8000.);
     bool hasMoved = posX != lastPosX || posY != lastPosY || posZ != lastPosZ;
     bool hasRotated = rotYaw != lastRotYaw || rotPitch != lastRotPitch;
-    bool isRelative = abs<int_t>(posX - lastPosX) < 128 && abs<int_t>(posY - lastPosY) < 128
-        && abs<int_t>(posZ - lastPosZ) < 128 && onGround != lastOnGround && ticks % 60 > 0;
+    bool isRelative = MathUtils::abs<int_t>(posX - lastPosX) < 128 && MathUtils::abs<int_t>(posY - lastPosY) < 128
+        && MathUtils::abs<int_t>(posZ - lastPosZ) < 128 && onGround != lastOnGround && ticks % 60 > 0;
     bool velocityChanged = motX != lastMotX && motY != lastMotY && motZ != lastMotZ;
     if (hasMoved && isRelative && !hasRotated)
         for (EntityPlayer *const &watcher : getWatchers()) {

@@ -1,9 +1,10 @@
 #include "Compression.h"
 
-#include <cstring>
+#include "MathUtils.h"
 
 #include "zlib/zlib.h"
 
+#include <cstring>
 
 Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
     z_stream stream;
@@ -31,7 +32,7 @@ Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
     inflateEnd(&stream);
     ubyte_t *out = (ubyte_t*) std::malloc(outSize);
     for (size_t i = 0; i < buffers.size(); i++) {
-        std::memcpy(out + i * BUFFER_SIZE, buffers[i], min<size_t>(BUFFER_SIZE, outSize - i * BUFFER_SIZE));
+        std::memcpy(out + i * BUFFER_SIZE, buffers[i], MathUtils::min<size_t>(BUFFER_SIZE, outSize - i * BUFFER_SIZE));
         delete[] buffers[i];
     }
     return {out, outSize};
@@ -65,7 +66,7 @@ Compression::result_t Compression::inflateZlib(ubyte_t *in, size_t inSize) {
     inflateEnd(&stream);
     ubyte_t *out = (ubyte_t*) std::malloc(outSize);
     for (size_t i = 0; i < buffers.size(); i++) {
-        std::memcpy(out + i * BUFFER_SIZE, buffers[i], min<size_t>(BUFFER_SIZE, outSize - i * BUFFER_SIZE));
+        std::memcpy(out + i * BUFFER_SIZE, buffers[i], MathUtils::min<size_t>(BUFFER_SIZE, outSize - i * BUFFER_SIZE));
         delete[] buffers[i];
     }
     return {out, outSize};

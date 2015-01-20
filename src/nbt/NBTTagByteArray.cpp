@@ -1,5 +1,7 @@
 #include "NBTTagByteArray.h"
 
+#include "MathUtils.h"
+
 #include <cstring>
 
 NBTTagByteArray::NBTTagByteArray() : NBTTag(Type::BYTE_ARRAY) {}
@@ -32,7 +34,7 @@ void NBTTagByteArray::write(ubyte_t *&data, bool header) {
 void NBTTagByteArray::print(int tab, bool header) {
     NBTTag::print(tab, header);
     std::cout << "TAG_ByteArray(" << (header ? ("'" + name + "'") : "None") << "): [" << std::endl;
-    for (int_t i = 0; i < min<int_t>(10, value.size()); i++) {
+    for (int_t i = 0; i < MathUtils::min<int_t>(10, value.size()); i++) {
         if (i > 0)
             std::cout << ", ";
         std::cout << (int) value[i];
