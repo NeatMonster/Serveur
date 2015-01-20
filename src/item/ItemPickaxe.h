@@ -7,6 +7,8 @@ class ItemPickaxe : public ItemTool {
 public:
     ItemPickaxe(ToolMaterial);
 
+    bool canHarvestBlock(Block*);
+
 private:
     static const std::set<Block*> effectiveBlocks;
 };

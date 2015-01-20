@@ -14,7 +14,7 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<EntityP
         if (type == Type::ADD_PLAYER)
             action.profile = player->getConnection()->getProfile();
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_GAMEMODE)
-            action.gameMode = 1;
+            action.gameMode = player->getGameMode();
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_LATENCY)
             action.ping = player->getConnection()->getPing();
         if (type == Type::ADD_PLAYER || type == Type::UPDATE_DISPLAY_NAME) {

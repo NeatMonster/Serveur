@@ -7,3 +7,8 @@ const std::set<Block*> ItemPickaxe::effectiveBlocks = {Block::activator_rail, Bl
     Block::gold_block, Block::gold_ore, Block::ice, Block::iron_block, Block::iron_ore, Block::lapis_block,
     Block::lapis_ore, Block::lit_redstone_ore, Block::mossy_cobblestone, Block::netherrack, Block::packed_ice,
     Block::rail, Block::redstone_ore, Block::sandstone, Block::red_sandstone, Block::stone, Block::stone_slab};
+
+bool ItemPickaxe::canHarvestBlock(Block* blockIn) {
+    //return blockIn == Block::obsidian ? toolMaterial.getHarvestLevel() == 3 : (blockIn != Block::diamond_block && blockIn != Block::diamond_ore ? (blockIn != Block::emerald_ore && blockIn != Block::emerald_block ? (blockIn != Block::gold_block && blockIn != Block::gold_ore ? (blockIn != Block::iron_block && blockIn != Block::iron_ore ? (blockIn != Block::lapis_block && blockIn != Block::lapis_ore ? (blockIn != Block::redstone_ore && blockIn != Block::lit_redstone_ore ? (blockIn.getMaterial() == Material.rock ? true : (blockIn.getMaterial() == Material.iron ? true : blockIn.getMaterial() == Material.anvil)) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 1) : toolMaterial.getHarvestLevel() >= 1) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 2);
+    return true; // A remplacer par la ligne ci-dessus quand getMaterial() sera implémenté.
+}
