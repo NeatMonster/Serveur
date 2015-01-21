@@ -51,6 +51,10 @@ float_t ItemTool::getDamageVsEntity() {
     return damageVsEntity;
 }
 
+float_t ItemTool::getStrVsBlock(ItemStack* stack, Block* blockIn) {
+    return (effectiveBlocks.find(blockIn) != effectiveBlocks.end()) ? efficiency : 1.0F;
+}
+
 std::set<Block*> ItemTool::getEffectiveBlocks() {
     return effectiveBlocks;
 }
