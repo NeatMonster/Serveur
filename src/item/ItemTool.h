@@ -3,8 +3,9 @@
 
 #include <set>
 
-#include "Item.h"
 #include "Block.h"
+#include "Item.h"
+#include "ItemStack.h"
 
 class ItemTool : public Item {
 public:
@@ -44,6 +45,8 @@ public:
     float_t getEfficiency();
 
     float_t getDamageVsEntity();
+
+    float_t getStrVsBlock(ItemStack*, Block*);
 
     std::set<Block*> getEffectiveBlocks();
 

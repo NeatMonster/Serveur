@@ -239,6 +239,8 @@ public:
 
     AxisAlignedBB getBoundingBox();
 
+    Material* getMaterial();
+
 private:
     static std::unordered_map<ubyte_t, string_t> idToName;
     static std::unordered_map<ubyte_t, Block*> idToBlock;

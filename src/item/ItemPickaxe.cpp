@@ -9,6 +9,10 @@ const std::set<Block*> ItemPickaxe::effectiveBlocks = {Block::activator_rail, Bl
     Block::rail, Block::redstone_ore, Block::sandstone, Block::red_sandstone, Block::stone, Block::stone_slab};
 
 bool ItemPickaxe::canHarvestBlock(Block* blockIn) {
-    //return blockIn == Block::obsidian ? toolMaterial.getHarvestLevel() == 3 : (blockIn != Block::diamond_block && blockIn != Block::diamond_ore ? (blockIn != Block::emerald_ore && blockIn != Block::emerald_block ? (blockIn != Block::gold_block && blockIn != Block::gold_ore ? (blockIn != Block::iron_block && blockIn != Block::iron_ore ? (blockIn != Block::lapis_block && blockIn != Block::lapis_ore ? (blockIn != Block::redstone_ore && blockIn != Block::lit_redstone_ore ? (blockIn.getMaterial() == Material.rock ? true : (blockIn.getMaterial() == Material.iron ? true : blockIn.getMaterial() == Material.anvil)) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 1) : toolMaterial.getHarvestLevel() >= 1) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 2);
-    return true; // A remplacer par la ligne ci-dessus quand getMaterial() sera implémenté.
+    return blockIn == Block::obsidian ? toolMaterial.getHarvestLevel() == 3 : (blockIn != Block::diamond_block && blockIn != Block::diamond_ore ? (blockIn != Block::emerald_ore && blockIn != Block::emerald_block ? (blockIn != Block::gold_block && blockIn != Block::gold_ore ? (blockIn != Block::iron_block && blockIn != Block::iron_ore ? (blockIn != Block::lapis_block && blockIn != Block::lapis_ore ? (blockIn != Block::redstone_ore && blockIn != Block::lit_redstone_ore ? (blockIn->getMaterial() == Material::rock ? true : (blockIn->getMaterial() == Material::iron ? true : blockIn->getMaterial() == Material::anvil)) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 1) : toolMaterial.getHarvestLevel() >= 1) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 2) : toolMaterial.getHarvestLevel() >= 2);
+}
+
+float_t ItemPickaxe::getStrVsBlock(ItemStack* stack, Block* blockIn)
+{
+    return blockIn->getMaterial() != Material::iron && blockIn->getMaterial() != Material::anvil && blockIn->getMaterial() != Material::rock ? ItemTool::getStrVsBlock(stack, blockIn) : getEfficiency();
 }

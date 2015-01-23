@@ -433,7 +433,13 @@ string_t Block::getBlockName(ubyte_t id) {
     return idToName[id];
 }
 
-Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}) {}
+Material* Block::getMaterial() {
+    return blockMaterial;
+}
+
+Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}) {
+    blockMaterial = Material::air;
+}
 
 Block::Block(Material* materialIn) : boundingBox({0, 0, 0, 1, 1, 1}) {
     if(materialIn != nullptr)
