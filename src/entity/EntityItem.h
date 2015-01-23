@@ -10,7 +10,13 @@ public:
 
     ~EntityItem();
 
-    Type getType();
+    Type getType() { return ITEM; }
+
+    int_t getTrackingRange() { return 64; }
+
+    int_t getUpdateFrequency() { return 20; }
+
+    bool sendVelocityUpdates() { return true; }
 
     ServerPacket *getSpawnPacket();
 

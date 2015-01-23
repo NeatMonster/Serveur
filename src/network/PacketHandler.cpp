@@ -4,6 +4,7 @@
 #include "EntityPlayer.h"
 #include "Level.h"
 #include "Logger.h"
+#include "MathUtils.h"
 #include "PacketAnimation.h"
 #include "PacketChatMessage.h"
 #include "PacketCreativeInventoryAction.h"
@@ -114,19 +115,16 @@ void PacketHandler::handlePlayer(PacketPlayer *packet) {
 }
 
 void PacketHandler::handlePlayerLook(PacketPlayerLook *packet) {
-    connect->player->onGround = packet->onGround;
-    connect->player->rotate(packet->yaw, packet->pitch);
+    handleRotation(packet->yaw, packet->pitch);
 }
 
 void PacketHandler::handlePlayerPosition(PacketPlayerPosition *packet) {
-    connect->player->onGround = packet->onGround;
-    connect->player->move(packet->x, packet->y, packet->z);
+    handlePosition(packet->x, packet->y, packet->z, packet->onGround);
 }
 
 void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
-    connect->player->onGround = packet->onGround;
-    connect->player->move(packet->x, packet->y, packet->z);
-    connect->player->rotate(packet->yaw, packet->pitch);
+    handlePosition(packet->x, packet->y, packet->z, packet->onGround);
+    handleRotation(packet->yaw, packet->pitch);
 }
 
 void PacketHandler::handleAnimation(PacketAnimation*) {
@@ -135,13 +133,26 @@ void PacketHandler::handleAnimation(PacketAnimation*) {
 }
 
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
-    if (packet->slot == -1) {
-        EntityPlayer *player = connect->player;
-        EntityItem *entity = new EntityItem(player->getWorld(), packet->stack->clone());
-        entity->setPosition(player->getX(), player->getY(), player->getZ());
-        player->getWorld()->addEntity(entity);
-    } else if (packet->stack == nullptr) {
+    if (packet->slot == -1)
+        connect->player->drop(packet->stack);
+    else if (packet->stack == nullptr)
         connect->player->getInventory().putStack(packet->slot, nullptr);
-    } else
+    else
         connect->player->getInventory().putStack(packet->slot, packet->stack->clone());
+}
+
+void PacketHandler::handleRotation(float_t yaw, float_t pitch) {
+    connect->player->setRotation(yaw, pitch);
+    connect->player->setHeadRotation(yaw);
+}
+
+void PacketHandler::handlePosition(double_t x, double_t y, double_t z, bool onGround) {
+    EntityPlayer *player = connect->player;
+    double_t moveX = x - player->posX;
+    double_t moveY = y - player->posY;
+    double_t moveZ = z - player->posZ;
+    player->move(moveX, moveY, moveZ);
+    player->onGround = onGround;
+    if (player->onGround && moveY > 0)
+        player->jump();
 }

@@ -32,25 +32,31 @@ void Section::initialize(bool fill) {
 }
 
 ubyte_t Section::getBlockType(int_t index) {
-    return ((blockData[index] & 0xff0) >> 4) & 0xff;
+    return initialized ? ((blockData[index] & 0xff0) >> 4) & 0xff : 0;
 }
 
 ubyte_t Section::getBlockData(int_t index) {
-    return blockData[index] & 0xf;
+    return initialized ? blockData[index] & 0xf : 0;
 }
 
 ubyte_t Section::getBlockLight(int_t index) {
-    if (index % 2 == 0)
-        return blockLight[index / 2] & 0x0f;
-    else
-        return (blockLight[index / 2] & 0xf0) >> 4;
+    if (initialized) {
+        if (index % 2 == 0)
+            return blockLight[index / 2] & 0x0f;
+        else
+            return (blockLight[index / 2] & 0xf0) >> 4;
+    } else
+        return 0;
 }
 
 ubyte_t Section::getSkyLight(int_t index) {
-    if (index % 2 == 0)
-        return skyLight[index / 2] & 0x0f;
-    else
-        return (skyLight[index / 2] & 0xf0) >> 4;
+    if (initialized) {
+        if (index % 2 == 0)
+            return skyLight[index / 2] & 0x0f;
+        else
+            return (skyLight[index / 2] & 0xf0) >> 4;
+    } else
+        return 15;
 }
 
 void Section::setBlockType(int_t index, ubyte_t type) {

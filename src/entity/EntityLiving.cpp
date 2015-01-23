@@ -8,22 +8,11 @@ EntityLiving::EntityLiving(World *world) : Entity(world), headYaw(0), lastHeadYa
 
 EntityLiving::~EntityLiving() {}
 
-void EntityLiving::move(double_t x, double_t y, double_t z) {
-    Entity::move(x, y, z);
-}
-
-void EntityLiving::rotate(float_t yaw, float_t pitch) {
-    rotateHead(yaw);
-    Entity::rotate(yaw, pitch);
-}
-
 void EntityLiving::setHeadRotation(float_t headYaw) {
     this->headYaw = MathUtils::mod<float_t>(headYaw, 360.);
 }
 
-void EntityLiving::rotateHead(float_t headYaw) {
-    setHeadRotation(headYaw);
-}
+void EntityLiving::jump() {}
 
 void EntityLiving::onTick() {
     Entity::onTick();

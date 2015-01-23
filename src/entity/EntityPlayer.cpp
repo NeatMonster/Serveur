@@ -1,7 +1,9 @@
 #include "EntityPlayer.h"
 
 #include "Chunk.h"
+#include "EntityItem.h"
 #include "Level.h"
+#include "MathUtils.h"
 #include "PacketChatMessage.h"
 #include "PacketChunkData.h"
 #include "PacketDestroyEntities.h"
@@ -17,58 +19,17 @@
 #include "Server.h"
 #include "World.h"
 
+#include <cmath>
+
 EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect),
-        gameMode(SURVIVAL) {
+        gameMode(CREATIVE) {
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
     setSize(0.6, 1.8);
 }
 
-Entity::Type EntityPlayer::getType() {
-    return Type::PLAYER;
-}
-
 World *EntityPlayer::getWorld() {
     return Entity::getWorld();
-}
-
-void EntityPlayer::move(double_t x, double_t y, double_t z) {
-    int_t xOld = (int_t) floor(this->posX) >> 4;
-    int_t zOld = (int_t) floor(this->posZ) >> 4;
-    EntityLiving::move(x, y, z);
-    int_t xNew = (int_t) floor(x) >> 4;
-    int_t zNew = (int_t) floor(z) >> 4;
-    if (xOld == xNew && zOld == zNew)
-        return;
-    world->getChunk(xOld, zOld)->removePlayer(this);
-    world->getChunk(xNew, zNew)->addPlayer(this);
-    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
-            if (xNew + x < xOld - VIEW_DISTANCE || xNew + x > xOld + VIEW_DISTANCE
-                    || zNew + z < zOld - VIEW_DISTANCE || zNew + z > zOld + VIEW_DISTANCE) {
-                Chunk *chunk = world->getChunk(xNew + x, zNew + z);
-                sendPacket(new PacketChunkData(chunk, false));
-                for (EntityPlayer *const &player : chunk->getPlayers())
-                    if (player != this) {
-                        sendPacket(new PacketSpawnPlayer(player));
-                        player->sendPacket(new PacketSpawnPlayer(this));
-                    }
-            }
-    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
-            if (xOld + x < xNew - VIEW_DISTANCE || xOld + x > xNew + VIEW_DISTANCE
-                    || zOld + z < zNew - VIEW_DISTANCE || zOld + z > zNew + VIEW_DISTANCE) {
-                Chunk *chunk = world->getChunk(xOld + x, zOld + z);
-                sendPacket(new PacketChunkData(chunk, true));
-                std::unordered_set<varint_t> entitiesIds;
-                for (EntityPlayer *const &player : chunk->getPlayers())
-                    if (player != this) {
-                        entitiesIds.insert(player->getEntityId());
-                        player->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
-                    }
-                if (!entitiesIds.empty())
-                    sendPacket(new PacketDestroyEntities(entitiesIds));
-            }
 }
 
 string_t EntityPlayer::getUUID() {
@@ -97,6 +58,21 @@ void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
 
 void EntityPlayer::sendMessage(ChatMessage &message) {
     sendPacket(new PacketChatMessage(message.getJSON()));
+}
+
+void EntityPlayer::drop(ItemStack *stack) {
+    EntityItem *entity = new EntityItem(world, stack->clone());
+    entity->setPosition(posX, posY + 1.32, posZ);
+    double_t motX = -sin(rotYaw / 180. * M_PI) * cos(rotPitch / 180. * M_PI) * 0.3;
+    double_t motY = -sin(rotPitch / 180. * M_PI) * cos(rotPitch / 180. * M_PI) * 0.3 + 0.1;
+    double_t motZ = cos(rotYaw / 180. * M_PI) * cos(rotPitch / 180. * M_PI) * 0.3;
+    double_t angle = MathUtils::random_f() * 2. * M_PI;
+    double_t length = MathUtils::random_f() * 0.02;
+    motX += cos(angle) * length;
+    motY += (MathUtils::random_f() - MathUtils::random_f()) * 0.1;
+    motZ += sin(angle) * length;
+    entity->setVelocity(motX, motY, motZ);
+    world->addEntity(entity);
 }
 
 void EntityPlayer::disconnect(string_t reason) {
@@ -199,4 +175,40 @@ ServerPacket *EntityPlayer::getSpawnPacket() {
 
 ServerPacket *EntityPlayer::getMetadataPacket() {
     return nullptr;
+}
+
+void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
+    oldChunk->removePlayer(this);
+    newChunk->addPlayer(this);
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+            if (newChunk->getX() + x < oldChunk->getX() - VIEW_DISTANCE
+                || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
+                || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
+                || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE) {
+                Chunk *chunk = world->getChunk(newChunk->getX() + x, newChunk->getZ() + z);
+                sendPacket(new PacketChunkData(chunk, false));
+                for (EntityPlayer *const &player : chunk->getPlayers())
+                    if (player != this) {
+                        sendPacket(new PacketSpawnPlayer(player));
+                        player->sendPacket(new PacketSpawnPlayer(this));
+                    }
+            }
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+            if (oldChunk->getX() + x < newChunk->getX() - VIEW_DISTANCE
+                || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
+                || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
+                || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE) {
+                Chunk *chunk = world->getChunk(oldChunk->getX() + x, oldChunk->getZ() + z);
+                sendPacket(new PacketChunkData(chunk, true));
+                std::unordered_set<varint_t> entitiesIds;
+                for (EntityPlayer *const &player : chunk->getPlayers())
+                    if (player != this) {
+                        entitiesIds.insert(player->getEntityId());
+                        player->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
+                    }
+                if (!entitiesIds.empty())
+                    sendPacket(new PacketDestroyEntities(entitiesIds));
+            }
 }

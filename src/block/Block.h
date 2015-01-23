@@ -245,6 +245,7 @@ private:
     static std::unordered_map<string_t, ubyte_t> nameToId;
     static std::unordered_map<string_t, Block*> nameToBlock;
 
+protected:
     AxisAlignedBB boundingBox;
 
     Material* blockMaterial;

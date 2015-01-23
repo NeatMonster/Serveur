@@ -15,11 +15,15 @@ public:
 
     EntityPlayer(World*, PlayerConnection*);
 
-    Type getType();
+    Type getType() { return PLAYER; }
+
+    int_t getTrackingRange() { return 512; }
+
+    int_t getUpdateFrequency() { return 2; }
+
+    bool sendVelocityUpdates() { return false; }
 
     World *getWorld();
-
-    void move(double_t, double_t, double_t);
 
     string_t getUUID();
 
@@ -32,6 +36,8 @@ public:
     GameMode getGameMode();
 
     void setGameMode(GameMode);
+
+    void drop(ItemStack*);
 
     void disconnect(string_t);
 
@@ -46,6 +52,8 @@ public:
     ServerPacket *getSpawnPacket();
 
     ServerPacket *getMetadataPacket();
+
+    void onChunk(Chunk*, Chunk*);
 
 private:
     PlayerConnection *connect;
