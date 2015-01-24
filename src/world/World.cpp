@@ -175,10 +175,10 @@ std::vector<AxisAlignedBB> World::getColliding(Entity *entity, AxisAlignedBB bou
     for (int_t x = MathUtils::floor_d(boundingBox.minX); x < MathUtils::floor_d(boundingBox.minX + 1); x++)
         for (int_t y = MathUtils::floor_d(boundingBox.minY); y < MathUtils::floor_d(boundingBox.minY + 1); y++)
             for (int_t z = MathUtils::floor_d(boundingBox.minZ); z < MathUtils::floor_d(boundingBox.minZ + 1); z++) {
-                AxisAlignedBB otherBoundingBox = getBlock(x, y, z)->getBoundingBox();
+                AxisAlignedBB otherBoundingBox = getBlock(x, y, z)->getBoundingBox().offset(x, y, z);
                 if (otherBoundingBox.intersects(boundingBox))
                     colliding.push_back(otherBoundingBox);
-         }
+            }
     for (Entity *otherEntity : entities)
         if (otherEntity != entity) {
             AxisAlignedBB otherBoundingBox = otherEntity->getBoundingBox();

@@ -44,6 +44,10 @@ public:
 
     void handleCreativeInventoryAction(PacketCreativeInventoryAction*);
 
+    void handlePosition(double_t, double_t, double_t, bool);
+
+    void handleRotation(float_t, float_t);
+
 private:
     PlayerConnection *connect;
 };

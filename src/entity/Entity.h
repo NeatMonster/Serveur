@@ -23,15 +23,21 @@ public:
 
     virtual Type getType() = 0;
 
+    virtual int_t getTrackingRange() = 0;
+
+    virtual int_t getUpdateFrequency() = 0;
+
+    virtual bool sendVelocityUpdates() = 0;
+
     varint_t getEntityId();
 
     bool isDead();
 
     void setDead();
 
-    AxisAlignedBB getBoundingBox();
-
     World *getWorld();
+
+    Chunk *getChunk();
 
     double_t getX();
 
@@ -43,21 +49,31 @@ public:
 
     float_t getPitch();
 
-    void setPosition(double_t, double_t, double_t);
+    double_t getVelocityX();
 
-    virtual void move(double_t, double_t, double_t);
+    double_t getVelocityY();
+
+    double_t getVelocityZ();
+
+    AxisAlignedBB getBoundingBox();
+
+    double_t getDistance(Entity*);
+
+    void move(double_t, double_t, double_t);
+
+    void setPosition(double_t, double_t, double_t);
 
     void setRotation(float_t, float_t);
 
-    virtual void rotate(float_t, float_t);
-
-    Chunk *getChunk();
+    void setVelocity(double_t, double_t, double_t);
 
     std::unordered_set<EntityPlayer*> getWatchers();
 
     virtual ServerPacket *getSpawnPacket() = 0;
 
     virtual ServerPacket *getMetadataPacket() = 0;
+
+    virtual void onChunk(Chunk*, Chunk*);
 
     virtual void onTick();
 
@@ -68,6 +84,7 @@ protected:
     int_t ticks;
     bool dead;
     AxisAlignedBB boundingBox;
+    float_t width, height;
 
     double_t posX, posY, posZ;
     float_t rotYaw, rotPitch;

@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "MathUtils.h"
 
-PacketSpawnObject::PacketSpawnObject(Entity *entity) : ServerPacket(0x0e) {
+PacketSpawnObject::PacketSpawnObject(Entity *entity, int_t data) : ServerPacket(0x0e) {
     entityId = entity->getEntityId();
     type = entity->getType();
     x = (int_t) MathUtils::floor_d(entity->getX() * 32.);
@@ -11,7 +11,12 @@ PacketSpawnObject::PacketSpawnObject(Entity *entity) : ServerPacket(0x0e) {
     z = (int_t) MathUtils::floor_d(entity->getZ() * 32.);
     yaw = (byte_t) MathUtils::floor_f(entity->getYaw() / 360. * 256.);
     pitch = (byte_t) MathUtils::floor_f(entity->getPitch() / 360. * 256.);
-    data = 0;
+    this->data = data;
+    if (data > 0) {
+        motX = (short_t) MathUtils::floor_d(entity->getVelocityX() * 8000.);
+        motY = (short_t) MathUtils::floor_d(entity->getVelocityY() * 8000.);
+        motZ = (short_t) MathUtils::floor_d(entity->getVelocityZ() * 8000.);
+    }
 }
 
 void PacketSpawnObject::write(PacketBuffer &buffer) {
@@ -23,4 +28,9 @@ void PacketSpawnObject::write(PacketBuffer &buffer) {
     buffer.putByte(pitch);
     buffer.putByte(yaw);
     buffer.putInt(data);
+    if (data > 0) {
+        buffer.putShort(motX);
+        buffer.putShort(motY);
+        buffer.putShort(motZ);
+    }
 }

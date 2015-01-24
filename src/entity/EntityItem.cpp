@@ -12,18 +12,21 @@ EntityItem::~EntityItem() {
     delete stack;
 }
 
-Entity::Type EntityItem::getType() {
-    return Type::ITEM;
-}
-
 void EntityItem::onTick() {
     Entity::onTick();
+    motY -= 0.04;
+    move(motX, motY, motZ);
+    motX *= 0.98 * (onGround ? 0.6 : 1);
+    motY *= 0.98;
+    motZ *= 0.98 * (onGround ? 0.6 : 1);
+    if (onGround)
+        motY *= -0.5;
     if (ticks >= 1200)
         setDead();
 }
 
 ServerPacket *EntityItem::getSpawnPacket() {
-    return new PacketSpawnObject(this);
+    return new PacketSpawnObject(this, 1);
 }
 
 ServerPacket *EntityItem::getMetadataPacket() {

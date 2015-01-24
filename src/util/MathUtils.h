@@ -3,7 +3,13 @@
 
 #include "Types.h"
 
+#include <chrono>
+
+using namespace std::chrono;
+typedef std::chrono::high_resolution_clock Clock;
+
 namespace MathUtils {
+    static Random random = Random(duration_cast<milliseconds>(Clock::now().time_since_epoch()).count());
 
     template<class T>
     inline T abs(T x) {
@@ -35,6 +41,14 @@ namespace MathUtils {
 
     inline long_t floor_d(double_t x) {
         return x >= 0 ? (long_t) x : ((long_t) x) - 1;
+    }
+
+    inline float_t random_f() {
+        return (float_t) random() / (float_t) random.max();
+    }
+
+    inline double_t random_d() {
+        return (double_t) random() / (double_t) random.max();
     }
 }
 

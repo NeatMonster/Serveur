@@ -7,7 +7,7 @@ class Entity;
 
 class PacketSpawnObject : public ServerPacket {
 public:
-    PacketSpawnObject(Entity*);
+    PacketSpawnObject(Entity*, int_t);
 
     void write(PacketBuffer&);
 
@@ -20,6 +20,9 @@ private:
     byte_t pitch;
     byte_t yaw;
     int_t data;
+    short_t motX;
+    short_t motY;
+    short_t motZ;
 };
 
 #endif /* defined(__Serveur__PacketSpawnObject__) */

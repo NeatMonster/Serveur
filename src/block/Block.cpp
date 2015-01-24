@@ -1,5 +1,7 @@
 #include "Block.h"
 
+#include "BlockAir.h"
+
 Block* Block::air;
 Block* Block::stone;
 Block* Block::grass;
@@ -201,7 +203,7 @@ Block* Block::dark_oak_door;
 
 void Block::registerBlocks() {
     Material::registerMaterials();
-    registerBlock(0, "air", air = new Block());
+    registerBlock(0, "air", air = new BlockAir());
     registerBlock(1, "stone", stone = new Block());
     registerBlock(2, "grass", grass = new Block());
     registerBlock(3, "dirt", dirt = new Block());

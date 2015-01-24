@@ -11,11 +11,23 @@ struct AxisAlignedBB {
     double_t maxY;
     double_t maxZ;
 
-    void setDimension(double_t, double_t, double_t);
+    AxisAlignedBB &add(double_t, double_t, double_t);
 
-    void setPosition(double_t, double_t, double_t);
+    double_t calculateXOffset(AxisAlignedBB, double_t);
+
+    double_t calculateYOffset(AxisAlignedBB, double_t);
+
+    double_t calculateZOffset(AxisAlignedBB, double_t);
+
+    AxisAlignedBB &contract(double_t, double_t, double_t);
+
+    AxisAlignedBB &expand(double_t, double_t, double_t);
 
     bool intersects(AxisAlignedBB);
+
+    AxisAlignedBB &offset(double_t, double_t, double_t);
+
+    AxisAlignedBB clone();
 };
 
 #endif /* defined(__Serveur__AxisAlignedBB__) */
