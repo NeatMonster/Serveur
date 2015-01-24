@@ -14,5 +14,8 @@ bool ItemPickaxe::canHarvestBlock(Block* blockIn) {
 
 float_t ItemPickaxe::getStrVsBlock(ItemStack* stack, Block* blockIn)
 {
-    return blockIn->getMaterial() != Material::iron && blockIn->getMaterial() != Material::anvil && blockIn->getMaterial() != Material::rock ? ItemTool::getStrVsBlock(stack, blockIn) : getEfficiency();
+    if(blockIn->getMaterial() != Material::iron && blockIn->getMaterial() != Material::anvil && blockIn->getMaterial() != Material::rock)
+        return ItemTool::getStrVsBlock(stack, blockIn);
+    else
+        getEfficiency();
 }
