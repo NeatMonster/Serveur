@@ -437,9 +437,7 @@ Material* Block::getMaterial() {
     return blockMaterial;
 }
 
-Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}) {
-    blockMaterial = Material::air;
-}
+Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}), blockMaterial(Material::air) {}
 
 Block::Block(Material* materialIn) : boundingBox({0, 0, 0, 1, 1, 1}) {
     if(materialIn != nullptr)

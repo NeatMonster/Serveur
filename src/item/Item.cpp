@@ -1,6 +1,9 @@
 #include "Item.h"
 
+#include "ItemAxe.h"
+#include "ItemHoe.h"
 #include "ItemPickaxe.h"
+#include "ItemSpade.h"
 
 Item* Item::iron_shovel;
 Item* Item::iron_pickaxe;
@@ -198,47 +201,47 @@ void Item::registerItem(ushort_t id, string_t name, Item *item) {
 }
 
 void Item::registerItems() {
-    registerItem(256, "iron_shovel", iron_shovel = new Item());
+    registerItem(256, "iron_shovel", iron_shovel = new ItemSpade(ItemTool::ToolMaterial::IRON));
     registerItem(257, "iron_pickaxe", iron_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::IRON));
-    registerItem(258, "iron_axe", iron_axe = new Item());
+    registerItem(258, "iron_axe", iron_axe = new ItemAxe(ItemTool::ToolMaterial::IRON));
     registerItem(259, "flint_and_steel", flint_and_steel = new Item());
     registerItem(260, "apple", apple = new Item());
     registerItem(261, "bow", bow = new Item());
-    registerItem(262, "arrow", arrow = new Item());
+    registerItem(262, "arrow", (arrow = new Item())->setCreativeTab(CreativeTabs::tabCombat));
     registerItem(263, "coal", coal = new Item());
-    registerItem(264, "diamond", diamond = new Item());
-    registerItem(265, "iron_ingot", iron_ingot = new Item());
-    registerItem(266, "gold_ingot", gold_ingot = new Item());
+    registerItem(264, "diamond", (diamond = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(265, "iron_ingot", (iron_ingot = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(266, "gold_ingot", (gold_ingot = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(267, "iron_sword", iron_sword = new Item());
     registerItem(268, "wooden_sword", wooden_sword = new Item());
-    registerItem(269, "wooden_shovel", wooden_shovel = new Item());
+    registerItem(269, "wooden_shovel", wooden_shovel = new ItemSpade(ItemTool::ToolMaterial::WOOD));
     registerItem(270, "wooden_pickaxe", wooden_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::WOOD));
-    registerItem(271, "wooden_axe", wooden_axe = new Item());
+    registerItem(271, "wooden_axe", wooden_axe = new ItemAxe(ItemTool::ToolMaterial::WOOD));
     registerItem(272, "stone_sword", stone_sword = new Item());
-    registerItem(273, "stone_shovel", stone_shovel = new Item());
+    registerItem(273, "stone_shovel", stone_shovel = new ItemSpade(ItemTool::ToolMaterial::STONE));
     registerItem(274, "stone_pickaxe", stone_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::STONE));
-    registerItem(275, "stone_axe", stone_axe = new Item());
+    registerItem(275, "stone_axe", stone_axe = new ItemAxe(ItemTool::ToolMaterial::STONE));
     registerItem(276, "diamond_sword", diamond_sword = new Item());
-    registerItem(277, "diamond_shovel", diamond_shovel = new Item());
+    registerItem(277, "diamond_shovel", diamond_shovel = new ItemSpade(ItemTool::ToolMaterial::DIAMOND));
     registerItem(278, "diamond_pickaxe", diamond_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::DIAMOND));
-    registerItem(279, "diamond_axe", diamond_axe = new Item());
-    registerItem(280, "stick", stick = new Item());
-    registerItem(281, "bowl", bowl = new Item());
+    registerItem(279, "diamond_axe", diamond_axe = new ItemAxe(ItemTool::ToolMaterial::DIAMOND));
+    registerItem(280, "stick", (stick = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(281, "bowl", (bowl = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(282, "mushroom_stew", mushroom_stew = new Item());
     registerItem(283, "golden_sword", golden_sword = new Item());
-    registerItem(284, "golden_shovel", golden_shovel = new Item());
+    registerItem(284, "golden_shovel", golden_shovel = new ItemSpade(ItemTool::ToolMaterial::GOLD));
     registerItem(285, "golden_pickaxe", golden_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::GOLD));
-    registerItem(286, "golden_axe", golden_axe = new Item());
-    registerItem(287, "string", string = new Item());
-    registerItem(288, "feather", feather = new Item());
-    registerItem(289, "gunpowder", gunpowder = new Item());
-    registerItem(290, "wooden_hoe", wooden_hoe = new Item());
-    registerItem(291, "stone_hoe", stone_hoe = new Item());
-    registerItem(292, "iron_hoe", iron_hoe = new Item());
-    registerItem(293, "diamond_hoe", diamond_hoe = new Item());
-    registerItem(294, "golden_hoe", golden_hoe = new Item());
+    registerItem(286, "golden_axe", golden_axe = new ItemAxe(ItemTool::ToolMaterial::GOLD));
+    registerItem(287, "string", (string = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(288, "feather", (feather = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(289, "gunpowder", (gunpowder = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(290, "wooden_hoe", wooden_hoe = new ItemHoe(ItemTool::ToolMaterial::WOOD));
+    registerItem(291, "stone_hoe", stone_hoe = new ItemHoe(ItemTool::ToolMaterial::STONE));
+    registerItem(292, "iron_hoe", iron_hoe = new ItemHoe(ItemTool::ToolMaterial::IRON));
+    registerItem(293, "diamond_hoe", diamond_hoe = new ItemHoe(ItemTool::ToolMaterial::DIAMOND));
+    registerItem(294, "golden_hoe", golden_hoe = new ItemHoe(ItemTool::ToolMaterial::GOLD));
     registerItem(295, "wheat_seeds", wheat_seeds = new Item());
-    registerItem(296, "wheat", wheat = new Item());
+    registerItem(296, "wheat", (wheat = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(297, "bread", bread = new Item());
     registerItem(298, "leather_helmet", leather_helmet = new Item());
     registerItem(299, "leather_chestplate", leather_chestplate = new Item());
@@ -260,7 +263,7 @@ void Item::registerItems() {
     registerItem(315, "golden_chestplate", golden_chestplate = new Item());
     registerItem(316, "golden_leggings", golden_leggings = new Item());
     registerItem(317, "golden_boots", golden_boots = new Item());
-    registerItem(318, "flint", flint = new Item());
+    registerItem(318, "flint", (flint = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(319, "porkchop", porkchop = new Item());
     registerItem(320, "cooked_porkchop", cooked_porkchop = new Item());
     registerItem(321, "painting", painting = new Item());
@@ -276,29 +279,29 @@ void Item::registerItems() {
     registerItem(331, "redstone", redstone = new Item());
     registerItem(332, "snowball", snowball = new Item());
     registerItem(333, "boat", boat = new Item());
-    registerItem(334, "leather", leather = new Item());
+    registerItem(334, "leather", (leather = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(335, "milk_bucket", milk_bucket = new Item());
-    registerItem(336, "brick", brick = new Item());
-    registerItem(337, "clay_ball", clay_ball = new Item());
-    registerItem(338, "reeds", reeds = new Item());
-    registerItem(339, "paper", paper = new Item());
-    registerItem(340, "book", book = new Item());
-    registerItem(341, "slime_ball", slime_ball = new Item());
+    registerItem(336, "brick", (brick = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(337, "clay_ball", (clay_ball = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(338, "reeds", (reeds = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(339, "paper", (paper = new Item())->setCreativeTab(CreativeTabs::tabMisc));
+    registerItem(340, "book", (book = new Item())->setCreativeTab(CreativeTabs::tabMisc));
+    registerItem(341, "slime_ball", (slime_ball = new Item())->setCreativeTab(CreativeTabs::tabMisc));
     registerItem(342, "chest_minecart", chest_minecart = new Item());
     registerItem(343, "furnace_minecart", furnace_minecart = new Item());
     registerItem(344, "egg", egg = new Item());
-    registerItem(345, "compass", compass = new Item());
+    registerItem(345, "compass", (compass = new Item())->setCreativeTab(CreativeTabs::tabTools));
     registerItem(346, "fishing_rod", fishing_rod = new Item());
-    registerItem(347, "clock", clock = new Item());
-    registerItem(348, "glowstone_dust", glowstone_dust = new Item());
+    registerItem(347, "clock", (clock = new Item())->setCreativeTab(CreativeTabs::tabTools));
+    registerItem(348, "glowstone_dust", (glowstone_dust = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(349, "fish", fish = new Item());
     registerItem(350, "cooked_fish", cooked_fish = new Item());
     registerItem(351, "dye", dye = new Item());
-    registerItem(352, "bone", bone = new Item());
-    registerItem(353, "sugar", sugar = new Item());
-    registerItem(354, "cake", cake = new Item());
+    registerItem(352, "bone", (bone = new Item())->setCreativeTab(CreativeTabs::tabMisc));
+    registerItem(353, "sugar", (sugar = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(354, "cake", (cake = new Item())->setCreativeTab(CreativeTabs::tabFood));
     registerItem(355, "bed", bed = new Item());
-    registerItem(356, "repeater", repeater = new Item());
+    registerItem(356, "repeater", (repeater = new Item())->setCreativeTab(CreativeTabs::tabRedstone));
     registerItem(357, "cookie", cookie = new Item());
     registerItem(358, "filled_map", filled_map = new Item());
     registerItem(359, "shears", shears = new Item());
@@ -311,57 +314,57 @@ void Item::registerItems() {
     registerItem(366, "cooked_chicken", cooked_chicken = new Item());
     registerItem(367, "rotten_flesh", rotten_flesh = new Item());
     registerItem(368, "ender_pearl", ender_pearl = new Item());
-    registerItem(369, "blaze_rod", blaze_rod = new Item());
-    registerItem(370, "ghast_tear", ghast_tear = new Item());
-    registerItem(371, "gold_nugget", gold_nugget = new Item());
+    registerItem(369, "blaze_rod", (blaze_rod = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(370, "ghast_tear", (ghast_tear = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
+    registerItem(371, "gold_nugget", (gold_nugget = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(372, "nether_wart", nether_wart = new Item());
     registerItem(373, "potion", potion = new Item());
     registerItem(374, "glass_bottle", glass_bottle = new Item());
     registerItem(375, "spider_eye", spider_eye = new Item());
-    registerItem(376, "fermented_spider_eye", fermented_spider_eye = new Item());
-    registerItem(377, "blaze_powder", blaze_powder = new Item());
-    registerItem(378, "magma_cream", magma_cream = new Item());
-    registerItem(379, "brewing_stand", brewing_stand = new Item());
-    registerItem(380, "cauldron", cauldron = new Item());
+    registerItem(376, "fermented_spider_eye", (fermented_spider_eye = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
+    registerItem(377, "blaze_powder", (blaze_powder = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
+    registerItem(378, "magma_cream", (magma_cream = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
+    registerItem(379, "brewing_stand", (brewing_stand = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
+    registerItem(380, "cauldron", (cauldron = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
     registerItem(381, "ender_eye", ender_eye = new Item());
-    registerItem(382, "speckled_melon", speckled_melon = new Item());
+    registerItem(382, "speckled_melon", (speckled_melon = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
     registerItem(383, "spawn_egg", spawn_egg = new Item());
     registerItem(384, "experience_bottle", experience_bottle = new Item());
     registerItem(385, "fire_charge", fire_charge = new Item());
-    registerItem(386, "writable_book", writable_book = new Item());
+    registerItem(386, "writable_book", (writable_book = new Item())->setCreativeTab(CreativeTabs::tabMisc));
     registerItem(387, "written_book", written_book = new Item());
-    registerItem(388, "emerald", emerald = new Item());
+    registerItem(388, "emerald", emerald = (new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(389, "item_frame", item_frame = new Item());
-    registerItem(390, "flower_pot", flower_pot = new Item());
+    registerItem(390, "flower_pot", (flower_pot = new Item())->setCreativeTab(CreativeTabs::tabDecorations));
     registerItem(391, "carrot", carrot = new Item());
     registerItem(392, "potato", potato = new Item());
     registerItem(393, "baked_potato", baked_potato = new Item());
     registerItem(394, "poisonous_potato", poisonous_potato = new Item());
     registerItem(395, "map", map = new Item());
-    registerItem(396, "golden_carrot", golden_carrot = new Item());
+    registerItem(396, "golden_carrot", (golden_carrot = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
     registerItem(397, "skull", skull = new Item());
     registerItem(398, "carrot_on_a_stick", carrot_on_a_stick = new Item());
-    registerItem(399, "nether_star", nether_star = new Item());
-    registerItem(400, "pumpkin_pie", pumpkin_pie = new Item());
+    registerItem(399, "nether_star", (nether_star = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(400, "pumpkin_pie", (pumpkin_pie = new Item())->setCreativeTab(CreativeTabs::tabFood));
     registerItem(401, "fireworks", fireworks = new Item());
-    registerItem(402, "firework_charge", firework_charge = new Item());
+    registerItem(402, "firework_charge", (firework_charge = new Item())->setCreativeTab(CreativeTabs::tabMisc));
     registerItem(403, "enchanted_book", enchanted_book = new Item());
-    registerItem(404, "comparator", comparator = new Item());
-    registerItem(405, "netherbrick", netherbrick = new Item());
-    registerItem(406, "quartz", quartz = new Item());
+    registerItem(404, "comparator", (comparator = new Item())->setCreativeTab(CreativeTabs::tabRedstone));
+    registerItem(405, "netherbrick", (netherbrick = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(406, "quartz", (quartz = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(407, "tnt_minecart", tnt_minecart = new Item());
     registerItem(408, "hopper_minecart", hopper_minecart = new Item());
-    registerItem(409, "prismarine_shard", prismarine_shard = new Item());
-    registerItem(410, "prismarine_crystals", prismarine_crystals = new Item());
+    registerItem(409, "prismarine_shard", (prismarine_shard = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
+    registerItem(410, "prismarine_crystals", (prismarine_crystals = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(411, "rabbit", rabbit = new Item());
     registerItem(412, "cooked_rabbit", cooked_rabbit = new Item());
     registerItem(413, "rabbit_stew", rabbit_stew = new Item());
-    registerItem(414, "rabbit_foot", rabbit_foot = new Item());
-    registerItem(415, "rabbit_hide", rabbit_hide = new Item());
+    registerItem(414, "rabbit_foot", (rabbit_foot = new Item())->setCreativeTab(CreativeTabs::tabBrewing));
+    registerItem(415, "rabbit_hide", (rabbit_hide = new Item())->setCreativeTab(CreativeTabs::tabMaterials));
     registerItem(416, "armor_stand", armor_stand = new Item());
-    registerItem(417, "iron_horse_armor", iron_horse_armor = new Item());
-    registerItem(418, "golden_horse_armor", golden_horse_armor = new Item());
-    registerItem(419, "diamond_horse_armor", diamond_horse_armor = new Item());
+    registerItem(417, "iron_horse_armor", (iron_horse_armor = new Item())->setCreativeTab(CreativeTabs::tabMisc));
+    registerItem(418, "golden_horse_armor", (golden_horse_armor = new Item())->setCreativeTab(CreativeTabs::tabMisc));
+    registerItem(419, "diamond_horse_armor", (diamond_horse_armor = new Item())->setCreativeTab(CreativeTabs::tabMisc));
     registerItem(420, "lead", lead = new Item());
     registerItem(421, "name_tag", name_tag = new Item());
     registerItem(422, "command_block_minecart", command_block_minecart = new Item());
@@ -411,6 +414,20 @@ string_t Item::getItemName(ushort_t id) {
 }
 
 Item::Item() {}
+
+Item* Item::setMaxDamage(int_t maxDurability) {
+    maxDamage = maxDurability;
+    return this;
+}
+
+int_t Item::getMaxDamage() {
+    return maxDamage;
+}
+
+Item* Item::setCreativeTab(CreativeTabs* tab) {
+    tabToDisplayOn = tab;
+    return this;
+}
 
 std::unordered_map<ushort_t, string_t> Item::idToName;
 std::unordered_map<ushort_t, Item*> Item::idToItem;

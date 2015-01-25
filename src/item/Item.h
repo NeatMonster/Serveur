@@ -1,6 +1,7 @@
 #ifndef __Serveur__Item__
 #define __Serveur__Item__
 
+#include "CreativeTabs.h"
 #include "Types.h"
 
 #include <unordered_map>
@@ -211,15 +212,24 @@ public:
 
     Item();
 
+    int_t getMaxDamage();
+
 private:
     static std::unordered_map<ushort_t, string_t> idToName;
     static std::unordered_map<ushort_t, Item*> idToItem;
     static std::unordered_map<string_t, ushort_t> nameToId;
     static std::unordered_map<string_t, Item*> nameToItem;
 
-protected:
-    int maxStackSize = 64;
     int maxDamage;
+
+    CreativeTabs* tabToDisplayOn;
+
+protected:
+    Item* setMaxDamage(int_t);
+
+    Item* setCreativeTab(CreativeTabs*);
+
+    int maxStackSize = 64;
 };
 
 #endif /* defined(__Serveur__Item__) */
