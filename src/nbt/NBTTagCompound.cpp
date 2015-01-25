@@ -47,3 +47,17 @@ void NBTTagCompound::set(string_t name, NBTTag *&child) {
 NBTTagCompound *NBTTagCompound::clone() {
     return new NBTTagCompound(this);
 }
+
+bool NBTTagCompound::equals(NBTTag *tag) {
+    if (!tag->isCompound() || tag->getName() != name)
+        return false;
+    NBTTagCompound *compound = tag->asCompound();
+    if (children.size() != compound->children.size())
+        return false;
+    for (auto child : children) {
+        auto compoundChild = compound->children.find(child.first);
+        if (compoundChild == compound->children.end() || !compoundChild->second->equals(child.second))
+            return false;
+    }
+    return true;
+}

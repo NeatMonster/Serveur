@@ -65,3 +65,7 @@ void NBTTagIntArray::set(int_t *frm, int_t size) {
 NBTTagIntArray *NBTTagIntArray::clone() {
     return new NBTTagIntArray(this);
 }
+
+bool NBTTagIntArray::equals(NBTTag *tag) {
+    return tag->isIntArray() && tag->getName() == name && tag->asIntArray()->value == value;
+}

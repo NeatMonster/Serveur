@@ -19,12 +19,24 @@ short_t ItemStack::getType() {
     return type;
 }
 
+void ItemStack::setType(short_t type) {
+    this->type = type;
+}
+
 byte_t ItemStack::getAmount() {
     return amount;
 }
 
+void ItemStack::setAmount(byte_t amount) {
+    this->amount = amount;
+}
+
 short_t ItemStack::getDamage() {
     return damage;
+}
+
+void ItemStack::setDamage(short_t damage) {
+    this->damage = damage;
 }
 
 NBTTagCompound *ItemStack::getNBT() {

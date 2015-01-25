@@ -21,6 +21,8 @@ public:
 
     NBTTagString *clone();
 
+    bool equals(NBTTag*);
+
 private:
     string_t value;
 };

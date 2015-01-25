@@ -44,3 +44,7 @@ void NBTTagLong::set(long_t value) {
 NBTTagLong *NBTTagLong::clone() {
     return new NBTTagLong(this);
 }
+
+bool NBTTagLong::equals(NBTTag *tag) {
+    return tag->isLong() && tag->getName() == name && tag->asLong()->value == value;
+}

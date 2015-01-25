@@ -2,15 +2,16 @@
 #define __Serveur__World__
 
 #include "AxisAlignedBB.h"
+#include "Entity.h"
 #include "Types.h"
 
+#include <functional>
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
 
 class Block;
 class Chunk;
-class Entity;
 class EntityPlayer;
 class Level;
 class Region;
@@ -60,6 +61,8 @@ public:
     std::vector<AxisAlignedBB> getCollisions(Entity*, AxisAlignedBB);
 
     std::vector<AxisAlignedBB> getBlockCollisions(AxisAlignedBB);
+
+    std::vector<Entity*> getEntityCollisions(AxisAlignedBB, std::function<bool(Entity*)>);
 
     void onTick();
 

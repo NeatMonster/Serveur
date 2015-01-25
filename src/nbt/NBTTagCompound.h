@@ -24,6 +24,8 @@ public:
 
     NBTTagCompound *clone();
 
+    bool equals(NBTTag*);
+
 private:
     std::unordered_map<string_t, NBTTag*> children;
 };

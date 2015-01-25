@@ -200,6 +200,17 @@ std::vector<AxisAlignedBB> World::getBlockCollisions(AxisAlignedBB boundingBox) 
     return collisions;
 }
 
+std::vector<Entity*> World::getEntityCollisions(AxisAlignedBB boundingBox, std::function<bool(Entity*)> predicate) {
+    std::vector<Entity*> entities;
+    for (Entity *otherEntity : this->entities)
+        if (predicate(otherEntity)) {
+            AxisAlignedBB otherBoundingBox = otherEntity->getBoundingBox();
+            if (otherBoundingBox.intersects(boundingBox))
+                entities.push_back(otherEntity);
+        }
+    return entities;
+}
+
 void World::onTick() {
     for (Entity *const &entity : std::unordered_set<Entity*>(entities)) {
         entity->onTick();

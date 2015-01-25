@@ -21,6 +21,8 @@ public:
 
     NBTTagDouble *clone();
 
+    bool equals(NBTTag*);
+
 private:
     double_t value;
 };

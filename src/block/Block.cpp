@@ -201,6 +201,13 @@ Block* Block::jungle_door;
 Block* Block::acacia_door;
 Block* Block::dark_oak_door;
 
+void Block::registerBlock(ubyte_t id, string_t name, Block *block) {
+    idToName[id] = name;
+    idToBlock[id] = block;
+    nameToId[name] = id;
+    nameToBlock[name] = block;
+}
+
 void Block::registerBlocks() {
     Material::registerMaterials();
     registerBlock(0, "air", air = new BlockAir());
@@ -401,13 +408,6 @@ void Block::registerBlocks() {
     registerBlock(195, "jungle_door", jungle_door = new Block());
     registerBlock(196, "acacia_door", acacia_door = new Block());
     registerBlock(197, "dark_oak_door", dark_oak_door = new Block());
-}
-
-void Block::registerBlock(ubyte_t id, string_t name, Block *block) {
-    idToName.insert({id, name});
-    idToBlock.insert({id, block});
-    nameToId.insert({name, id,});
-    nameToBlock.insert({name, block});
 }
 
 void Block::deregisterBlocks() {

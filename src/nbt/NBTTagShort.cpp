@@ -32,3 +32,7 @@ void NBTTagShort::set(short_t value) {
 NBTTagShort *NBTTagShort::clone() {
     return new NBTTagShort(this);
 }
+
+bool NBTTagShort::equals(NBTTag *tag) {
+    return tag->isShort() && tag->getName() == name && tag->asShort()->value == value;
+}

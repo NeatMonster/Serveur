@@ -21,6 +21,8 @@ public:
 
     NBTTagIntArray *clone();
 
+    bool equals(NBTTag*);
+
 private:
     ints_t value;
 };

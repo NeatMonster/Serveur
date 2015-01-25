@@ -33,6 +33,10 @@ void NBTTag::print() {
     print(0, true);
 }
 
+string_t NBTTag::getName() {
+    return name;
+}
+
 bool NBTTag::isByte() {
     return type == NBTTag::Type::BYTE;
 }

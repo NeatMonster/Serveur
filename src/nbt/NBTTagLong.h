@@ -21,6 +21,8 @@ public:
 
     NBTTagLong *clone();
 
+    bool equals(NBTTag*);
+
 private:
     long_t value;
 };

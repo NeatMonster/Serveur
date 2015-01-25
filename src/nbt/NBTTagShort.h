@@ -21,6 +21,8 @@ public:
 
     NBTTagShort *clone();
 
+    bool equals(NBTTag*);
+
 private:
     short_t value;
 };

@@ -42,3 +42,7 @@ void NBTTagString::set(string_t value) {
 NBTTagString *NBTTagString::clone() {
     return new NBTTagString(this);
 }
+
+bool NBTTagString::equals(NBTTag *tag) {
+    return tag->isString() && tag->getName() == name && tag->asString()->value == value;
+}

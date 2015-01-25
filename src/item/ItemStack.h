@@ -20,9 +20,15 @@ public:
 
     short_t getType();
 
+    void setType(short_t);
+
     byte_t getAmount();
 
+    void setAmount(byte_t);
+
     short_t getDamage();
+
+    void setDamage(short_t);
 
     NBTTagCompound *getNBT();
 

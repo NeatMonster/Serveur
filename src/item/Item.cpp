@@ -194,13 +194,14 @@ Item* Item::record_11;
 Item* Item::record_wait;
 
 void Item::registerItem(ushort_t id, string_t name, Item *item) {
-    idToName.insert({id, name});
-    idToItem.insert({id, item});
-    nameToId.insert({name, id,});
-    nameToItem.insert({name, item});
+    idToName[id] = name;
+    idToItem[id] = item;
+    nameToId[name] = id;
+    nameToItem[name] = item;
 }
 
 void Item::registerItems() {
+    // TODO Ajouter les items correspondants aux blocs
     registerItem(256, "iron_shovel", iron_shovel = new ItemSpade(ItemTool::ToolMaterial::IRON));
     registerItem(257, "iron_pickaxe", iron_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::IRON));
     registerItem(258, "iron_axe", iron_axe = new ItemAxe(ItemTool::ToolMaterial::IRON));
@@ -397,7 +398,7 @@ void Item::deregisterItems() {
         delete it->second;
 }
 
-Item *Item::getItem(ubyte_t id) {
+Item *Item::getItem(ushort_t id) {
     return idToItem[id];
 }
 
@@ -415,13 +416,17 @@ string_t Item::getItemName(ushort_t id) {
 
 Item::Item() {}
 
+int_t Item::getMaxDamage() {
+    return maxDamage;
+}
+
+int_t Item::getMaxStackSize() {
+    return maxStackSize;
+}
+
 Item* Item::setMaxDamage(int_t maxDurability) {
     maxDamage = maxDurability;
     return this;
-}
-
-int_t Item::getMaxDamage() {
-    return maxDamage;
 }
 
 Item* Item::setCreativeTab(CreativeTabs* tab) {

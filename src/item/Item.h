@@ -202,7 +202,7 @@ public:
 
     static void deregisterItems();
 
-    static Item *getItem(ubyte_t);
+    static Item *getItem(ushort_t);
 
     static Item *getItem(string_t);
 
@@ -214,13 +214,15 @@ public:
 
     int_t getMaxDamage();
 
+    int_t getMaxStackSize();
+
 private:
     static std::unordered_map<ushort_t, string_t> idToName;
     static std::unordered_map<ushort_t, Item*> idToItem;
     static std::unordered_map<string_t, ushort_t> nameToId;
     static std::unordered_map<string_t, Item*> nameToItem;
 
-    int maxDamage;
+    int_t maxDamage;
 
     CreativeTabs* tabToDisplayOn;
 
@@ -229,7 +231,7 @@ protected:
 
     Item* setCreativeTab(CreativeTabs*);
 
-    int maxStackSize = 64;
+    int_t maxStackSize = 64;
 };
 
 #endif /* defined(__Serveur__Item__) */

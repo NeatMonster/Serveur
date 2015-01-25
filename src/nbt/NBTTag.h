@@ -40,6 +40,8 @@ public:
 
     void print();
 
+    string_t getName();
+
     bool isByte();
 
     NBTTagByte *asByte();
@@ -85,6 +87,8 @@ public:
     NBTTagString *asString();
 
     virtual NBTTag* clone() = 0;
+
+    virtual bool equals(NBTTag*) = 0;
 
 protected:
     Type type;

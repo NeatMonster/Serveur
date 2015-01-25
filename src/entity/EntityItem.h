@@ -24,6 +24,11 @@ public:
 
 private:
     ItemStack *stack;
+    int_t pickupDelay;
+
+    void searchForItems();
+
+    bool combineItems(EntityItem*);
 };
 
 #endif /* defined(__Serveur__EntityItem__) */

@@ -36,3 +36,7 @@ void NBTTagInt::set(int_t value) {
 NBTTagInt *NBTTagInt::clone() {
     return new NBTTagInt(this);
 }
+
+bool NBTTagInt::equals(NBTTag *tag) {
+    return tag->isInt() && tag->getName() == name && tag->asInt()->value == value;
+}

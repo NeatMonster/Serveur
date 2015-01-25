@@ -44,3 +44,7 @@ void NBTTagDouble::set(double_t value) {
 NBTTagDouble *NBTTagDouble::clone() {
     return new NBTTagDouble(this);
 }
+
+bool NBTTagDouble::equals(NBTTag *tag) {
+    return tag->isDouble() && tag->getName() == name && tag->asDouble()->value == value;
+}

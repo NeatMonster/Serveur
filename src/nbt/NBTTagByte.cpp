@@ -30,3 +30,7 @@ void NBTTagByte::set(byte_t value) {
 NBTTagByte *NBTTagByte::clone() {
     return new NBTTagByte(this);
 }
+
+bool NBTTagByte::equals(NBTTag *tag) {
+    return tag->isByte() && tag->getName() == name && tag->asByte()->value == value;
+}

@@ -20,7 +20,7 @@ void NBTTagList::read(ubyte_t *&data, bool header) {
     *(((ubyte_t*) &size) + 2) = *(data++);
     *(((ubyte_t*) &size) + 1) = *(data++);
     *(((ubyte_t*) &size) + 0) = *(data++);
-    for (int_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         children.push_back(NBTTag::read(data, type, false));
 }
 
@@ -57,4 +57,16 @@ std::vector<NBTTag*>::iterator NBTTagList::end() {
 
 NBTTagList *NBTTagList::clone() {
     return new NBTTagList(this);
+}
+
+bool NBTTagList::equals(NBTTag *tag) {
+    if (!tag->isList() || tag->getName() != name)
+        return false;
+    NBTTagList *list = tag->asList();
+    if (children.size() != list->children.size())
+        return false;
+    for (size_t i = 0; i < children.size(); i++)
+        if (!children[i]->equals(list->children[i]))
+            return false;
+    return true;
 }

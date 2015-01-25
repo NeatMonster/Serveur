@@ -81,7 +81,6 @@ public:
     virtual void onTick();
 
 protected:
-    Type type;
     World *world;
     varint_t entityId;
     int_t ticks;

@@ -36,3 +36,7 @@ void NBTTagFloat::set(float_t value) {
 NBTTagFloat *NBTTagFloat::clone() {
     return new NBTTagFloat(this);
 }
+
+bool NBTTagFloat::equals(NBTTag *tag) {
+    return tag->isFloat() && tag->getName() == name && tag->asFloat()->value == value;
+}

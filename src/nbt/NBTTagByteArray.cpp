@@ -56,3 +56,7 @@ void NBTTagByteArray::set(ubyte_t *frm, int_t size) {
 NBTTagByteArray *NBTTagByteArray::clone() {
     return new NBTTagByteArray(this);
 }
+
+bool NBTTagByteArray::equals(NBTTag *tag) {
+    return tag->isByteArray() && tag->getName() == name && tag->asByteArray()->value == value;
+}

@@ -21,6 +21,8 @@ public:
 
     NBTTagFloat *clone();
 
+    bool equals(NBTTag*);
+
 private:
     float_t value;
 };

@@ -26,6 +26,8 @@ public:
 
     NBTTagList *clone();
 
+    bool equals(NBTTag*);
+
 private:
     std::vector<NBTTag*> children;
 };

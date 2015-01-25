@@ -21,6 +21,8 @@ public:
 
     NBTTagByteArray *clone();
 
+    bool equals(NBTTag*);
+
 private:
     ubytes_t value;
 };
