@@ -6,13 +6,13 @@
 
 class PacketEntityMetadata : public ServerPacket {
 public:
-    PacketEntityMetadata(varint_t, DataWatcher);
+    PacketEntityMetadata(varint_t, DataWatcher*);
 
     void write(PacketBuffer&);
 
 private:
     varint_t entityId;
-    DataWatcher metadata;
+    DataWatcher *metadata;
 };
 
 #endif /* defined(__Serveur__PacketEntityMetadata__) */

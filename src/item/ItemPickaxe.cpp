@@ -17,5 +17,5 @@ float_t ItemPickaxe::getStrVsBlock(ItemStack* stack, Block* blockIn)
     if(blockIn->getMaterial() != Material::iron && blockIn->getMaterial() != Material::anvil && blockIn->getMaterial() != Material::rock)
         return ItemTool::getStrVsBlock(stack, blockIn);
     else
-        getEfficiency();
+        return getEfficiency();
 }

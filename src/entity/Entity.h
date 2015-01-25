@@ -68,6 +68,8 @@ public:
 
     void setVelocity(double_t, double_t, double_t);
 
+    bool pushOutOfBlocks(double_t, double_t, double_t);
+
     std::unordered_set<EntityPlayer*> getWatchers();
 
     virtual ServerPacket *getSpawnPacket() = 0;
@@ -92,11 +94,14 @@ protected:
     float_t rotYaw, rotPitch;
     double_t motX, motY, motZ;
     bool onGround;
+    bool noClip;
 
     int_t lastPosX, lastPosY, lastPosZ;
     int_t lastRotYaw, lastRotPitch;
     int_t lastMotX, lastMotY, lastMotZ;
     bool lastOnGround;
+
+    void setPosition();
 
     void setSize(float_t, float_t);
 

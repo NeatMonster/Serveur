@@ -170,22 +170,34 @@ Block *World::getBlock(int_t x, int_t y, int_t z) {
     return getChunk((int_t) MathUtils::floor_d(x) >> 4, (int_t) MathUtils::floor_d(z) >> 4)->getBlock(x % 16, y, z % 16);
 }
 
-std::vector<AxisAlignedBB> World::getColliding(Entity *entity, AxisAlignedBB boundingBox) {
-    std::vector<AxisAlignedBB> colliding;
-    for (int_t x = MathUtils::floor_d(boundingBox.minX); x < MathUtils::floor_d(boundingBox.minX + 1); x++)
-        for (int_t y = MathUtils::floor_d(boundingBox.minY); y < MathUtils::floor_d(boundingBox.minY + 1); y++)
-            for (int_t z = MathUtils::floor_d(boundingBox.minZ); z < MathUtils::floor_d(boundingBox.minZ + 1); z++) {
-                AxisAlignedBB otherBoundingBox = getBlock(x, y, z)->getBoundingBox().offset(x, y, z);
-                if (otherBoundingBox.intersects(boundingBox))
-                    colliding.push_back(otherBoundingBox);
-            }
+bool World::isFullBlock(int_t x, int_t y, int_t z) {
+    AxisAlignedBB boundingBox = getBlock(x, y, z)->getBoundingBox().offset(x, y, z);
+    return boundingBox.maxX - boundingBox.minX
+         + boundingBox.maxY - boundingBox.minY
+         + boundingBox.maxZ - boundingBox.minZ >= 3.;
+}
+
+std::vector<AxisAlignedBB> World::getCollisions(Entity *entity, AxisAlignedBB boundingBox) {
+    std::vector<AxisAlignedBB> collisions = getBlockCollisions(boundingBox);
     for (Entity *otherEntity : entities)
         if (otherEntity != entity) {
             AxisAlignedBB otherBoundingBox = otherEntity->getBoundingBox();
             if (otherBoundingBox.intersects(boundingBox))
-                colliding.push_back(otherBoundingBox);
+                collisions.push_back(otherBoundingBox);
         }
-    return colliding;
+    return collisions;
+}
+
+std::vector<AxisAlignedBB> World::getBlockCollisions(AxisAlignedBB boundingBox) {
+    std::vector<AxisAlignedBB> collisions;
+    for (int_t x = MathUtils::floor_d(boundingBox.minX); x < MathUtils::floor_d(boundingBox.maxX + 1); x++)
+        for (int_t y = MathUtils::floor_d(boundingBox.minY); y < MathUtils::floor_d(boundingBox.maxY + 1); y++)
+            for (int_t z = MathUtils::floor_d(boundingBox.minZ); z < MathUtils::floor_d(boundingBox.maxZ + 1); z++) {
+                AxisAlignedBB otherBoundingBox = getBlock(x, y, z)->getBoundingBox().offset(x, y, z);
+                if (otherBoundingBox.intersects(boundingBox))
+                    collisions.push_back(otherBoundingBox);
+            }
+    return collisions;
 }
 
 void World::onTick() {

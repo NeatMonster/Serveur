@@ -14,6 +14,7 @@ EntityItem::~EntityItem() {
 void EntityItem::onTick() {
     Entity::onTick();
     motY -= 0.04;
+    noClip = pushOutOfBlocks(posX, (boundingBox.minY + boundingBox.maxY) / 2, posZ);
     move(motX, motY, motZ);
     motX *= 0.98 * (onGround ? 0.6 : 1);
     motY *= 0.98;

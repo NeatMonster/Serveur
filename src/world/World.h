@@ -55,7 +55,11 @@ public:
 
     Block *getBlock(int_t, int_t, int_t);
 
-    std::vector<AxisAlignedBB> getColliding(Entity*, AxisAlignedBB);
+    bool isFullBlock(int_t, int_t, int_t);
+
+    std::vector<AxisAlignedBB> getCollisions(Entity*, AxisAlignedBB);
+
+    std::vector<AxisAlignedBB> getBlockCollisions(AxisAlignedBB);
 
     void onTick();
 

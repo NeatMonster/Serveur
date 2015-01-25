@@ -12,7 +12,7 @@
 #include "World.h"
 
 Entity::Entity(World *world) : world(world), ticks(0), dead(false), boundingBox({0, 0, 0, 0, 0, 0}), width(0), height(0),
-    posX(0), posY(0), posZ(0), rotYaw(0), rotPitch(0), motX(0), motY(0), motZ(0), onGround(false),
+    posX(0), posY(0), posZ(0), rotYaw(0), rotPitch(0), motX(0), motY(0), motZ(0), onGround(false), noClip(false),
     lastPosX(0), lastPosY(0), lastPosZ(0), lastRotYaw(0), lastRotPitch(0), lastMotX(0), lastMotY(0), lastMotZ(0), lastOnGround(false) {
     entityId = nextEntityId++;
 }
@@ -84,24 +84,27 @@ double_t Entity::getDistance(Entity *entity) {
 void Entity::move(double_t x, double_t y, double_t z) {
     int_t oldChunkX = (int_t) floor(posX) >> 4;
     int_t oldChunkZ = (int_t) floor(posZ) >> 4;
-    double_t savX = x, savY = y, savZ = z;
-    std::vector<AxisAlignedBB> collisions = world->getColliding(this, boundingBox.clone().add(x, y, z));
-    for (AxisAlignedBB &collision : collisions) {
-        x = collision.calculateXOffset(boundingBox, x);
-        y = collision.calculateYOffset(boundingBox, y);
-        z = collision.calculateZOffset(boundingBox, z);
+    if (noClip) {
+        boundingBox.offset(x, y, z);
+        setPosition();
+    } else {
+        double_t savX = x, savY = y, savZ = z;
+        std::vector<AxisAlignedBB> collisions = world->getCollisions(this, boundingBox.clone().add(x, y, z));
+        for (AxisAlignedBB &collision : collisions) {
+            x = collision.calculateXOffset(boundingBox, x);
+            y = collision.calculateYOffset(boundingBox, y);
+            z = collision.calculateZOffset(boundingBox, z);
+        }
+        boundingBox.offset(x, y, z);
+        setPosition();
+        onGround = y != savY && savY < 0;
+        if (x != savX)
+            motX = 0;
+        if (y != savY)
+            motY = 0;
+        if (z != savZ)
+            motZ = 0;
     }
-    boundingBox.offset(x, y, z);
-    posX = (boundingBox.minX + boundingBox.maxX) / 2.;
-    posY = boundingBox.minY;
-    posZ = (boundingBox.minZ + boundingBox.maxZ) / 2.;
-    onGround = y != savY && savY < 0;
-    if (x != savX)
-        motX = 0;
-    if (y != savY)
-        motY = 0;
-    if (z != savZ)
-        motZ = 0;
     int_t newChunkX = (int_t) floor(posX) >> 4;
     int_t newChunkZ = (int_t) floor(posZ) >> 4;
     if (oldChunkX != newChunkX || oldChunkZ != newChunkZ)
@@ -132,6 +135,51 @@ void Entity::setVelocity(double_t motX, double_t motY, double_t motZ) {
     this->motZ = motZ;
 }
 
+bool Entity::pushOutOfBlocks(double_t x, double_t y, double_t z) {
+    double_t blockX = MathUtils::floor_d(x);
+    double_t blockY = MathUtils::floor_d(y);
+    double_t blockZ = MathUtils::floor_d(z);
+    if (world->getBlockCollisions(boundingBox).empty() && !world->isFullBlock(blockX, blockY, blockZ))
+        return false;
+    byte_t direction = 3;
+    double_t distance = 9999;
+    double_t deltaX = x - blockX;
+    double_t deltaY = y - blockY;
+    double_t deltaZ = z - blockZ;
+    if (!world->isFullBlock(blockX - 1, blockY, blockZ) && deltaX < distance) {
+        distance = deltaX;
+        direction = 0;
+    }
+    if (!world->isFullBlock(blockX + 1, blockY, blockZ) && 1 - deltaX < distance) {
+        distance = 1 - deltaX;
+        direction = 1;
+    }
+    if (!world->isFullBlock(blockX, blockY + 1, blockZ) && 1 - deltaY < distance) {
+        distance = 1 - deltaY;
+        direction = 3;
+    }
+    if (!world->isFullBlock(blockX, blockY, blockZ - 1) && deltaZ < distance) {
+        distance = deltaZ;
+        direction = 4;
+    }
+    if (!world->isFullBlock(blockX, blockY, blockZ + 1) && 1 - deltaZ < distance) {
+        distance = 1 - deltaZ;
+        direction = 5;
+    }
+    float_t speed = MathUtils::random_f() * 0.2 + 0.1;
+    if (direction == 0)
+        motX = -speed;
+    if (direction == 1)
+        motX = speed;
+    if (direction == 3)
+        motY = speed;
+    if (direction == 4)
+        motZ = -speed;
+    if (direction == 5)
+        motZ = speed;
+    return true;
+}
+
 std::unordered_set<EntityPlayer*> Entity::getWatchers() {
     std::unordered_set<EntityPlayer*> watchers;
     int_t xChunk = (int_t) floor(posX) >> 4;
@@ -150,7 +198,7 @@ std::unordered_set<EntityPlayer*> Entity::getWatchers() {
 }
 
 ServerPacket *Entity::getMetadataPacket() {
-    return new PacketEntityMetadata(entityId, dataWatcher);
+    return new PacketEntityMetadata(entityId, &dataWatcher);
 }
 
 void Entity::onChunk(Chunk *oldChunk, Chunk *newChunk) {
@@ -236,6 +284,12 @@ void Entity::onTick() {
     lastMotX = motX;
     lastMotY = motY;
     lastMotZ = motZ;
+}
+
+void Entity::setPosition() {
+    posX = (boundingBox.minX + boundingBox.maxX) / 2.;
+    posY = boundingBox.minY;
+    posZ = (boundingBox.minZ + boundingBox.maxZ) / 2.;
 }
 
 void Entity::setSize(float_t width, float_t height) {
