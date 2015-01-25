@@ -51,8 +51,6 @@ public:
 
     ServerPacket *getSpawnPacket();
 
-    ServerPacket *getMetadataPacket();
-
     void onChunk(Chunk*, Chunk*);
 
 private:

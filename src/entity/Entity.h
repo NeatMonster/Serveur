@@ -2,6 +2,7 @@
 #define __Serveur__Entity__
 
 #include "AxisAlignedBB.h"
+#include "DataWatcher.h"
 #include "Types.h"
 
 #include <unordered_set>
@@ -71,7 +72,7 @@ public:
 
     virtual ServerPacket *getSpawnPacket() = 0;
 
-    virtual ServerPacket *getMetadataPacket() = 0;
+    ServerPacket *getMetadataPacket();
 
     virtual void onChunk(Chunk*, Chunk*);
 
@@ -85,6 +86,7 @@ protected:
     bool dead;
     AxisAlignedBB boundingBox;
     float_t width, height;
+    DataWatcher dataWatcher;
 
     double_t posX, posY, posZ;
     float_t rotYaw, rotPitch;

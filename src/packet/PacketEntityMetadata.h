@@ -1,21 +1,18 @@
 #ifndef __Serveur__PacketEntityMetadata__
 #define __Serveur__PacketEntityMetadata__
 
+#include "DataWatcher.h"
 #include "ServerPacket.h"
-
-class Metadata;
 
 class PacketEntityMetadata : public ServerPacket {
 public:
-    PacketEntityMetadata(varint_t, Metadata*);
-
-    ~PacketEntityMetadata();
+    PacketEntityMetadata(varint_t, DataWatcher);
 
     void write(PacketBuffer&);
 
 private:
     varint_t entityId;
-    Metadata *metadata;
+    DataWatcher metadata;
 };
 
 #endif /* defined(__Serveur__PacketEntityMetadata__) */

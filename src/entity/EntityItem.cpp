@@ -1,11 +1,10 @@
 #include "EntityItem.h"
 
-#include "Metadata.h"
-#include "PacketEntityMetadata.h"
 #include "PacketSpawnObject.h"
 
 EntityItem::EntityItem(World *world, ItemStack *stack) : Entity(world), stack(stack) {
     setSize(0.25, 0.25);
+    dataWatcher.setItemStack(10, stack->clone());
 }
 
 EntityItem::~EntityItem() {
@@ -27,10 +26,4 @@ void EntityItem::onTick() {
 
 ServerPacket *EntityItem::getSpawnPacket() {
     return new PacketSpawnObject(this, 1);
-}
-
-ServerPacket *EntityItem::getMetadataPacket() {
-    Metadata *metadata = new Metadata();
-    metadata->setItemStack(10, stack->clone());
-    return new PacketEntityMetadata(entityId, metadata);
 }

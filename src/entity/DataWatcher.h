@@ -1,5 +1,5 @@
-#ifndef __Serveur__Metadata__
-#define __Serveur__Metadata__
+#ifndef __Serveur__DataWatcher__
+#define __Serveur__DataWatcher__
 
 #include "ItemStack.h"
 #include "Types.h"
@@ -9,11 +9,11 @@
 
 class PacketBuffer;
 
-class Metadata {
+class DataWatcher {
 public:
-    Metadata();
+    DataWatcher();
 
-    ~Metadata();
+    ~DataWatcher();
 
     byte_t getByte(size_t);
 
@@ -52,4 +52,4 @@ private:
     byte_t type[23];
 };
 
-#endif /* defined(__Serveur__Metadata__) */
+#endif /* defined(__Serveur__DataWatcher__) */

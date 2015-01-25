@@ -1,15 +1,15 @@
-#include "Metadata.h"
+#include "DataWatcher.h"
 
 #include "PacketBuffer.h"
 
-Metadata::Metadata() {
+DataWatcher::DataWatcher() {
     for (size_t i = 0; i < 23; i++) {
         data[i] = nullptr;
         type[i] = NONE;
     }
 }
 
-Metadata::~Metadata() {
+DataWatcher::~DataWatcher() {
     for (size_t i = 0; i < 23; i++)
         switch (type[i]) {
             case BYTE:
@@ -33,61 +33,61 @@ Metadata::~Metadata() {
         }
 }
 
-byte_t Metadata::getByte(size_t index) {
+byte_t DataWatcher::getByte(size_t index) {
     return *((byte_t*) data[index]);
 }
 
-void Metadata::setByte(size_t index, byte_t b) {
+void DataWatcher::setByte(size_t index, byte_t b) {
     data[index] = new byte_t(b);
     type[index] = BYTE;
 }
 
-short_t Metadata::getShort(size_t index) {
+short_t DataWatcher::getShort(size_t index) {
     return *((short_t*) data[index]);
 }
 
-void Metadata::setShort(size_t index, short_t s) {
+void DataWatcher::setShort(size_t index, short_t s) {
     data[index] = new short_t(s);
     type[index] = SHORT;
 }
 
-int_t Metadata::getInt(size_t index) {
+int_t DataWatcher::getInt(size_t index) {
     return *((int_t*) data[index]);
 }
 
-void Metadata::setInt(size_t index, int_t i) {
+void DataWatcher::setInt(size_t index, int_t i) {
     data[index] = new int_t(i);
     type[index] = INT;
 }
 
-float_t Metadata::getFloat(size_t index) {
+float_t DataWatcher::getFloat(size_t index) {
     return *((float_t*) data[index]);
 }
 
-void Metadata::setFloat(size_t index, float_t f) {
+void DataWatcher::setFloat(size_t index, float_t f) {
     data[index] = new float_t(f);
     type[index] = FLOAT;
 }
 
-string_t Metadata::getString(size_t index) {
+string_t DataWatcher::getString(size_t index) {
     return *((string_t*) data[index]);
 }
 
-void Metadata::setString(size_t index, string_t str) {
+void DataWatcher::setString(size_t index, string_t str) {
     data[index] = new string_t(str);
     type[index] = STRING;
 }
 
-ItemStack *Metadata::getItemStack(size_t index) {
+ItemStack *DataWatcher::getItemStack(size_t index) {
     return (ItemStack*) data[index];
 }
 
-void Metadata::setItemStack(size_t index, ItemStack *stack) {
+void DataWatcher::setItemStack(size_t index, ItemStack *stack) {
     data[index] = stack;
     type[index] = ITEMSTACK;
 }
 
-void Metadata::read(PacketBuffer &buffer) {
+void DataWatcher::read(PacketBuffer &buffer) {
     byte_t item, index;
     do {
         buffer.getByte(item);
@@ -130,7 +130,7 @@ void Metadata::read(PacketBuffer &buffer) {
     } while (true);
 }
 
-void Metadata::write(PacketBuffer &buffer) {
+void DataWatcher::write(PacketBuffer &buffer) {
     for (byte_t index = 0; index < 23; index++) {
         if (type[index] == NONE)
             continue;

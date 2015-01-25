@@ -4,6 +4,7 @@
 #include "EntityPlayer.h"
 #include "MathUtils.h"
 #include "PacketEntityLook.h"
+#include "PacketEntityMetadata.h"
 #include "PacketEntityMove.h"
 #include "PacketEntityMoveLook.h"
 #include "PacketEntityTeleport.h"
@@ -146,6 +147,10 @@ std::unordered_set<EntityPlayer*> Entity::getWatchers() {
                 }
         }
     return watchers;
+}
+
+ServerPacket *Entity::getMetadataPacket() {
+    return new PacketEntityMetadata(entityId, dataWatcher);
 }
 
 void Entity::onChunk(Chunk *oldChunk, Chunk *newChunk) {

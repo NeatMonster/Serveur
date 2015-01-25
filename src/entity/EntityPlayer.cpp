@@ -173,10 +173,6 @@ ServerPacket *EntityPlayer::getSpawnPacket() {
     return new PacketSpawnPlayer(this);
 }
 
-ServerPacket *EntityPlayer::getMetadataPacket() {
-    return nullptr;
-}
-
 void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
     oldChunk->removePlayer(this);
     newChunk->addPlayer(this);
