@@ -14,8 +14,14 @@ EntityItem::~EntityItem() {
     delete stack;
 }
 
+void EntityItem::onCollision(EntityPlayer *player) {
+    // TODO Permettre aux joueurs de ramasser les items
+}
+
 void EntityItem::onTick() {
     Entity::onTick();
+    if (pickupDelay > 0 && pickupDelay != 32767)
+        pickupDelay--;
     double_t prevX = posX, prevY = posY, prevZ = posZ;
     motY -= 0.04;
     noClip = pushOutOfBlocks(posX, (boundingBox.minY + boundingBox.maxY) / 2, posZ);
@@ -59,6 +65,7 @@ bool EntityItem::combineItems(EntityItem *other) {
     other->stack->setAmount(other->stack->getAmount() + stack->getAmount());
     other->pickupDelay = MathUtils::max(other->pickupDelay, pickupDelay);
     other->ticks = MathUtils::min(other->ticks, ticks);
+    other->dataWatcher.setItemStack(10, other->stack);
     setDead();
     return true;
 }

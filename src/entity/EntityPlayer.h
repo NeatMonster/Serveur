@@ -53,6 +53,8 @@ public:
 
     void onChunk(Chunk*, Chunk*);
 
+    void onTick();
+
 private:
     PlayerConnection *connect;
     InventoryPlayer inventory;

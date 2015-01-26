@@ -208,3 +208,12 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
                     sendPacket(new PacketDestroyEntities(entitiesIds));
             }
 }
+
+void EntityPlayer::onTick() {
+    EntityLiving::onTick();
+    std::vector<Entity*> entities = world->getEntityCollisions(boundingBox.clone().expand(1, 0.5, 1), [this] (Entity *entity) {
+        return entity != this;
+    });
+    for (Entity *entity : entities)
+        entity->onCollision(this);
+}

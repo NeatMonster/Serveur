@@ -15,7 +15,7 @@ public:
 
     void jump();
 
-    void onTick();
+    virtual void onTick();
 
 protected:
     int_t headYaw, lastHeadYaw;

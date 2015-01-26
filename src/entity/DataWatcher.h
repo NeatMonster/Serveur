@@ -43,6 +43,8 @@ public:
 
     void write(PacketBuffer&);
 
+    bool hasChanged();
+
 private:
     enum {
         NONE = -1, BYTE, SHORT, INT, FLOAT, STRING, ITEMSTACK, INT_TUPLE, FLOAT_TUPLE
@@ -50,6 +52,7 @@ private:
 
     void *data[23];
     byte_t type[23];
+    bool changed;
 };
 
 #endif /* defined(__Serveur__DataWatcher__) */

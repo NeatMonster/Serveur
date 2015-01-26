@@ -6,6 +6,7 @@
 #include "Level.h"
 #include "MathUtils.h"
 #include "PacketDestroyEntities.h"
+#include "PacketEntityMetadata.h"
 #include "PacketTimeUpdate.h"
 #include "Region.h"
 #include "Section.h"
@@ -44,12 +45,12 @@ void World::addEntity(Entity *entity) {
     EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
     if (player != nullptr)
         addPlayer(player);
-    for (EntityPlayer *const watcher : entity->getWatchers()) {
+    std::unordered_set<EntityPlayer*> watchers = entity->getWatchers();
+    for (EntityPlayer *const watcher : watchers)
         watcher->sendPacket(entity->getSpawnPacket());
-        ServerPacket *metaPacket = entity->getMetadataPacket();
-        if (metaPacket != nullptr)
-            watcher->sendPacket(metaPacket);
-    }
+    if (entity->getDataWatcher().hasChanged())
+        for (EntityPlayer *const watcher : watchers)
+            watcher->sendPacket(new PacketEntityMetadata(entity->getEntityId(), &entity->getDataWatcher()));
 }
 
 void World::removeEntity(Entity *entity) {

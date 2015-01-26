@@ -58,6 +58,8 @@ public:
 
     AxisAlignedBB getBoundingBox();
 
+    DataWatcher &getDataWatcher();
+
     double_t getDistance(Entity*);
 
     void move(double_t, double_t, double_t);
@@ -74,9 +76,9 @@ public:
 
     virtual ServerPacket *getSpawnPacket() = 0;
 
-    ServerPacket *getMetadataPacket();
-
     virtual void onChunk(Chunk*, Chunk*);
+
+    virtual void onCollision(EntityPlayer*);
 
     virtual void onTick();
 

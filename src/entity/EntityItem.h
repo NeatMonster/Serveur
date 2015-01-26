@@ -2,6 +2,7 @@
 #define __Serveur__EntityItem__
 
 #include "Entity.h"
+#include "EntityPlayer.h"
 #include "ItemStack.h"
 
 class EntityItem : public Entity {
@@ -19,6 +20,8 @@ public:
     bool sendVelocityUpdates() { return true; }
 
     ServerPacket *getSpawnPacket();
+
+    void onCollision(EntityPlayer*);
 
     void onTick();
 

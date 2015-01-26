@@ -75,6 +75,10 @@ AxisAlignedBB Entity::getBoundingBox() {
     return boundingBox;
 }
 
+DataWatcher &Entity::getDataWatcher() {
+    return dataWatcher;
+}
+
 double_t Entity::getDistance(Entity *entity) {
     return (posX - entity->getX()) * (posX - entity->getX())
          + (posY - entity->getY()) * (posY - entity->getY())
@@ -197,18 +201,17 @@ std::unordered_set<EntityPlayer*> Entity::getWatchers() {
     return watchers;
 }
 
-ServerPacket *Entity::getMetadataPacket() {
-    return new PacketEntityMetadata(entityId, &dataWatcher);
-}
-
 void Entity::onChunk(Chunk *oldChunk, Chunk *newChunk) {
     oldChunk->removeEntity(this);
     newChunk->addEntity(this);
 }
 
+void Entity::onCollision(EntityPlayer*) {}
+
 void Entity::onTick() {
     if (++ticks % getUpdateFrequency() > 0)
         return;
+    std::unordered_set<EntityPlayer*> watchers = getWatchers();
     int_t posX = (int_t) MathUtils::floor_d(this->posX * 32.);
     int_t posY = (int_t) MathUtils::floor_d(this->posY * 32.);
     int_t posZ = (int_t) MathUtils::floor_d(this->posZ * 32.);
@@ -223,7 +226,7 @@ void Entity::onTick() {
     short_t motZ = (short_t) MathUtils::floor_d(this->motZ * 8000.);
     bool velocityChanged = motX != lastMotX && motY != lastMotY && motZ != lastMotZ && sendVelocityUpdates();
     if (hasMoved && isRelative && !hasRotated)
-        for (EntityPlayer *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : watchers) {
             PacketEntityMove *packet = new PacketEntityMove();
             packet->entityId = entityId;
             packet->dX = posX - lastPosX;
@@ -233,7 +236,7 @@ void Entity::onTick() {
             watcher->sendPacket(packet);
         }
     else if (!hasMoved && hasRotated)
-        for (EntityPlayer *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : watchers) {
             PacketEntityLook *packet = new PacketEntityLook();
             packet->entityId = entityId;
             packet->yaw = rotYaw;
@@ -242,7 +245,7 @@ void Entity::onTick() {
             watcher->sendPacket(packet);
         }
     else if (hasMoved && isRelative && hasRotated)
-        for (EntityPlayer *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : watchers) {
             PacketEntityMoveLook *packet = new PacketEntityMoveLook();
             packet->entityId = entityId;
             packet->dX = posX - lastPosX;
@@ -254,7 +257,7 @@ void Entity::onTick() {
             watcher->sendPacket(packet);
         }
     else if (hasMoved && !isRelative) {
-        for (EntityPlayer *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : watchers) {
             PacketEntityTeleport *packet = new PacketEntityTeleport();
             packet->entityId = entityId;
             packet->x = posX;
@@ -267,7 +270,7 @@ void Entity::onTick() {
         }
     }
     if (velocityChanged)
-        for (EntityPlayer *const &watcher : getWatchers()) {
+        for (EntityPlayer *const &watcher : watchers) {
             PacketEntityVelocity *packet = new PacketEntityVelocity();
             packet->entityId = entityId;
             packet->velocityX = motX;
@@ -275,6 +278,9 @@ void Entity::onTick() {
             packet->velocityZ = motZ;
             watcher->sendPacket(packet);
         }
+    if (dataWatcher.hasChanged())
+        for (EntityPlayer *const &watcher : watchers)
+            watcher->sendPacket(new PacketEntityMetadata(entityId, &dataWatcher));
     lastPosX = posX;
     lastPosY = posY;
     lastPosZ = posZ;

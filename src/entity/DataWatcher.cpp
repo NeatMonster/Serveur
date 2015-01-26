@@ -2,7 +2,7 @@
 
 #include "PacketBuffer.h"
 
-DataWatcher::DataWatcher() {
+DataWatcher::DataWatcher() : changed(false) {
     for (size_t i = 0; i < 23; i++) {
         data[i] = nullptr;
         type[i] = NONE;
@@ -38,6 +38,7 @@ byte_t DataWatcher::getByte(size_t index) {
 }
 
 void DataWatcher::setByte(size_t index, byte_t b) {
+    changed = true;
     data[index] = new byte_t(b);
     type[index] = BYTE;
 }
@@ -47,6 +48,7 @@ short_t DataWatcher::getShort(size_t index) {
 }
 
 void DataWatcher::setShort(size_t index, short_t s) {
+    changed = true;
     data[index] = new short_t(s);
     type[index] = SHORT;
 }
@@ -56,6 +58,7 @@ int_t DataWatcher::getInt(size_t index) {
 }
 
 void DataWatcher::setInt(size_t index, int_t i) {
+    changed = true;
     data[index] = new int_t(i);
     type[index] = INT;
 }
@@ -65,6 +68,7 @@ float_t DataWatcher::getFloat(size_t index) {
 }
 
 void DataWatcher::setFloat(size_t index, float_t f) {
+    changed = true;
     data[index] = new float_t(f);
     type[index] = FLOAT;
 }
@@ -74,6 +78,7 @@ string_t DataWatcher::getString(size_t index) {
 }
 
 void DataWatcher::setString(size_t index, string_t str) {
+    changed = true;
     data[index] = new string_t(str);
     type[index] = STRING;
 }
@@ -83,6 +88,7 @@ ItemStack *DataWatcher::getItemStack(size_t index) {
 }
 
 void DataWatcher::setItemStack(size_t index, ItemStack *stack) {
+    changed = true;
     data[index] = stack;
     type[index] = ITEMSTACK;
 }
@@ -157,4 +163,10 @@ void DataWatcher::write(PacketBuffer &buffer) {
         }
     }
     buffer.putByte(0x7f);
+}
+
+bool DataWatcher::hasChanged() {
+    bool changed_ = changed;
+    changed = false;
+    return changed_;
 }
