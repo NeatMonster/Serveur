@@ -66,8 +66,9 @@ void NetworkManager::handlePackets() {
         connect->handlePackets();
     if (ticks++ % 40 == 0) {
         keepAliveId = random();
+        std::shared_ptr<PacketKeepAlive> packet = std::make_shared<PacketKeepAlive>(keepAliveId);
         for (EntityPlayer *const &player : Server::getPlayers())
-            player->sendPacket(new PacketKeepAlive(keepAliveId));
+            player->sendPacket(packet);
     }
 }
 

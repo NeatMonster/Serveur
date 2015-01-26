@@ -49,7 +49,7 @@ void PacketHandler::handleHandshake(PacketHandshake *packet) {
 void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     Profile *profile = Server::getDatabase()->getProfile(packet->name);
     connect->profile = profile;
-    connect->sendPacket(new PacketLoginSuccess(profile->getUUID(), profile->getName()));
+    connect->sendPacket(std::make_shared<PacketLoginSuccess>(profile->getUUID(), profile->getName()));
     for (EntityPlayer *const &player : Server::getPlayers())
         if (player->getUUID() == profile->getUUID())
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
@@ -128,8 +128,9 @@ void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
 }
 
 void PacketHandler::handleAnimation(PacketAnimation*) {
+    std::shared_ptr<PacketAnimation> packet = std::make_shared<PacketAnimation>(connect->player->getEntityId(), 0);
     for (EntityPlayer *const &watcher : connect->player->getWatchers())
-        watcher->sendPacket(new PacketAnimation(connect->player->getEntityId(), 0));
+        watcher->sendPacket(packet);
 }
 
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {

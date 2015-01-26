@@ -57,7 +57,7 @@ void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
 }
 
 void EntityPlayer::sendMessage(ChatMessage &message) {
-    sendPacket(new PacketChatMessage(message.getJSON()));
+    sendPacket(std::make_shared<PacketChatMessage>(message.getJSON()));
 }
 
 void EntityPlayer::drop(ItemStack *stack) {
@@ -80,13 +80,13 @@ void EntityPlayer::disconnect(string_t reason) {
         connect->disconnect(reason);
 }
 
-void EntityPlayer::sendPacket(ServerPacket *packet) {
+void EntityPlayer::sendPacket(std::shared_ptr<ServerPacket> packet) {
     if (connect != nullptr)
         connect->sendPacket(packet);
 }
 
 void EntityPlayer::onJoinGame() {
-    PacketJoinGame *joinPacket = new PacketJoinGame();
+    std::shared_ptr<PacketJoinGame> joinPacket = std::make_shared<PacketJoinGame>();
     joinPacket->entityId = entityId;
     joinPacket->gameMode = gameMode;
     joinPacket->dimension = 0;
@@ -96,9 +96,9 @@ void EntityPlayer::onJoinGame() {
     joinPacket->reducedDebugInfo = false;
     sendPacket(joinPacket);
 
-    sendPacket(new PacketSpawnPosition(posX, posY, posZ));
+    sendPacket(std::make_shared<PacketSpawnPosition>(posX, posY, posZ));
 
-    PacketPlayerAbilities *abilPacket = new PacketPlayerAbilities();
+    std::shared_ptr<PacketPlayerAbilities> abilPacket = std::make_shared<PacketPlayerAbilities>();
     abilPacket->godMode = true;
     abilPacket->canFly = true;
     abilPacket->isFlying = true;
@@ -110,13 +110,15 @@ void EntityPlayer::onJoinGame() {
     Server::broadcast(Chat() << Color::YELLOW << name << " a rejoint la partie");
 
     std::unordered_set<EntityPlayer*> players = Server::getPlayers();
+    std::shared_ptr<PacketPlayerListItem> listPacket =
+        std::make_shared<PacketPlayerListItem>(PacketPlayerListItem::Type::ADD_PLAYER, this);
     for (EntityPlayer *const &player : players)
-        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, {this}));
+        player->sendPacket(listPacket);
     players.insert(this);
-    sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::ADD_PLAYER, players));
+    sendPacket(std::make_shared<PacketPlayerListItem>(PacketPlayerListItem::Type::ADD_PLAYER, players));
     Server::getServer()->addPlayer(this);
 
-    PacketPlayerPositionLook *posPacket = new PacketPlayerPositionLook();
+    std::shared_ptr<PacketPlayerPositionLook> posPacket = std::make_shared<PacketPlayerPositionLook>();
     posPacket->x = posX;
     posPacket->y = posY;
     posPacket->z = posZ;
@@ -125,7 +127,7 @@ void EntityPlayer::onJoinGame() {
     posPacket->flags = 0;
     sendPacket(posPacket);
 
-    sendPacket(new PacketTimeUpdate(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
+    sendPacket(std::make_shared<PacketTimeUpdate>(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
     int_t xChunk = (int_t) floor(posX) >> 4;
     int_t zChunk = (int_t) floor(posZ) >> 4;
     std::vector<Chunk*> chunks = {world->getChunk(xChunk, zChunk)};
@@ -142,21 +144,21 @@ void EntityPlayer::onJoinGame() {
     std::vector<Chunk*> packetChunks;
     for (Chunk *&chunk : chunks) {
         if (packetChunks.size() == 10) {
-            sendPacket(new PacketMapChunkBulk(packetChunks));
+            sendPacket(std::make_shared<PacketMapChunkBulk>(packetChunks));
             for (Chunk *&packetChunk : packetChunks)
                 for (EntityPlayer *const &player : packetChunk->getPlayers())
                     if (player != this)
-                        sendPacket(new PacketSpawnPlayer(player));
+                        sendPacket(std::make_shared<PacketSpawnPlayer>(player));
             packetChunks.clear();
         }
         packetChunks.push_back(chunk);
     }
     if (!packetChunks.empty()) {
-        sendPacket(new PacketMapChunkBulk(packetChunks));
+        sendPacket(std::make_shared<PacketMapChunkBulk>(packetChunks));
         for (Chunk *&packetChunk : packetChunks)
             for (EntityPlayer *const &player : packetChunk->getPlayers())
                 if (player != this)
-                    sendPacket(new PacketSpawnPlayer(player));
+                    sendPacket(std::make_shared<PacketSpawnPlayer>(player));
     }
     packetChunks.clear();
 }
@@ -165,12 +167,14 @@ void EntityPlayer::onQuitGame() {
     Server::getServer()->removePlayer(this);
     Server::broadcast(Chat() << Color::YELLOW << name << " a quitté la partie");
 
+    std::shared_ptr<PacketPlayerListItem> packet =
+        std::make_shared<PacketPlayerListItem>(PacketPlayerListItem::Type::REMOVE_PLAYER, this);
     for (EntityPlayer *const &player : Server::getPlayers())
-        player->sendPacket(new PacketPlayerListItem(PacketPlayerListItem::Type::REMOVE_PLAYER, {this}));
+        player->sendPacket(packet);
 }
 
-ServerPacket *EntityPlayer::getSpawnPacket() {
-    return new PacketSpawnPlayer(this);
+std::shared_ptr<ServerPacket> EntityPlayer::getSpawnPacket() {
+    return std::make_shared<PacketSpawnPlayer>(this);
 }
 
 void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
@@ -183,11 +187,12 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
                 || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
                 || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE) {
                 Chunk *chunk = world->getChunk(newChunk->getX() + x, newChunk->getZ() + z);
-                sendPacket(new PacketChunkData(chunk, false));
+                sendPacket(std::make_shared<PacketChunkData>(chunk, false));
+                std::shared_ptr<PacketSpawnPlayer> packet = std::make_shared<PacketSpawnPlayer>(this);
                 for (EntityPlayer *const &player : chunk->getPlayers())
                     if (player != this) {
-                        sendPacket(new PacketSpawnPlayer(player));
-                        player->sendPacket(new PacketSpawnPlayer(this));
+                        sendPacket(std::make_shared<PacketSpawnPlayer>(player));
+                        player->sendPacket(packet);
                     }
             }
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
@@ -197,15 +202,16 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
                 || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
                 || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE) {
                 Chunk *chunk = world->getChunk(oldChunk->getX() + x, oldChunk->getZ() + z);
-                sendPacket(new PacketChunkData(chunk, true));
+                sendPacket(std::make_shared<PacketChunkData>(chunk, true));
                 std::unordered_set<varint_t> entitiesIds;
+                std::shared_ptr<PacketDestroyEntities> packet = std::make_shared<PacketDestroyEntities>(getEntityId());
                 for (EntityPlayer *const &player : chunk->getPlayers())
                     if (player != this) {
                         entitiesIds.insert(player->getEntityId());
-                        player->sendPacket(new PacketDestroyEntities({(varint_t) getEntityId()}));
+                        player->sendPacket(packet);
                     }
                 if (!entitiesIds.empty())
-                    sendPacket(new PacketDestroyEntities(entitiesIds));
+                    sendPacket(std::make_shared<PacketDestroyEntities>(entitiesIds));
             }
 }
 

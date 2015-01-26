@@ -43,13 +43,13 @@ public:
 
     void sendMessage(ChatMessage&);
 
-    void sendPacket(ServerPacket*);
+    void sendPacket(std::shared_ptr<ServerPacket>);
 
     void onJoinGame();
 
     void onQuitGame();
 
-    ServerPacket *getSpawnPacket();
+    std::shared_ptr<ServerPacket> getSpawnPacket();
 
     void onChunk(Chunk*, Chunk*);
 

@@ -9,16 +9,16 @@ class PacketFactory {
 public:
     PacketFactory();
 
-    ClientPacket *createPacket(const varint_t);
+    std::shared_ptr<ClientPacket> createPacket(const varint_t);
 
     bool hasPacket(const varint_t);
 
 private:
-    typedef ClientPacket *(*cons_t)();
+    typedef std::shared_ptr<ClientPacket> (*cons_t)();
     std::map<const varint_t, cons_t> packets;
 
     template<typename T>
-    static ClientPacket *constructPacket();
+    static std::shared_ptr<ClientPacket> constructPacket();
 
     template<typename T>
     void registerPacket(const varint_t);

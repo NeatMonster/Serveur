@@ -225,62 +225,60 @@ void Entity::onTick() {
     short_t motY = (short_t) MathUtils::floor_d(this->motY * 8000.);
     short_t motZ = (short_t) MathUtils::floor_d(this->motZ * 8000.);
     bool velocityChanged = motX != lastMotX && motY != lastMotY && motZ != lastMotZ && sendVelocityUpdates();
-    if (hasMoved && isRelative && !hasRotated)
-        for (EntityPlayer *const &watcher : watchers) {
-            PacketEntityMove *packet = new PacketEntityMove();
-            packet->entityId = entityId;
-            packet->dX = posX - lastPosX;
-            packet->dY = posY - lastPosY;
-            packet->dZ = posZ - lastPosZ;
-            packet->onGround = onGround;
-            watcher->sendPacket(packet);
-        }
-    else if (!hasMoved && hasRotated)
-        for (EntityPlayer *const &watcher : watchers) {
-            PacketEntityLook *packet = new PacketEntityLook();
-            packet->entityId = entityId;
-            packet->yaw = rotYaw;
-            packet->pitch = rotPitch;
-            packet->onGround = onGround;
-            watcher->sendPacket(packet);
-        }
-    else if (hasMoved && isRelative && hasRotated)
-        for (EntityPlayer *const &watcher : watchers) {
-            PacketEntityMoveLook *packet = new PacketEntityMoveLook();
-            packet->entityId = entityId;
-            packet->dX = posX - lastPosX;
-            packet->dY = posY - lastPosY;
-            packet->dZ = posZ - lastPosZ;
-            packet->yaw = rotYaw;
-            packet->pitch = rotPitch;
-            packet->onGround = onGround;
-            watcher->sendPacket(packet);
-        }
-    else if (hasMoved && !isRelative) {
-        for (EntityPlayer *const &watcher : watchers) {
-            PacketEntityTeleport *packet = new PacketEntityTeleport();
-            packet->entityId = entityId;
-            packet->x = posX;
-            packet->y = posY;
-            packet->z = posZ;
-            packet->yaw = rotYaw;
-            packet->pitch = rotPitch;
-            packet->onGround = onGround;
-            watcher->sendPacket(packet);
-        }
-    }
-    if (velocityChanged)
-        for (EntityPlayer *const &watcher : watchers) {
-            PacketEntityVelocity *packet = new PacketEntityVelocity();
-            packet->entityId = entityId;
-            packet->velocityX = motX;
-            packet->velocityY = motY;
-            packet->velocityZ = motZ;
-            watcher->sendPacket(packet);
-        }
-    if (dataWatcher.hasChanged())
+    if (hasMoved && isRelative && !hasRotated) {
+        std::shared_ptr<PacketEntityMove> packet = std::make_shared<PacketEntityMove>();
+        packet->entityId = entityId;
+        packet->dX = posX - lastPosX;
+        packet->dY = posY - lastPosY;
+        packet->dZ = posZ - lastPosZ;
+        packet->onGround = onGround;
         for (EntityPlayer *const &watcher : watchers)
-            watcher->sendPacket(new PacketEntityMetadata(entityId, &dataWatcher));
+            watcher->sendPacket(packet);
+    } else if (!hasMoved && hasRotated) {
+        std::shared_ptr<PacketEntityLook> packet = std::make_shared<PacketEntityLook>();
+        packet->entityId = entityId;
+        packet->yaw = rotYaw;
+        packet->pitch = rotPitch;
+        packet->onGround = onGround;
+        for (EntityPlayer *const &watcher : watchers)
+            watcher->sendPacket(packet);
+    } else if (hasMoved && isRelative && hasRotated) {
+        std::shared_ptr<PacketEntityMoveLook> packet = std::make_shared<PacketEntityMoveLook>();
+        packet->entityId = entityId;
+        packet->dX = posX - lastPosX;
+        packet->dY = posY - lastPosY;
+        packet->dZ = posZ - lastPosZ;
+        packet->yaw = rotYaw;
+        packet->pitch = rotPitch;
+        packet->onGround = onGround;
+        for (EntityPlayer *const &watcher : watchers)
+            watcher->sendPacket(packet);
+    } else if (hasMoved && !isRelative) {
+        std::shared_ptr<PacketEntityTeleport> packet = std::make_shared<PacketEntityTeleport>();
+        packet->entityId = entityId;
+        packet->x = posX;
+        packet->y = posY;
+        packet->z = posZ;
+        packet->yaw = rotYaw;
+        packet->pitch = rotPitch;
+        packet->onGround = onGround;
+        for (EntityPlayer *const &watcher : watchers)
+            watcher->sendPacket(packet);
+    }
+    if (velocityChanged) {
+        std::shared_ptr<PacketEntityVelocity> packet = std::make_shared<PacketEntityVelocity>();
+        packet->entityId = entityId;
+        packet->velocityX = motX;
+        packet->velocityY = motY;
+        packet->velocityZ = motZ;
+        for (EntityPlayer *const &watcher : watchers)
+            watcher->sendPacket(packet);
+    }
+    if (dataWatcher.hasChanged()) {
+        std::shared_ptr<PacketEntityMetadata> packet = std::make_shared<PacketEntityMetadata>(entityId, &dataWatcher);
+        for (EntityPlayer *const &watcher : watchers)
+            watcher->sendPacket(packet);
+    }
     lastPosX = posX;
     lastPosY = posY;
     lastPosZ = posZ;

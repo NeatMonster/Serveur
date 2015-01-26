@@ -7,6 +7,8 @@
 
 class PacketDestroyEntities : public ServerPacket {
 public:
+    PacketDestroyEntities(varint_t);
+
     PacketDestroyEntities(std::unordered_set<varint_t>);
 
     void write(PacketBuffer&);

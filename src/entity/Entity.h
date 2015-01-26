@@ -74,7 +74,7 @@ public:
 
     std::unordered_set<EntityPlayer*> getWatchers();
 
-    virtual ServerPacket *getSpawnPacket() = 0;
+    virtual std::shared_ptr<ServerPacket> getSpawnPacket() = 0;
 
     virtual void onChunk(Chunk*, Chunk*);
 

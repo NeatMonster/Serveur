@@ -65,20 +65,18 @@ float_t PlayerConnection::getPing() {
 }
 
 void PlayerConnection::handlePackets() {
-    ClientPacket *packet;
-    while (!closed && readQueue.tryPop(packet)) {
+    std::shared_ptr<ClientPacket> packet;
+    while (!closed && readQueue.tryPop(packet))
         packet->handle(handler);
-        delete packet;
-    }
 }
 
-void PlayerConnection::sendPacket(ServerPacket *packet) {
+void PlayerConnection::sendPacket(std::shared_ptr<ServerPacket> packet) {
     if (!closed)
         writeQueue.push(packet);
 }
 
 void PlayerConnection::disconnect(string_t reason) {
-    sendPacket(new PacketDisconnect(phase == PLAY, (Chat() << reason).getJSON()));
+    sendPacket(std::make_shared<PacketDisconnect>(phase == PLAY, (Chat() << reason).getJSON()));
 }
 
 PacketFactory PlayerConnection::factory;
@@ -97,7 +95,7 @@ void PlayerConnection::runRead() {
             size_t rcvd = socket->receive(readBuffer.getArray() + readBuffer.getLimit(), BUFFER_SIZE);
             readBuffer.setLimit(readBuffer.getLimit() + rcvd);
             readBuffer.setPosition(position);
-            ClientPacket *packet = nullptr;
+            std::shared_ptr<ClientPacket> packet;
             try {
                 while (readBuffer.getPosition() < readBuffer.getLimit()) {
                     varint_t packetLength;
@@ -108,10 +106,10 @@ void PlayerConnection::runRead() {
                     readBuffer.getVarInt(packetId);
                     packet = nullptr;
                     if (phase == HANDSHAKE && packetId == 0x00) {
-                        packet = new PacketHandshake();
+                        packet = std::make_shared<PacketHandshake>();
                         phase = LOGIN;
                     } else if (phase == LOGIN && packetId == 0x00)
-                        packet = new PacketLoginStart();
+                        packet = std::make_shared<PacketLoginStart>();
                     else if (phase == PLAY && factory.hasPacket(packetId))
                         packet = factory.createPacket(packetId);
                     else {
@@ -126,10 +124,7 @@ void PlayerConnection::runRead() {
                         readBuffer.clear();
                     position = readBuffer.getPosition();
                 }
-            } catch (const PacketBuffer::BufferUnderflowException &e) {
-                if (packet != nullptr)
-                    delete packet;
-            }
+            } catch (const PacketBuffer::BufferUnderflowException &e) {}
         }
     } catch (const ClientSocket::SocketReadException &e) {
         Logger() << "<" << getName() << " <-> Serveur> s'est déconnecté" << std::endl;
@@ -139,7 +134,7 @@ void PlayerConnection::runRead() {
 
 void PlayerConnection::runWrite() {
     try {
-        ServerPacket *packet;
+        std::shared_ptr<ServerPacket> packet;
         while (!closed) {
             writeQueue.pop(packet);
             if (closed)
@@ -150,7 +145,6 @@ void PlayerConnection::runWrite() {
             varint_t packetId = packet->getPacketId();
             writeBuffer.putVarInt(packetId);
             packet->write(writeBuffer);
-            delete packet;
             varint_t packetLength = writeBuffer.getLimit() - 5;
             if (packetLength < 128)
                 writeBuffer.setMark(4);

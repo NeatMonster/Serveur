@@ -46,7 +46,7 @@ public:
 
     void handlePackets();
 
-    void sendPacket(ServerPacket*);
+    void sendPacket(std::shared_ptr<ServerPacket>);
 
     void disconnect(string_t);
 
@@ -57,8 +57,8 @@ private:
     std::thread writeThread;
     PacketBuffer readBuffer;
     PacketBuffer writeBuffer;
-    PacketQueue<ClientPacket*> readQueue;
-    PacketQueue<ServerPacket*> writeQueue;
+    PacketQueue<std::shared_ptr<ClientPacket>> readQueue;
+    PacketQueue<std::shared_ptr<ServerPacket>> writeQueue;
     PacketHandler *handler;
     std::atomic<bool> closed;
     std::atomic<Phase> phase;

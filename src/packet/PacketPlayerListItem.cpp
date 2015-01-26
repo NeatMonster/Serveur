@@ -6,6 +6,23 @@
 
 #include <iomanip>
 
+PacketPlayerListItem::PacketPlayerListItem(Type type, EntityPlayer *player) : ServerPacket(0x38) {
+    this->type = type;
+    Action action;
+    action.uuid = player->getUUID();
+    if (type == Type::ADD_PLAYER)
+        action.profile = player->getConnection()->getProfile();
+    if (type == Type::ADD_PLAYER || type == Type::UPDATE_GAMEMODE)
+        action.gameMode = player->getGameMode();
+    if (type == Type::ADD_PLAYER || type == Type::UPDATE_LATENCY)
+        action.ping = player->getConnection()->getPing();
+    if (type == Type::ADD_PLAYER || type == Type::UPDATE_DISPLAY_NAME) {
+        action.hasDisplayName = false;
+        action.displayName = player->getName();
+    }
+    actions.push_back(action);
+}
+
 PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<EntityPlayer*> players) : ServerPacket(0x38) {
     this->type = type;
     for (EntityPlayer *const &player : players) {

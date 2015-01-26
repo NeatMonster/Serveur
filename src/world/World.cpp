@@ -46,16 +46,21 @@ void World::addEntity(Entity *entity) {
     if (player != nullptr)
         addPlayer(player);
     std::unordered_set<EntityPlayer*> watchers = entity->getWatchers();
+    std::shared_ptr<ServerPacket> spawnPacket = entity->getSpawnPacket();
     for (EntityPlayer *const watcher : watchers)
-        watcher->sendPacket(entity->getSpawnPacket());
-    if (entity->getDataWatcher().hasChanged())
+        watcher->sendPacket(spawnPacket);
+    if (entity->getDataWatcher().hasChanged()) {
+        std::shared_ptr<PacketEntityMetadata> metaPacket =
+            std::make_shared<PacketEntityMetadata>(entity->getEntityId(), &entity->getDataWatcher());
         for (EntityPlayer *const watcher : watchers)
-            watcher->sendPacket(new PacketEntityMetadata(entity->getEntityId(), &entity->getDataWatcher()));
+            watcher->sendPacket(metaPacket);
+    }
 }
 
 void World::removeEntity(Entity *entity) {
+    std::shared_ptr<PacketDestroyEntities> packet = std::make_shared<PacketDestroyEntities>(entity->getEntityId());
     for (EntityPlayer *const watcher : entity->getWatchers())
-        watcher->sendPacket(new PacketDestroyEntities({entity->getEntityId()}));
+        watcher->sendPacket(packet);
     EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
     if (player != nullptr)
         removePlayer(player);
@@ -222,7 +227,9 @@ void World::onTick() {
     }
     level->setTime(level->getTime() + 1);
     level->setDayTime(level->getDayTime() + 1);
-    if (level->getTime() % 20 == 0)
+    if (level->getTime() % 20 == 0) {
+        std::shared_ptr<PacketTimeUpdate> packet = std::make_shared<PacketTimeUpdate>(level->getTime(), level->getDayTime());
         for (EntityPlayer *const &player : players)
-            player->sendPacket(new PacketTimeUpdate(level->getTime(), level->getDayTime()));
+            player->sendPacket(packet);
+    }
 }

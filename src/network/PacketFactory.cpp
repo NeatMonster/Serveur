@@ -38,7 +38,7 @@ PacketFactory::PacketFactory() {
     registerPacket<PacketPluginMessage>(0x17);
 }
 
-ClientPacket *PacketFactory::createPacket(const varint_t packetId) {
+std::shared_ptr<ClientPacket> PacketFactory::createPacket(const varint_t packetId) {
     return packets.find(packetId)->second();
 }
 
@@ -47,8 +47,8 @@ bool PacketFactory::hasPacket(const varint_t packetId) {
 }
 
 template<typename T>
-ClientPacket *PacketFactory::constructPacket() {
-    return new T;
+std::shared_ptr<ClientPacket> PacketFactory::constructPacket() {
+    return std::make_shared<T>();
 }
 
 template<typename T>

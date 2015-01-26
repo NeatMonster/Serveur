@@ -38,8 +38,8 @@ void EntityItem::onTick() {
         setDead();
 }
 
-ServerPacket *EntityItem::getSpawnPacket() {
-    return new PacketSpawnObject(this, 1);
+std::shared_ptr<ServerPacket> EntityItem::getSpawnPacket() {
+    return std::make_shared<PacketSpawnObject>(this, 1);
 }
 
 void EntityItem::searchForItems() {

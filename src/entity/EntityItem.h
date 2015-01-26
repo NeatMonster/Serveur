@@ -19,7 +19,7 @@ public:
 
     bool sendVelocityUpdates() { return true; }
 
-    ServerPacket *getSpawnPacket();
+    std::shared_ptr<ServerPacket> getSpawnPacket();
 
     void onCollision(EntityPlayer*);
 

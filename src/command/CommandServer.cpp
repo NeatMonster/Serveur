@@ -10,14 +10,14 @@ void CommandServer::perform(CommandSender *sender, std::vector<string_t> args) {
         EntityPlayer *player = dynamic_cast<EntityPlayer*>(sender);
         if (player == nullptr)
             throw CommandException("Cette commande est pour les joueurs uniquement.");
-        PacketPluginMessage *packet = new PacketPluginMessage();
+        std::shared_ptr<PacketPluginMessage> packet = std::make_shared<PacketPluginMessage>();
         packet->channel = "MF|GetServers";
         player->sendPacket(packet);
     } else if (args.size() == 1) {
         EntityPlayer *player = dynamic_cast<EntityPlayer*>(sender);
         if (player == nullptr)
             throw CommandException("Cette commande est pour les joueurs uniquement.");
-        PacketPluginMessage *packet = new PacketPluginMessage();
+        std::shared_ptr<PacketPluginMessage> packet = std::make_shared<PacketPluginMessage>();
         packet->channel = "MF|Connect";
         PacketBuffer buffer;
         buffer.putString(args[0]);
