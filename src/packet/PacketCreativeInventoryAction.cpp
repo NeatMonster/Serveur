@@ -2,10 +2,6 @@
 
 #include "PacketHandler.h"
 
-PacketCreativeInventoryAction::~PacketCreativeInventoryAction() {
-    delete stack;
-}
-
 void PacketCreativeInventoryAction::read(PacketBuffer &buffer) {
     buffer.getShort(slot);
     buffer.getItemStack(stack);

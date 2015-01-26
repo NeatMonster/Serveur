@@ -7,9 +7,7 @@
 
 class EntityItem : public Entity {
 public:
-    EntityItem(World*, ItemStack*);
-
-    ~EntityItem();
+    EntityItem(World*, std::shared_ptr<ItemStack>);
 
     Type getType() { return ITEM; }
 
@@ -19,6 +17,10 @@ public:
 
     bool sendVelocityUpdates() { return true; }
 
+    std::shared_ptr<ItemStack> getItem();
+
+    void setItem(std::shared_ptr<ItemStack>);
+
     std::shared_ptr<ServerPacket> getSpawnPacket();
 
     void onCollision(std::shared_ptr<EntityPlayer>);
@@ -26,7 +28,6 @@ public:
     void onTick();
 
 private:
-    ItemStack *stack;
     int_t pickupDelay;
 
     void searchForItems();

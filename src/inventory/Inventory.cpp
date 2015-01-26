@@ -7,7 +7,7 @@ Inventory::~Inventory() {
         delete slot;
 }
 
-void Inventory::putStack(short_t slot, ItemStack *stack) {
+void Inventory::putStack(short_t slot, std::shared_ptr<ItemStack> stack) {
     getSlot(slot)->setStack(stack);
 }
 

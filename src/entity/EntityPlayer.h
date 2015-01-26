@@ -37,7 +37,7 @@ public:
 
     void setGameMode(GameMode);
 
-    void drop(ItemStack*);
+    void drop(std::shared_ptr<ItemStack>);
 
     void disconnect(string_t);
 

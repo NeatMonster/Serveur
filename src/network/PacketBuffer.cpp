@@ -100,7 +100,7 @@ void PacketBuffer::getString(string_t &s) {
     s = string_t((char*) bs.data(), size);
 }
 
-void PacketBuffer::getItemStack(ItemStack *&item) {
+void PacketBuffer::getItemStack(std::shared_ptr<ItemStack> &item) {
     item = nullptr;
     short_t type;
     getShort(type);
@@ -109,7 +109,7 @@ void PacketBuffer::getItemStack(ItemStack *&item) {
         getByte(amount);
         short_t damage;
         getShort(damage);
-        item = new ItemStack(type, amount, damage);
+        item = std::make_shared<ItemStack>(type, amount, damage);
         getNBT(item->nbt);
     }
 }
@@ -215,7 +215,7 @@ void PacketBuffer::putString(string_t s) {
     putUBytes(ubytes_t(s.begin(), s.end()));
 }
 
-void PacketBuffer::putItemStack(ItemStack *item) {
+void PacketBuffer::putItemStack(std::shared_ptr<ItemStack> item) {
     if (item == nullptr)
         putShort(-1);
     else {

@@ -7,9 +7,9 @@ const std::set<Block*> ItemAxe::effectiveBlocks = {Block::planks, Block::bookshe
 
 ItemAxe::ItemAxe(ItemTool::ToolMaterial toolMaterial) : ItemTool(3., toolMaterial, effectiveBlocks) {}
 
-float_t ItemAxe::getStrVsBlock(ItemStack* stack, Block* blockIn) {
+float_t ItemAxe::getStrVsBlock(Block* blockIn) {
     if(blockIn->getMaterial() != Material::wood && blockIn->getMaterial() != Material::plants && blockIn->getMaterial() != Material::vine)
-        return ItemTool::getStrVsBlock(stack, blockIn);
+        return ItemTool::getStrVsBlock(blockIn);
     else
         return getEfficiency();
 }

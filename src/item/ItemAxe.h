@@ -10,7 +10,7 @@ class ItemAxe : public ItemTool
     public:
         ItemAxe(ItemTool::ToolMaterial);
 
-        float_t getStrVsBlock(ItemStack*, Block*);
+        float_t getStrVsBlock(Block*);
 
     private:
         static const std::set<Block*> effectiveBlocks;

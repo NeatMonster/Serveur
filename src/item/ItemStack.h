@@ -4,7 +4,7 @@
 #include "NBTTagCompound.h"
 #include "Types.h"
 
-class ItemStack {
+class ItemStack : public std::enable_shared_from_this<ItemStack> {
     friend class PacketBuffer;
 
 public:
@@ -32,7 +32,7 @@ public:
 
     NBTTagCompound *getNBT();
 
-    ItemStack *clone();
+    std::shared_ptr<ItemStack> clone();
 
 private:
     short_t type;

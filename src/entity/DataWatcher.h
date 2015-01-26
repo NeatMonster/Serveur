@@ -35,9 +35,9 @@ public:
 
     void setString(size_t, string_t);
 
-    ItemStack *getItemStack(size_t);
+    std::shared_ptr<ItemStack> getItemStack(size_t);
 
-    void setItemStack(size_t, ItemStack*);
+    void setItemStack(size_t, std::shared_ptr<ItemStack>);
 
     void read(PacketBuffer&);
 

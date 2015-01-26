@@ -60,8 +60,9 @@ void EntityPlayer::sendMessage(ChatMessage &message) {
     sendPacket(std::make_shared<PacketChatMessage>(message.getJSON()));
 }
 
-void EntityPlayer::drop(ItemStack *stack) {
-    std::shared_ptr<EntityItem> entity = std::make_shared<EntityItem>(world, stack->clone());
+void EntityPlayer::drop(std::shared_ptr<ItemStack> stack) {
+    std::shared_ptr<EntityItem> entity = std::make_shared<EntityItem>(world, stack);
+    entity->getItem();
     entity->setPosition(posX, posY + 1.32, posZ);
     double_t motX = -sin(rotYaw / 180. * M_PI) * cos(rotPitch / 180. * M_PI) * 0.3;
     double_t motY = -sin(rotPitch / 180. * M_PI) * cos(rotPitch / 180. * M_PI) * 0.3 + 0.1;

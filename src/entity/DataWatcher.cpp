@@ -83,13 +83,13 @@ void DataWatcher::setString(size_t index, string_t str) {
     type[index] = STRING;
 }
 
-ItemStack *DataWatcher::getItemStack(size_t index) {
-    return (ItemStack*) data[index];
+std::shared_ptr<ItemStack> DataWatcher::getItemStack(size_t index) {
+    return std::make_shared<ItemStack>((ItemStack*) data[index]);
 }
 
-void DataWatcher::setItemStack(size_t index, ItemStack *stack) {
+void DataWatcher::setItemStack(size_t index, std::shared_ptr<ItemStack> stack) {
     changed = true;
-    data[index] = stack;
+    data[index] = stack == nullptr ? nullptr : new ItemStack(stack.get());
     type[index] = ITEMSTACK;
 }
 
@@ -127,7 +127,7 @@ void DataWatcher::read(PacketBuffer &buffer) {
                 setString(index, str);
                 break;
             } case ITEMSTACK: {
-                ItemStack *stack;
+                std::shared_ptr<ItemStack> stack;
                 buffer.getItemStack(stack);
                 setItemStack(index, stack);
                 break;
@@ -143,22 +143,22 @@ void DataWatcher::write(PacketBuffer &buffer) {
         buffer.putByte(type[index] << 5 | (index & 0x1f));
         switch (type[index]) {
             case BYTE:
-                buffer.putByte(*((byte_t*) data[index]));
+                buffer.putByte(getByte(index));
                 break;
             case SHORT:
-                buffer.putShort(*((short_t*) data[index]));
+                buffer.putShort(getShort(index));
                 break;
             case INT:
-                buffer.putInt(*((int_t*) data[index]));
+                buffer.putInt(getInt(index));
                 break;
             case FLOAT:
-                buffer.putFloat(*((float_t*) data[index]));
+                buffer.putFloat(getFloat(index));
                 break;
             case STRING:
-                buffer.putString(*((string_t*) data[index]));
+                buffer.putString(getString(index));
                 break;
             case ITEMSTACK:
-                buffer.putItemStack((ItemStack*) data[index]);
+                buffer.putItemStack(getItemStack(index));
                 break;
         }
     }

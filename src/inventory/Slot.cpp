@@ -1,18 +1,11 @@
 #include "Slot.h"
 
-Slot::Slot() : stack(nullptr) {}
+Slot::Slot() {}
 
-Slot::~Slot() {
-    if (stack != nullptr)
-        delete stack;
+std::shared_ptr<ItemStack> Slot::getStack() {
+    return stack == nullptr ? std::shared_ptr<ItemStack>() : stack->clone();
 }
 
-ItemStack *Slot::getStack() {
-    return stack;
-}
-
-void Slot::setStack(ItemStack *stack) {
-    if (this->stack != nullptr)
-        delete this->stack;
-    this->stack = stack;
+void Slot::setStack(std::shared_ptr<ItemStack> stack) {
+    this->stack = stack == nullptr ? std::shared_ptr<ItemStack>() : stack->clone();
 }

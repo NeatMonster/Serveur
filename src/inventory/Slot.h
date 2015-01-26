@@ -7,14 +7,12 @@ class Slot {
 public:
     Slot();
 
-    ~Slot();
+    std::shared_ptr<ItemStack> getStack();
 
-    ItemStack *getStack();
-
-    void setStack(ItemStack*);
+    void setStack(std::shared_ptr<ItemStack>);
 
 private:
-    ItemStack *stack;
+    std::shared_ptr<ItemStack> stack;
 };
 
 #endif /* defined(__Serveur__Slot__) */

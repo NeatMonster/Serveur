@@ -12,7 +12,7 @@ public:
 
     virtual ~Inventory();
 
-    void putStack(short_t, ItemStack*);
+    void putStack(short_t, std::shared_ptr<ItemStack>);
 
 protected:
     void addSlot(Slot*);

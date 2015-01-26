@@ -7,9 +7,7 @@
 class PacketCreativeInventoryAction : public ClientPacket {
 public:
     short_t slot;
-    ItemStack* stack;
-
-    ~PacketCreativeInventoryAction();
+    std::shared_ptr<ItemStack> stack;
 
     void read(PacketBuffer&);
 

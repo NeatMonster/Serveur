@@ -49,7 +49,7 @@ public:
 
     void getString(string_t&);
 
-    void getItemStack(ItemStack*&);
+    void getItemStack(std::shared_ptr<ItemStack>&);
 
     void getNBT(NBTTagCompound*&);
 
@@ -87,7 +87,7 @@ public:
 
     void putString(string_t);
 
-    void putItemStack(ItemStack*);
+    void putItemStack(std::shared_ptr<ItemStack>);
 
     void putNBT(NBTTagCompound*);
 

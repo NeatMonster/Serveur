@@ -1,7 +1,6 @@
 #ifndef __Serveur__ItemPickaxe__
 #define __Serveur__ItemPickaxe__
 
-#include "ItemStack.h"
 #include "ItemTool.h"
 
 class ItemPickaxe : public ItemTool {
@@ -10,7 +9,7 @@ public:
 
     bool canHarvestBlock(Block*);
 
-    float_t getStrVsBlock(ItemStack*, Block*);
+    float_t getStrVsBlock(Block*);
 
 private:
     static const std::set<Block*> effectiveBlocks;

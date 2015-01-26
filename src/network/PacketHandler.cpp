@@ -136,10 +136,8 @@ void PacketHandler::handleAnimation(PacketAnimation*) {
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
     if (packet->slot == -1)
         connect->player.lock()->drop(packet->stack);
-    else if (packet->stack == nullptr)
-        connect->player.lock()->getInventory().putStack(packet->slot, nullptr);
     else
-        connect->player.lock()->getInventory().putStack(packet->slot, packet->stack->clone());
+        connect->player.lock()->getInventory().putStack(packet->slot, packet->stack);
 }
 
 void PacketHandler::handleRotation(float_t yaw, float_t pitch) {

@@ -5,17 +5,21 @@
 #include "PacketSpawnObject.h"
 #include "World.h"
 
-EntityItem::EntityItem(World *world, ItemStack *stack) : Entity(world), stack(stack), pickupDelay(10) {
+EntityItem::EntityItem(World *world, std::shared_ptr<ItemStack> stack) : Entity(world), pickupDelay(10) {
     setSize(0.25, 0.25);
-    dataWatcher.setItemStack(10, stack->clone());
-}
-
-EntityItem::~EntityItem() {
-    delete stack;
+    setItem(stack);
 }
 
 void EntityItem::onCollision(std::shared_ptr<EntityPlayer>) {
     // TODO Permettre aux joueurs de ramasser les items
+}
+
+std::shared_ptr<ItemStack> EntityItem::getItem() {
+    return dataWatcher.getItemStack(10);
+}
+
+void EntityItem::setItem(std::shared_ptr<ItemStack> stack) {
+    dataWatcher.setItemStack(10, stack);
 }
 
 void EntityItem::onTick() {
@@ -52,21 +56,23 @@ void EntityItem::searchForItems() {
 }
 
 bool EntityItem::combineItems(std::shared_ptr<EntityItem> other) {
+    std::shared_ptr<ItemStack> stack = getItem();
+    std::shared_ptr<ItemStack> otherStack = other->getItem();
     if (other.get() == this || isDead() || other->isDead()
         || pickupDelay == 32767 || other->pickupDelay == 32767
         || ticks == -32768 || other->ticks == -32768
-        || stack->getType() != other->stack->getType()
+        || stack->getType() != otherStack->getType()
         || stack->getAmount() + stack->getAmount() > Item::getItem(stack->getType())->getMaxStackSize()
-        || stack->getDamage() != other->stack->getDamage()
-        || stack->getNBT() != nullptr ^ other->stack->getNBT() != nullptr
-        || (stack->getNBT() != nullptr && !stack->getNBT()->equals(other->stack->getNBT())))
+        || stack->getDamage() != otherStack->getDamage()
+        || stack->getNBT() != nullptr ^ otherStack->getNBT() != nullptr
+        || (stack->getNBT() != nullptr && !stack->getNBT()->equals(otherStack->getNBT())))
         return false;
-    if (stack->getAmount() > other->stack->getAmount())
+    if (stack->getAmount() > otherStack->getAmount())
         return other->combineItems(std::dynamic_pointer_cast<EntityItem>(shared_from_this()));
-    other->stack->setAmount(other->stack->getAmount() + stack->getAmount());
+    otherStack->setAmount(otherStack->getAmount() + stack->getAmount());
+    other->setItem(otherStack);
     other->pickupDelay = MathUtils::max(other->pickupDelay, pickupDelay);
     other->ticks = MathUtils::min(other->ticks, ticks);
-    other->dataWatcher.setItemStack(10, other->stack);
     setDead();
     return true;
 }
