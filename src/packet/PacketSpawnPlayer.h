@@ -7,7 +7,7 @@ class EntityPlayer;
 
 class PacketSpawnPlayer : public ServerPacket {
 public:
-    PacketSpawnPlayer(EntityPlayer*);
+    PacketSpawnPlayer(std::shared_ptr<EntityPlayer>);
 
     void write(PacketBuffer&);
 

@@ -14,7 +14,7 @@ EntityItem::~EntityItem() {
     delete stack;
 }
 
-void EntityItem::onCollision(EntityPlayer *player) {
+void EntityItem::onCollision(std::shared_ptr<EntityPlayer>) {
     // TODO Permettre aux joueurs de ramasser les items
 }
 
@@ -43,15 +43,16 @@ std::shared_ptr<ServerPacket> EntityItem::getSpawnPacket() {
 }
 
 void EntityItem::searchForItems() {
-    std::vector<Entity*> entities = world->getEntityCollisions(getBoundingBox().clone().expand(0.5, 0, 0.5), [this] (Entity *entity) {
-        return entity != this && entity->getType() == Type::ITEM;
+    std::vector<std::shared_ptr<Entity>> entities = world->getEntityCollisions(getBoundingBox().clone().expand(0.5, 0, 0.5),
+    [] (std::shared_ptr<Entity> entity) {
+        return entity->getType() == Type::ITEM;
     });
-    for (Entity *entity : entities)
-        combineItems((EntityItem*) entity);
+    for (std::shared_ptr<Entity> entity : entities)
+        combineItems(std::dynamic_pointer_cast<EntityItem>(entity));
 }
 
-bool EntityItem::combineItems(EntityItem *other) {
-    if (other == this || isDead() || other->isDead()
+bool EntityItem::combineItems(std::shared_ptr<EntityItem> other) {
+    if (other.get() == this || isDead() || other->isDead()
         || pickupDelay == 32767 || other->pickupDelay == 32767
         || ticks == -32768 || other->ticks == -32768
         || stack->getType() != other->stack->getType()
@@ -61,7 +62,7 @@ bool EntityItem::combineItems(EntityItem *other) {
         || (stack->getNBT() != nullptr && !stack->getNBT()->equals(other->stack->getNBT())))
         return false;
     if (stack->getAmount() > other->stack->getAmount())
-        return other->combineItems(this);
+        return other->combineItems(std::dynamic_pointer_cast<EntityItem>(shared_from_this()));
     other->stack->setAmount(other->stack->getAmount() + stack->getAmount());
     other->pickupDelay = MathUtils::max(other->pickupDelay, pickupDelay);
     other->ticks = MathUtils::min(other->ticks, ticks);

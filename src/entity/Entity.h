@@ -12,7 +12,7 @@ class EntityPlayer;
 class ServerPacket;
 class World;
 
-class Entity {
+class Entity : public std::enable_shared_from_this<Entity> {
     friend class PacketHandler;
 
 public:
@@ -60,7 +60,7 @@ public:
 
     DataWatcher &getDataWatcher();
 
-    double_t getDistance(Entity*);
+    double_t getDistance(std::shared_ptr<Entity>);
 
     void move(double_t, double_t, double_t);
 
@@ -72,13 +72,13 @@ public:
 
     bool pushOutOfBlocks(double_t, double_t, double_t);
 
-    std::unordered_set<EntityPlayer*> getWatchers();
+    std::unordered_set<std::shared_ptr<EntityPlayer>> getWatchers();
 
     virtual std::shared_ptr<ServerPacket> getSpawnPacket() = 0;
 
     virtual void onChunk(Chunk*, Chunk*);
 
-    virtual void onCollision(EntityPlayer*);
+    virtual void onCollision(std::shared_ptr<EntityPlayer>);
 
     virtual void onTick();
 

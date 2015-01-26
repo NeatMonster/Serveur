@@ -55,7 +55,7 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
             player->disconnect("Vous êtes connecté depuis un autre emplacement");
     connect->phase = PlayerConnection::PLAY;
     World *world = Server::getServer()->getWorld();
-    EntityPlayer *player = new EntityPlayer(world, connect);
+    std::shared_ptr<EntityPlayer> player = std::make_shared<EntityPlayer>(world, connect);
     Position spawn = world->getLevel()->getSpawn();
     player->setPosition(spawn.x, spawn.y, spawn.z);
     world->addEntity(player);
@@ -78,7 +78,7 @@ void PacketHandler::handleKeepAlive(PacketKeepAlive *packet) {
 
 void PacketHandler::handleChatMessage(PacketChatMessage *packet) {
     if (packet->message[0] == '/')
-        Server::getCommands()->processCommand(packet->message.substr(1), connect->player);
+        Server::getCommands()->processCommand(packet->message.substr(1), connect->player.lock().get());
     else
         Server::broadcast(Chat() << "<" << connect->getName() << "> " << packet->message);
 }
@@ -98,20 +98,20 @@ void PacketHandler::handlePluginMessage(PacketPluginMessage *packet) {
             servers += server;
         }
         servers += ".";
-        connect->player->sendMessage(Chat() << Color::YELLOW << servers);
+        connect->player.lock()->sendMessage(Chat() << Color::YELLOW << servers);
     } else if (packet->channel == "MF|Connect") {
         PacketBuffer buffer;
         buffer.putUBytes(packet->data);
         buffer.setPosition(0);
         string_t message;
         buffer.getString(message);
-        connect->player->sendMessage(Chat() << Color::RED << "Une erreur est survenue lors de l'exécution de la commande.");
-        connect->player->sendMessage(Chat() << Color::RED << message);
+        connect->player.lock()->sendMessage(Chat() << Color::RED << "Une erreur est survenue lors de l'exécution de la commande.");
+        connect->player.lock()->sendMessage(Chat() << Color::RED << message);
     }
 }
 
 void PacketHandler::handlePlayer(PacketPlayer *packet) {
-    connect->player->onGround = packet->onGround;
+    connect->player.lock()->onGround = packet->onGround;
 }
 
 void PacketHandler::handlePlayerLook(PacketPlayerLook *packet) {
@@ -128,27 +128,27 @@ void PacketHandler::handlePlayerPositionLook(PacketPlayerPositionLook *packet) {
 }
 
 void PacketHandler::handleAnimation(PacketAnimation*) {
-    std::shared_ptr<PacketAnimation> packet = std::make_shared<PacketAnimation>(connect->player->getEntityId(), 0);
-    for (EntityPlayer *const &watcher : connect->player->getWatchers())
+    std::shared_ptr<PacketAnimation> packet = std::make_shared<PacketAnimation>(connect->player.lock()->getEntityId(), 0);
+    for (std::shared_ptr<EntityPlayer> watcher : connect->player.lock()->getWatchers())
         watcher->sendPacket(packet);
 }
 
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
     if (packet->slot == -1)
-        connect->player->drop(packet->stack);
+        connect->player.lock()->drop(packet->stack);
     else if (packet->stack == nullptr)
-        connect->player->getInventory().putStack(packet->slot, nullptr);
+        connect->player.lock()->getInventory().putStack(packet->slot, nullptr);
     else
-        connect->player->getInventory().putStack(packet->slot, packet->stack->clone());
+        connect->player.lock()->getInventory().putStack(packet->slot, packet->stack->clone());
 }
 
 void PacketHandler::handleRotation(float_t yaw, float_t pitch) {
-    connect->player->setRotation(yaw, pitch);
-    connect->player->setHeadRotation(yaw);
+    connect->player.lock()->setRotation(yaw, pitch);
+    connect->player.lock()->setHeadRotation(yaw);
 }
 
 void PacketHandler::handlePosition(double_t x, double_t y, double_t z, bool onGround) {
-    EntityPlayer *player = connect->player;
+    std::shared_ptr<EntityPlayer> player = connect->player.lock();
     double_t moveX = x - player->posX;
     double_t moveY = y - player->posY;
     double_t moveZ = z - player->posZ;

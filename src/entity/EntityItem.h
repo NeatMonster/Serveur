@@ -21,7 +21,7 @@ public:
 
     std::shared_ptr<ServerPacket> getSpawnPacket();
 
-    void onCollision(EntityPlayer*);
+    void onCollision(std::shared_ptr<EntityPlayer>);
 
     void onTick();
 
@@ -31,7 +31,7 @@ private:
 
     void searchForItems();
 
-    bool combineItems(EntityItem*);
+    bool combineItems(std::shared_ptr<EntityItem>);
 };
 
 #endif /* defined(__Serveur__EntityItem__) */

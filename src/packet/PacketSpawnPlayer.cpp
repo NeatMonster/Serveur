@@ -5,7 +5,7 @@
 
 #include <cstring>
 
-PacketSpawnPlayer::PacketSpawnPlayer(EntityPlayer *player) : ServerPacket(0x0c) {
+PacketSpawnPlayer::PacketSpawnPlayer(std::shared_ptr<EntityPlayer> player) : ServerPacket(0x0c) {
     entityId = player->getEntityId();
     uuid = player->getUUID();
     x = (int_t) MathUtils::floor_d(player->getX() * 32.);

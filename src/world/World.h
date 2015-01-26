@@ -26,17 +26,17 @@ public:
 
     string_t getName();
 
-    const std::unordered_set<Entity*> &getEntities();
+    const std::unordered_set<std::shared_ptr<Entity>> &getEntities();
 
-    void addEntity(Entity*);
+    void addEntity(std::shared_ptr<Entity>);
 
-    void removeEntity(Entity*);
+    void removeEntity(std::shared_ptr<Entity>);
 
-    const std::unordered_set<EntityPlayer*> &getPlayers();
+    const std::unordered_set<std::shared_ptr<EntityPlayer>> &getPlayers();
 
-    void addPlayer(EntityPlayer*);
+    void addPlayer(std::shared_ptr<EntityPlayer>);
 
-    void removePlayer(EntityPlayer*);
+    void removePlayer(std::shared_ptr<EntityPlayer>);
 
     Region *getRegion(int_t, int_t);
 
@@ -58,19 +58,19 @@ public:
 
     bool isFullBlock(int_t, int_t, int_t);
 
-    std::vector<AxisAlignedBB> getCollisions(Entity*, AxisAlignedBB);
+    std::vector<AxisAlignedBB> getCollisions(std::shared_ptr<Entity>, AxisAlignedBB);
 
     std::vector<AxisAlignedBB> getBlockCollisions(AxisAlignedBB);
 
-    std::vector<Entity*> getEntityCollisions(AxisAlignedBB, std::function<bool(Entity*)>);
+    std::vector<std::shared_ptr<Entity>> getEntityCollisions(AxisAlignedBB, std::function<bool(std::shared_ptr<Entity>)>);
 
     void onTick();
 
 private:
     Level *level;
     string_t name;
-    std::unordered_set<Entity*> entities;
-    std::unordered_set<EntityPlayer*> players;
+    std::unordered_set<std::shared_ptr<Entity>> entities;
+    std::unordered_set<std::shared_ptr<EntityPlayer>> players;
     std::unordered_map<long_t, Chunk*> chunks;
     std::unordered_map<long_t, Region*> regions;
 

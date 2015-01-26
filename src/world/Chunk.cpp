@@ -29,27 +29,27 @@ int_t Chunk::getZ() {
     return z;
 }
 
-const std::unordered_set<Entity*> &Chunk::getEntities() {
+const std::unordered_set<std::shared_ptr<Entity>> &Chunk::getEntities() {
     return entities;
 }
 
-void Chunk::addEntity(Entity *entity) {
+void Chunk::addEntity(std::shared_ptr<Entity> entity) {
     entities.insert(entity);
 }
 
-void Chunk::removeEntity(Entity *entity) {
+void Chunk::removeEntity(std::shared_ptr<Entity> entity) {
     entities.erase(entity);
 }
 
-const std::unordered_set<EntityPlayer*> &Chunk::getPlayers() {
+const std::unordered_set<std::shared_ptr<EntityPlayer>> &Chunk::getPlayers() {
     return players;
 }
 
-void Chunk::addPlayer(EntityPlayer *player) {
+void Chunk::addPlayer(std::shared_ptr<EntityPlayer> player) {
     players.insert(player);
 }
 
-void Chunk::removePlayer(EntityPlayer *player) {
+void Chunk::removePlayer(std::shared_ptr<EntityPlayer> player) {
     players.erase(player);
 }
 

@@ -23,8 +23,6 @@ World::~World() {
         delete region.second;
     for (auto &chunk : chunks)
         delete chunk.second;
-    for (auto &entity : entities)
-        delete entity;
 }
 
 string_t World::getName() {
@@ -35,44 +33,44 @@ Level *World::getLevel() {
     return level;
 }
 
-const std::unordered_set<Entity*> &World::getEntities() {
+const std::unordered_set<std::shared_ptr<Entity>> &World::getEntities() {
     return entities;
 }
 
-void World::addEntity(Entity *entity) {
+void World::addEntity(std::shared_ptr<Entity> entity) {
     entities.insert(entity);
     entity->getChunk()->addEntity(entity);
-    EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
-    if (player != nullptr)
+    std::shared_ptr<EntityPlayer> player = std::dynamic_pointer_cast<EntityPlayer>(entity);
+    if (player)
         addPlayer(player);
-    std::unordered_set<EntityPlayer*> watchers = entity->getWatchers();
     std::shared_ptr<ServerPacket> spawnPacket = entity->getSpawnPacket();
-    for (EntityPlayer *const watcher : watchers)
+    std::unordered_set<std::shared_ptr<EntityPlayer>> watchers = entity->getWatchers();
+    for (std::shared_ptr<EntityPlayer> watcher : watchers)
         watcher->sendPacket(spawnPacket);
     if (entity->getDataWatcher().hasChanged()) {
         std::shared_ptr<PacketEntityMetadata> metaPacket =
             std::make_shared<PacketEntityMetadata>(entity->getEntityId(), &entity->getDataWatcher());
-        for (EntityPlayer *const watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(metaPacket);
     }
 }
 
-void World::removeEntity(Entity *entity) {
+void World::removeEntity(std::shared_ptr<Entity> entity) {
     std::shared_ptr<PacketDestroyEntities> packet = std::make_shared<PacketDestroyEntities>(entity->getEntityId());
-    for (EntityPlayer *const watcher : entity->getWatchers())
+    for (std::shared_ptr<EntityPlayer> watcher : entity->getWatchers())
         watcher->sendPacket(packet);
-    EntityPlayer *player = dynamic_cast<EntityPlayer*>(entity);
-    if (player != nullptr)
+    std::shared_ptr<EntityPlayer> player = std::dynamic_pointer_cast<EntityPlayer>(entity);
+    if (player)
         removePlayer(player);
     entity->getChunk()->removeEntity(entity);
     entities.erase(entity);
 }
 
-const std::unordered_set<EntityPlayer*> &World::getPlayers() {
+const std::unordered_set<std::shared_ptr<EntityPlayer>> &World::getPlayers() {
     return players;
 }
 
-void World::addPlayer(EntityPlayer *player) {
+void World::addPlayer(std::shared_ptr<EntityPlayer> player) {
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
     int_t zChunk = (int_t) floor(player->getZ()) >> 4;
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
@@ -83,7 +81,7 @@ void World::addPlayer(EntityPlayer *player) {
     player->onJoinGame();
 }
 
-void World::removePlayer(EntityPlayer *player) {
+void World::removePlayer(std::shared_ptr<EntityPlayer> player) {
     player->onQuitGame();
     player->getChunk()->removePlayer(player);
     players.erase(player);
@@ -183,9 +181,9 @@ bool World::isFullBlock(int_t x, int_t y, int_t z) {
          + boundingBox.maxZ - boundingBox.minZ >= 3.;
 }
 
-std::vector<AxisAlignedBB> World::getCollisions(Entity *entity, AxisAlignedBB boundingBox) {
+std::vector<AxisAlignedBB> World::getCollisions(std::shared_ptr<Entity> entity, AxisAlignedBB boundingBox) {
     std::vector<AxisAlignedBB> collisions = getBlockCollisions(boundingBox);
-    for (Entity *otherEntity : entities)
+    for (std::shared_ptr<Entity> otherEntity : entities)
         if (otherEntity != entity) {
             AxisAlignedBB otherBoundingBox = otherEntity->getBoundingBox();
             if (otherBoundingBox.intersects(boundingBox))
@@ -206,9 +204,9 @@ std::vector<AxisAlignedBB> World::getBlockCollisions(AxisAlignedBB boundingBox) 
     return collisions;
 }
 
-std::vector<Entity*> World::getEntityCollisions(AxisAlignedBB boundingBox, std::function<bool(Entity*)> predicate) {
-    std::vector<Entity*> entities;
-    for (Entity *otherEntity : this->entities)
+std::vector<std::shared_ptr<Entity>> World::getEntityCollisions(AxisAlignedBB boundingBox, std::function<bool(std::shared_ptr<Entity>)> predicate) {
+    std::vector<std::shared_ptr<Entity>> entities;
+    for (std::shared_ptr<Entity> otherEntity : this->entities)
         if (predicate(otherEntity)) {
             AxisAlignedBB otherBoundingBox = otherEntity->getBoundingBox();
             if (otherBoundingBox.intersects(boundingBox))
@@ -218,18 +216,16 @@ std::vector<Entity*> World::getEntityCollisions(AxisAlignedBB boundingBox, std::
 }
 
 void World::onTick() {
-    for (Entity *const &entity : std::unordered_set<Entity*>(entities)) {
+    for (std::shared_ptr<Entity> entity : std::unordered_set<std::shared_ptr<Entity>>(entities)) {
         entity->onTick();
-        if (entity->isDead()) {
+        if (entity->isDead())
             removeEntity(entity);
-            delete entity;
-        }
     }
     level->setTime(level->getTime() + 1);
     level->setDayTime(level->getDayTime() + 1);
     if (level->getTime() % 20 == 0) {
         std::shared_ptr<PacketTimeUpdate> packet = std::make_shared<PacketTimeUpdate>(level->getTime(), level->getDayTime());
-        for (EntityPlayer *const &player : players)
+        for (std::shared_ptr<EntityPlayer> player : players)
             player->sendPacket(packet);
     }
 }

@@ -62,7 +62,7 @@ private:
     PacketHandler *handler;
     std::atomic<bool> closed;
     std::atomic<Phase> phase;
-    EntityPlayer *player;
+    std::weak_ptr<EntityPlayer> player;
     Profile *profile;
     Clock::time_point sentKeepAlive;
     Clock::time_point rcvdKeepAlive;

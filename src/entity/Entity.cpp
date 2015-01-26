@@ -79,7 +79,7 @@ DataWatcher &Entity::getDataWatcher() {
     return dataWatcher;
 }
 
-double_t Entity::getDistance(Entity *entity) {
+double_t Entity::getDistance(std::shared_ptr<Entity> entity) {
     return (posX - entity->getX()) * (posX - entity->getX())
          + (posY - entity->getY()) * (posY - entity->getY())
          + (posZ - entity->getZ()) * (posZ - entity->getZ());
@@ -93,7 +93,7 @@ void Entity::move(double_t x, double_t y, double_t z) {
         setPosition();
     } else {
         double_t savX = x, savY = y, savZ = z;
-        std::vector<AxisAlignedBB> collisions = world->getCollisions(this, boundingBox.clone().add(x, y, z));
+        std::vector<AxisAlignedBB> collisions = world->getCollisions(shared_from_this(), boundingBox.clone().add(x, y, z));
         for (AxisAlignedBB &collision : collisions) {
             x = collision.calculateXOffset(boundingBox, x);
             y = collision.calculateYOffset(boundingBox, y);
@@ -184,8 +184,8 @@ bool Entity::pushOutOfBlocks(double_t x, double_t y, double_t z) {
     return true;
 }
 
-std::unordered_set<EntityPlayer*> Entity::getWatchers() {
-    std::unordered_set<EntityPlayer*> watchers;
+std::unordered_set<std::shared_ptr<EntityPlayer>> Entity::getWatchers() {
+    std::unordered_set<std::shared_ptr<EntityPlayer>> watchers;
     int_t xChunk = (int_t) floor(posX) >> 4;
     int_t zChunk = (int_t) floor(posZ) >> 4;
     int viewDistance = MathUtils::min(VIEW_DISTANCE, 1 + getTrackingRange() / 16);
@@ -193,25 +193,24 @@ std::unordered_set<EntityPlayer*> Entity::getWatchers() {
         for (int z = -viewDistance; z <= viewDistance; z++) {
             Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
             if (chunk != nullptr)
-                for (EntityPlayer *const &watcher : chunk->getPlayers()) {
+                for (std::shared_ptr<EntityPlayer> watcher : chunk->getPlayers())
                     if (watcher->getEntityId() != getEntityId() && getDistance(watcher) < getTrackingRange() * getTrackingRange())
                         watchers.insert(watcher);
-                }
         }
     return watchers;
 }
 
 void Entity::onChunk(Chunk *oldChunk, Chunk *newChunk) {
-    oldChunk->removeEntity(this);
-    newChunk->addEntity(this);
+    oldChunk->removeEntity(shared_from_this());
+    newChunk->addEntity(shared_from_this());
 }
 
-void Entity::onCollision(EntityPlayer*) {}
+void Entity::onCollision(std::shared_ptr<EntityPlayer>) {}
 
 void Entity::onTick() {
     if (++ticks % getUpdateFrequency() > 0)
         return;
-    std::unordered_set<EntityPlayer*> watchers = getWatchers();
+    std::unordered_set<std::shared_ptr<EntityPlayer>> watchers = getWatchers();
     int_t posX = (int_t) MathUtils::floor_d(this->posX * 32.);
     int_t posY = (int_t) MathUtils::floor_d(this->posY * 32.);
     int_t posZ = (int_t) MathUtils::floor_d(this->posZ * 32.);
@@ -232,7 +231,7 @@ void Entity::onTick() {
         packet->dY = posY - lastPosY;
         packet->dZ = posZ - lastPosZ;
         packet->onGround = onGround;
-        for (EntityPlayer *const &watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(packet);
     } else if (!hasMoved && hasRotated) {
         std::shared_ptr<PacketEntityLook> packet = std::make_shared<PacketEntityLook>();
@@ -240,7 +239,7 @@ void Entity::onTick() {
         packet->yaw = rotYaw;
         packet->pitch = rotPitch;
         packet->onGround = onGround;
-        for (EntityPlayer *const &watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(packet);
     } else if (hasMoved && isRelative && hasRotated) {
         std::shared_ptr<PacketEntityMoveLook> packet = std::make_shared<PacketEntityMoveLook>();
@@ -251,7 +250,7 @@ void Entity::onTick() {
         packet->yaw = rotYaw;
         packet->pitch = rotPitch;
         packet->onGround = onGround;
-        for (EntityPlayer *const &watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(packet);
     } else if (hasMoved && !isRelative) {
         std::shared_ptr<PacketEntityTeleport> packet = std::make_shared<PacketEntityTeleport>();
@@ -262,7 +261,7 @@ void Entity::onTick() {
         packet->yaw = rotYaw;
         packet->pitch = rotPitch;
         packet->onGround = onGround;
-        for (EntityPlayer *const &watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(packet);
     }
     if (velocityChanged) {
@@ -271,12 +270,12 @@ void Entity::onTick() {
         packet->velocityX = motX;
         packet->velocityY = motY;
         packet->velocityZ = motZ;
-        for (EntityPlayer *const &watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(packet);
     }
     if (dataWatcher.hasChanged()) {
         std::shared_ptr<PacketEntityMetadata> packet = std::make_shared<PacketEntityMetadata>(entityId, &dataWatcher);
-        for (EntityPlayer *const &watcher : watchers)
+        for (std::shared_ptr<EntityPlayer> watcher : watchers)
             watcher->sendPacket(packet);
     }
     lastPosX = posX;

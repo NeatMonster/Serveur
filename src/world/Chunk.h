@@ -32,17 +32,17 @@ public:
 
     int_t getZ();
 
-    const std::unordered_set<Entity*> &getEntities();
+    const std::unordered_set<std::shared_ptr<Entity>> &getEntities();
 
-    void addEntity(Entity*);
+    void addEntity(std::shared_ptr<Entity>);
 
-    void removeEntity(Entity*);
+    void removeEntity(std::shared_ptr<Entity>);
 
-    const std::unordered_set<EntityPlayer*> &getPlayers();
+    const std::unordered_set<std::shared_ptr<EntityPlayer>> &getPlayers();
 
-    void addPlayer(EntityPlayer*);
+    void addPlayer(std::shared_ptr<EntityPlayer>);
 
-    void removePlayer(EntityPlayer*);
+    void removePlayer(std::shared_ptr<EntityPlayer>);
 
     Block *getBlock(int_t, int_t, int_t);
 
@@ -57,8 +57,8 @@ private:
     ubyte_t biomes[256];
     int_t heightMap[256];
     Section *sections[16];
-    std::unordered_set<Entity*> entities;
-    std::unordered_set<EntityPlayer*> players;
+    std::unordered_set<std::shared_ptr<Entity>> entities;
+    std::unordered_set<std::shared_ptr<EntityPlayer>> players;
 };
 
 #endif /* defined(__Serveur__Chunk__) */

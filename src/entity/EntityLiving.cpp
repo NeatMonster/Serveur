@@ -21,7 +21,7 @@ void EntityLiving::onTick() {
         std::shared_ptr<PacketEntityHeadLook> packet = std::make_shared<PacketEntityHeadLook>();
         packet->entityId = entityId;
         packet->headYaw = headYaw;
-        for (EntityPlayer *const &watcher : getWatchers())
+        for (std::shared_ptr<EntityPlayer> watcher : getWatchers())
             watcher->sendPacket(packet);
     }
     lastHeadYaw = headYaw;
