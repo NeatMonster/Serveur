@@ -38,17 +38,17 @@ public:
 
     void removePlayer(std::shared_ptr<EntityPlayer>);
 
-    Region *getRegion(int_t, int_t);
+    std::shared_ptr<Region> getRegion(int_t, int_t);
 
-    Region *loadRegion(int_t, int_t);
+    std::shared_ptr<Region> loadRegion(int_t, int_t);
 
-    Chunk *getChunk(int_t, int_t);
+    std::shared_ptr<Chunk> getChunk(int_t, int_t);
 
-    Chunk *tryGetChunk(int_t, int_t);
+    std::shared_ptr<Chunk> tryGetChunk(int_t, int_t);
 
-    Chunk *loadChunk(int_t, int_t);
+    std::shared_ptr<Chunk> loadChunk(int_t, int_t);
 
-    Chunk *tryLoadChunk(int_t, int_t);
+    std::shared_ptr<Chunk> tryLoadChunk(int_t, int_t);
 
     void unloadChunk(int_t, int_t);
 
@@ -71,8 +71,8 @@ private:
     string_t name;
     std::unordered_set<std::shared_ptr<Entity>> entities;
     std::unordered_set<std::shared_ptr<EntityPlayer>> players;
-    std::unordered_map<long_t, Chunk*> chunks;
-    std::unordered_map<long_t, Region*> regions;
+    std::unordered_map<long_t, std::shared_ptr<Chunk>> chunks;
+    std::unordered_map<long_t, std::shared_ptr<Region>> regions;
 
     static inline long_t hash(int_t x, int_t z) {
         return ((long_t) x & 4294967295L) | (((long_t) z & 4294967295L) << 32);

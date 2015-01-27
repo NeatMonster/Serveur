@@ -13,7 +13,7 @@ public:
 
     ~Region();
 
-    bool getChunk(Chunk*);
+    bool getChunk(std::shared_ptr<Chunk>);
 
 private:
     std::fstream file;

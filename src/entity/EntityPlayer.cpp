@@ -131,7 +131,7 @@ void EntityPlayer::onJoinGame() {
     sendPacket(std::make_shared<PacketTimeUpdate>(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
     int_t xChunk = (int_t) floor(posX) >> 4;
     int_t zChunk = (int_t) floor(posZ) >> 4;
-    std::vector<Chunk*> chunks = {world->getChunk(xChunk, zChunk)};
+    std::vector<std::shared_ptr<Chunk>> chunks = {world->getChunk(xChunk, zChunk)};
     for (int_t distance = 1; distance <= VIEW_DISTANCE; distance++) {
         for (int_t x = -distance; x < distance; x++)
             chunks.push_back(world->getChunk(xChunk + x, zChunk - distance));
@@ -142,11 +142,11 @@ void EntityPlayer::onJoinGame() {
         for (int_t z = distance; z > -distance; z--)
             chunks.push_back(world->getChunk(xChunk - distance, zChunk + z));
     }
-    std::vector<Chunk*> packetChunks;
-    for (Chunk *&chunk : chunks) {
+    std::vector<std::shared_ptr<Chunk>> packetChunks;
+    for (std::shared_ptr<Chunk> chunk : chunks) {
         if (packetChunks.size() == 10) {
             sendPacket(std::make_shared<PacketMapChunkBulk>(packetChunks));
-            for (Chunk *&packetChunk : packetChunks)
+            for (std::shared_ptr<Chunk> packetChunk : packetChunks)
                 for (std::shared_ptr<EntityPlayer> player : packetChunk->getPlayers())
                     if (player.get() != this)
                         sendPacket(std::make_shared<PacketSpawnPlayer>(player));
@@ -156,7 +156,7 @@ void EntityPlayer::onJoinGame() {
     }
     if (!packetChunks.empty()) {
         sendPacket(std::make_shared<PacketMapChunkBulk>(packetChunks));
-        for (Chunk *&packetChunk : packetChunks)
+        for (std::shared_ptr<Chunk> packetChunk : packetChunks)
             for (std::shared_ptr<EntityPlayer> player : packetChunk->getPlayers())
                 if (player.get() != this)
                     sendPacket(std::make_shared<PacketSpawnPlayer>(player));
@@ -178,7 +178,7 @@ std::shared_ptr<ServerPacket> EntityPlayer::getSpawnPacket() {
     return std::make_shared<PacketSpawnPlayer>(std::dynamic_pointer_cast<EntityPlayer>(shared_from_this()));
 }
 
-void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
+void EntityPlayer::onChunk(std::shared_ptr<Chunk> oldChunk, std::shared_ptr<Chunk> newChunk) {
     oldChunk->removePlayer(std::dynamic_pointer_cast<EntityPlayer>(shared_from_this()));
     newChunk->addPlayer(std::dynamic_pointer_cast<EntityPlayer>(shared_from_this()));
     for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
@@ -187,7 +187,7 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
                 || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
                 || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
                 || newChunk->getZ() + z > oldChunk->getZ() + VIEW_DISTANCE) {
-                Chunk *chunk = world->getChunk(newChunk->getX() + x, newChunk->getZ() + z);
+                std::shared_ptr<Chunk> chunk = world->getChunk(newChunk->getX() + x, newChunk->getZ() + z);
                 sendPacket(std::make_shared<PacketChunkData>(chunk, false));
                 std::shared_ptr<PacketSpawnPlayer> packet = std::make_shared<PacketSpawnPlayer>(
                     std::dynamic_pointer_cast<EntityPlayer>(shared_from_this()));
@@ -203,7 +203,7 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
                 || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
                 || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
                 || oldChunk->getZ() + z > newChunk->getZ() + VIEW_DISTANCE) {
-                Chunk *chunk = world->getChunk(oldChunk->getX() + x, oldChunk->getZ() + z);
+                std::shared_ptr<Chunk> chunk = world->getChunk(oldChunk->getX() + x, oldChunk->getZ() + z);
                 sendPacket(std::make_shared<PacketChunkData>(chunk, true));
                 std::unordered_set<varint_t> entitiesIds;
                 std::shared_ptr<PacketDestroyEntities> packet = std::make_shared<PacketDestroyEntities>(getEntityId());

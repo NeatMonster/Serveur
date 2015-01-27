@@ -38,7 +38,7 @@ public:
 
     World *getWorld();
 
-    Chunk *getChunk();
+    std::shared_ptr<Chunk> getChunk();
 
     double_t getX();
 
@@ -76,7 +76,7 @@ public:
 
     virtual std::shared_ptr<ServerPacket> getSpawnPacket() = 0;
 
-    virtual void onChunk(Chunk*, Chunk*);
+    virtual void onChunk(std::shared_ptr<Chunk>, std::shared_ptr<Chunk>);
 
     virtual void onCollision(std::shared_ptr<EntityPlayer>);
 

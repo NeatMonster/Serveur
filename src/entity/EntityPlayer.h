@@ -51,7 +51,7 @@ public:
 
     std::shared_ptr<ServerPacket> getSpawnPacket();
 
-    void onChunk(Chunk*, Chunk*);
+    void onChunk(std::shared_ptr<Chunk>, std::shared_ptr<Chunk>);
 
     void onTick();
 

@@ -1,6 +1,6 @@
 #include "PacketChunkData.h"
 
-PacketChunkData::PacketChunkData(Chunk *chunk, bool unload) : ServerPacket(0x21) {
+PacketChunkData::PacketChunkData(std::shared_ptr<Chunk> chunk, bool unload) : ServerPacket(0x21) {
     continuous = true;
     if (unload) {
         meta = {chunk->getX(), chunk->getZ(), 0};

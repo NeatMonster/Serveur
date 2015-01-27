@@ -1,9 +1,9 @@
 #include "PacketMapChunkBulk.h"
 
-PacketMapChunkBulk::PacketMapChunkBulk(std::vector<Chunk*> chunks) : ServerPacket(0x26) {
+PacketMapChunkBulk::PacketMapChunkBulk(std::vector<std::shared_ptr<Chunk>> chunks) : ServerPacket(0x26) {
     skyLight = true;
     size = 0;
-    for (Chunk *&chunk : chunks) {
+    for (std::shared_ptr<Chunk> chunk : chunks) {
         Chunk::Meta meta = chunk->getMeta();
         this->meta.push_back(meta);
         size_t count = 0;
@@ -14,7 +14,7 @@ PacketMapChunkBulk::PacketMapChunkBulk(std::vector<Chunk*> chunks) : ServerPacke
     }
     data = new ubyte_t[size];
     ubyte_t *data = this->data;
-    for (Chunk *chunk : chunks)
+    for (std::shared_ptr<Chunk> chunk : chunks)
         chunk->write(data);
 }
 

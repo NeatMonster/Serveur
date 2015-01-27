@@ -19,10 +19,6 @@ World::World(string_t name) : name(name) {
 
 World::~World() {
     delete level;
-    for (auto &region : regions)
-        delete region.second;
-    for (auto &chunk : chunks)
-        delete chunk.second;
 }
 
 string_t World::getName() {
@@ -92,36 +88,36 @@ void World::removePlayer(std::shared_ptr<EntityPlayer> player) {
             tryUnloadChunk(xChunk + x, zChunk + z);
 }
 
-Region *World::getRegion(int_t x, int_t z) {
+std::shared_ptr<Region> World::getRegion(int_t x, int_t z) {
     auto result = regions.find(hash(x, z));
     if (result == regions.end())
         return loadRegion(x, z);
     return result->second;
 }
 
-Region *World::loadRegion(int_t x, int_t z) {
-    Region *region = new Region(name, x, z);
+std::shared_ptr<Region> World::loadRegion(int_t x, int_t z) {
+    std::shared_ptr<Region> region = std::make_shared<Region>(name, x, z);
     regions[hash(x, z)] = region;
     return region;
 }
 
-Chunk *World::getChunk(int_t x, int_t z) {
+std::shared_ptr<Chunk> World::getChunk(int_t x, int_t z) {
     auto result = chunks.find(hash(x,z));
     if (result == chunks.end())
         return loadChunk(x, z);
     return result->second;
 }
 
-Chunk *World::tryGetChunk(int_t x, int_t z) {
+std::shared_ptr<Chunk> World::tryGetChunk(int_t x, int_t z) {
     auto result = chunks.find(hash(x, z));
     if (result == chunks.end())
         return nullptr;
     return result->second;
 }
 
-Chunk *World::loadChunk(int_t x, int_t z) {
-    Chunk *chunk = new Chunk(this, x, z);
-    Region *region = getRegion(MathUtils::floor_d(x / 32.), MathUtils::floor_d(z / 32.));
+std::shared_ptr<Chunk> World::loadChunk(int_t x, int_t z) {
+    std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>(this, x, z);
+    std::shared_ptr<Region> region = getRegion(MathUtils::floor_d(x / 32.), MathUtils::floor_d(z / 32.));
     if (!region->getChunk(chunk)) {
         Section *section = chunk->sections[0];
         section->blockCount = 1024;
@@ -145,7 +141,7 @@ Chunk *World::loadChunk(int_t x, int_t z) {
     return chunk;
 }
 
-Chunk *World::tryLoadChunk(int_t x, int_t z) {
+std::shared_ptr<Chunk> World::tryLoadChunk(int_t x, int_t z) {
     auto result = chunks.find(hash(x, z));
     if (result == chunks.end())
         return loadChunk(x, z);
@@ -154,7 +150,6 @@ Chunk *World::tryLoadChunk(int_t x, int_t z) {
 
 void World::unloadChunk(int_t x, int_t z) {
     auto result = chunks.find(hash(x, z));
-    delete result->second;
     chunks.erase(result);
 }
 
@@ -163,7 +158,7 @@ void World::tryUnloadChunk(int_t x, int_t z) {
         return;
     for (int_t xDist = -VIEW_DISTANCE; xDist <= VIEW_DISTANCE; xDist++)
         for (int_t zDist = -VIEW_DISTANCE; zDist <= VIEW_DISTANCE; zDist++) {
-            Chunk *chunk = tryGetChunk(x + xDist, z + zDist);
+            std::shared_ptr<Chunk> chunk = tryGetChunk(x + xDist, z + zDist);
             if (chunk != nullptr && chunk->getPlayers().size() > 0)
                 return;
         }

@@ -35,7 +35,7 @@ World *Entity::getWorld() {
     return world;
 }
 
-Chunk *Entity::getChunk() {
+std::shared_ptr<Chunk> Entity::getChunk() {
     return world->getChunk((int_t) MathUtils::floor_d(posX) >> 4, (int_t) MathUtils::floor_d(posZ) >> 4);
 }
 
@@ -191,7 +191,7 @@ std::unordered_set<std::shared_ptr<EntityPlayer>> Entity::getWatchers() {
     int viewDistance = MathUtils::min(VIEW_DISTANCE, 1 + getTrackingRange() / 16);
     for (int x = -viewDistance; x <= viewDistance; x++)
         for (int z = -viewDistance; z <= viewDistance; z++) {
-            Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
+            std::shared_ptr<Chunk> chunk = world->tryGetChunk(xChunk + x, zChunk + z);
             if (chunk != nullptr)
                 for (std::shared_ptr<EntityPlayer> watcher : chunk->getPlayers())
                     if (watcher->getEntityId() != getEntityId() && getDistance(watcher) < getTrackingRange() * getTrackingRange())
@@ -200,7 +200,7 @@ std::unordered_set<std::shared_ptr<EntityPlayer>> Entity::getWatchers() {
     return watchers;
 }
 
-void Entity::onChunk(Chunk *oldChunk, Chunk *newChunk) {
+void Entity::onChunk(std::shared_ptr<Chunk> oldChunk, std::shared_ptr<Chunk> newChunk) {
     oldChunk->removeEntity(shared_from_this());
     newChunk->addEntity(shared_from_this());
 }
