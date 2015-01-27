@@ -19,9 +19,9 @@ public:
 
     void set(byte_t);
 
-    NBTTagByte *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     byte_t value;

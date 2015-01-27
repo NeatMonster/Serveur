@@ -33,10 +33,10 @@ void NBTTagFloat::set(float_t value) {
     this->value = value;
 }
 
-NBTTagFloat *NBTTagFloat::clone() {
-    return new NBTTagFloat(this);
+std::shared_ptr<NBTTag> NBTTagFloat::clone() {
+    return std::make_shared<NBTTagFloat>(this);
 }
 
-bool NBTTagFloat::equals(NBTTag *tag) {
+bool NBTTagFloat::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isFloat() && tag->getName() == name && tag->asFloat()->value == value;
 }

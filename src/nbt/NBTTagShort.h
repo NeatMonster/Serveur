@@ -19,9 +19,9 @@ public:
 
     void set(short_t);
 
-    NBTTagShort *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     short_t value;

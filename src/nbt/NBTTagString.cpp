@@ -39,10 +39,10 @@ void NBTTagString::set(string_t value) {
     this->value = value;
 }
 
-NBTTagString *NBTTagString::clone() {
-    return new NBTTagString(this);
+std::shared_ptr<NBTTag> NBTTagString::clone() {
+    return std::make_shared<NBTTagString>(this);
 }
 
-bool NBTTagString::equals(NBTTag *tag) {
+bool NBTTagString::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isString() && tag->getName() == name && tag->asString()->value == value;
 }

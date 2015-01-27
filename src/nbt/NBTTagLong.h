@@ -19,9 +19,9 @@ public:
 
     void set(long_t);
 
-    NBTTagLong *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     long_t value;

@@ -7,14 +7,9 @@ NBTTagCompound::NBTTagCompound(NBTTagCompound *tag) : NBTTag(tag) {
         children[child.first] = child.second->clone();
 }
 
-NBTTagCompound::~NBTTagCompound() {
-    for (auto child : children)
-        delete child.second;
-}
-
 void NBTTagCompound::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
-    NBTTag *child;
+    std::shared_ptr<NBTTag> child;
     while ((child = NBTTag::read(data)) != nullptr)
         children.insert({child->name, child});
 }
@@ -36,22 +31,22 @@ void NBTTagCompound::print(int tab, bool header) {
     std::cout << "}" << std::endl;
 }
 
-NBTTag *&NBTTagCompound::get(string_t name) {
+std::shared_ptr<NBTTag> NBTTagCompound::get(string_t name) {
     return children[name];
 }
 
-void NBTTagCompound::set(string_t name, NBTTag *&child) {
+void NBTTagCompound::set(string_t name, std::shared_ptr<NBTTag> child) {
     children[name] = child;
 }
 
-NBTTagCompound *NBTTagCompound::clone() {
-    return new NBTTagCompound(this);
+std::shared_ptr<NBTTag> NBTTagCompound::clone() {
+    return std::make_shared<NBTTagCompound>(this);
 }
 
-bool NBTTagCompound::equals(NBTTag *tag) {
+bool NBTTagCompound::equals(std::shared_ptr<NBTTag> tag) {
     if (!tag->isCompound() || tag->getName() != name)
         return false;
-    NBTTagCompound *compound = tag->asCompound();
+    std::shared_ptr<NBTTagCompound> compound = tag->asCompound();
     if (children.size() != compound->children.size())
         return false;
     for (auto child : children) {

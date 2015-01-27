@@ -41,10 +41,10 @@ void NBTTagDouble::set(double_t value) {
     this->value = value;
 }
 
-NBTTagDouble *NBTTagDouble::clone() {
-    return new NBTTagDouble(this);
+std::shared_ptr<NBTTag> NBTTagDouble::clone() {
+    return std::make_shared<NBTTagDouble>(this);
 }
 
-bool NBTTagDouble::equals(NBTTag *tag) {
+bool NBTTagDouble::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isDouble() && tag->getName() == name && tag->asDouble()->value == value;
 }

@@ -19,9 +19,9 @@ public:
 
     void set(float_t);
 
-    NBTTagFloat *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     float_t value;

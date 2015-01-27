@@ -19,9 +19,9 @@ public:
 
     void set(int_t);
 
-    NBTTagInt *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     int_t value;

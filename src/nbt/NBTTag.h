@@ -17,7 +17,7 @@ class NBTTagLong;
 class NBTTagShort;
 class NBTTagString;
 
-class NBTTag {
+class NBTTag : public std::enable_shared_from_this<NBTTag> {
     friend class NBTTagCompound;
     friend class NBTTagList;
 
@@ -34,7 +34,7 @@ public:
 
     virtual ~NBTTag();
 
-    static NBTTagCompound *read(ubyte_t*&);
+    static std::shared_ptr<NBTTagCompound> read(ubyte_t*&);
 
     void write(ubyte_t*&);
 
@@ -44,57 +44,57 @@ public:
 
     bool isByte();
 
-    NBTTagByte *asByte();
+    std::shared_ptr<NBTTagByte> asByte();
 
     bool isByteArray();
 
-    NBTTagByteArray *asByteArray();
+    std::shared_ptr<NBTTagByteArray> asByteArray();
 
     bool isCompound();
 
-    NBTTagCompound *asCompound();
+    std::shared_ptr<NBTTagCompound> asCompound();
 
     bool isDouble();
 
-    NBTTagDouble *asDouble();
+    std::shared_ptr<NBTTagDouble> asDouble();
 
     bool isFloat();
 
-    NBTTagFloat *asFloat();
+    std::shared_ptr<NBTTagFloat> asFloat();
 
     bool isInt();
 
-    NBTTagInt *asInt();
+    std::shared_ptr<NBTTagInt> asInt();
 
     bool isIntArray();
 
-    NBTTagIntArray *asIntArray();
+    std::shared_ptr<NBTTagIntArray> asIntArray();
 
     bool isList();
 
-    NBTTagList *asList();
+    std::shared_ptr<NBTTagList> asList();
 
     bool isLong();
 
-    NBTTagLong *asLong();
+    std::shared_ptr<NBTTagLong> asLong();
 
     bool isShort();
 
-    NBTTagShort *asShort();
+    std::shared_ptr<NBTTagShort> asShort();
 
     bool isString();
 
-    NBTTagString *asString();
+    std::shared_ptr<NBTTagString> asString();
 
-    virtual NBTTag* clone() = 0;
+    virtual std::shared_ptr<NBTTag> clone() = 0;
 
-    virtual bool equals(NBTTag*) = 0;
+    virtual bool equals(std::shared_ptr<NBTTag>) = 0;
 
 protected:
     Type type;
     string_t name;
 
-    static NBTTag *read(ubyte_t*&, Type, bool);
+    static std::shared_ptr<NBTTag> read(ubyte_t*&, Type, bool);
 
     virtual void read(ubyte_t*&, bool);
 

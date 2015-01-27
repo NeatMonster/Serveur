@@ -7,11 +7,6 @@ NBTTagList::NBTTagList(NBTTagList *tag) : NBTTag(tag) {
         children.push_back(child->clone());
 }
 
-NBTTagList::~NBTTagList() {
-    for (auto child : children)
-        delete child;
-}
-
 void NBTTagList::read(ubyte_t *&data, bool header) {
     NBTTag::read(data, header);
     NBTTag::Type type = (NBTTag::Type) *(data++);
@@ -47,22 +42,22 @@ void NBTTagList::print(int tab, bool header) {
     std::cout << "}" << std::endl;
 }
 
-std::vector<NBTTag*>::iterator NBTTagList::begin() {
+std::vector<std::shared_ptr<NBTTag>>::iterator NBTTagList::begin() {
     return children.begin();
 }
 
-std::vector<NBTTag*>::iterator NBTTagList::end() {
+std::vector<std::shared_ptr<NBTTag>>::iterator NBTTagList::end() {
     return children.end();
 }
 
-NBTTagList *NBTTagList::clone() {
-    return new NBTTagList(this);
+std::shared_ptr<NBTTag> NBTTagList::clone() {
+    return std::make_shared<NBTTagList>(this);
 }
 
-bool NBTTagList::equals(NBTTag *tag) {
+bool NBTTagList::equals(std::shared_ptr<NBTTag> tag) {
     if (!tag->isList() || tag->getName() != name)
         return false;
-    NBTTagList *list = tag->asList();
+    std::shared_ptr<NBTTagList> list = tag->asList();
     if (children.size() != list->children.size())
         return false;
     for (size_t i = 0; i < children.size(); i++)

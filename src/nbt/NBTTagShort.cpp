@@ -29,10 +29,10 @@ void NBTTagShort::set(short_t value) {
     this->value = value;
 }
 
-NBTTagShort *NBTTagShort::clone() {
-    return new NBTTagShort(this);
+std::shared_ptr<NBTTag> NBTTagShort::clone() {
+    return std::make_shared<NBTTagShort>(this);
 }
 
-bool NBTTagShort::equals(NBTTag *tag) {
+bool NBTTagShort::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isShort() && tag->getName() == name && tag->asShort()->value == value;
 }

@@ -10,24 +10,22 @@ public:
 
     NBTTagCompound(NBTTagCompound*);
 
-    ~NBTTagCompound();
-
     void read(ubyte_t *&, bool);
 
     void write(ubyte_t *&, bool);
 
     void print(int, bool);
 
-    NBTTag *&get(string_t);
+    std::shared_ptr<NBTTag> get(string_t);
 
-    void set(string_t, NBTTag*&);
+    void set(string_t, std::shared_ptr<NBTTag>);
 
-    NBTTagCompound *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
-    std::unordered_map<string_t, NBTTag*> children;
+    std::unordered_map<string_t, std::shared_ptr<NBTTag>> children;
 };
 
 #endif /* defined(__Serveur__NBTTagCompound__) */

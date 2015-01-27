@@ -16,15 +16,14 @@ Level::Level(string_t worldName) {
         file.read((char*) bytes.data(), length);
         ubyte_t *plain = Compression::inflateGzip(bytes.data(), length).first;
         ubyte_t *copy = (ubyte_t*)(plain);
-        NBTTag *root = NBTTag::read(copy);
-        NBTTagCompound *data = root->asCompound()->get("Data")->asCompound();
+        std::shared_ptr<NBTTagCompound> root = NBTTag::read(copy);
+        std::shared_ptr<NBTTagCompound> data = root->get("Data")->asCompound();
         time = data->get("Time")->asLong()->get();
         dayTime = data->get("DayTime")->asLong()->get();
         int_t spawnX = data->get("SpawnX")->asInt()->get();
         int_t spawnY = data->get("SpawnY")->asInt()->get();
         int_t spawnZ = data->get("SpawnZ")->asInt()->get();
         spawn = Position(spawnX, spawnY, spawnZ);
-        delete root;
         std::free(plain);
     } else {
         time = dayTime = 0;

@@ -41,10 +41,10 @@ void NBTTagLong::set(long_t value) {
     this->value = value;
 }
 
-NBTTagLong *NBTTagLong::clone() {
-    return new NBTTagLong(this);
+std::shared_ptr<NBTTag> NBTTagLong::clone() {
+    return std::make_shared<NBTTagLong>(this);
 }
 
-bool NBTTagLong::equals(NBTTag *tag) {
+bool NBTTagLong::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isLong() && tag->getName() == name && tag->asLong()->value == value;
 }

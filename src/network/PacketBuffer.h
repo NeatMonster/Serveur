@@ -51,7 +51,7 @@ public:
 
     void getItemStack(std::shared_ptr<ItemStack>&);
 
-    void getNBT(NBTTagCompound*&);
+    void getNBT(std::shared_ptr<NBTTagCompound>&);
 
     void put(ubyte_t*);
 
@@ -89,7 +89,7 @@ public:
 
     void putItemStack(std::shared_ptr<ItemStack>);
 
-    void putNBT(NBTTagCompound*);
+    void putNBT(std::shared_ptr<NBTTagCompound>);
 
     void clear();
 

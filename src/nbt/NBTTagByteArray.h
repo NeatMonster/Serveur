@@ -19,9 +19,9 @@ public:
 
     void set(ubyte_t*, int_t);
 
-    NBTTagByteArray *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     ubytes_t value;

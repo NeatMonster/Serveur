@@ -12,24 +12,22 @@ public:
 
     NBTTagList(NBTTagList*);
 
-    ~NBTTagList();
-
     void read(ubyte_t*&, bool);
 
     void write(ubyte_t*&, bool);
 
     void print(int, bool);
 
-    std::vector<NBTTag*>::iterator begin();
+    std::vector<std::shared_ptr<NBTTag>>::iterator begin();
 
-    std::vector<NBTTag*>::iterator end();
+    std::vector<std::shared_ptr<NBTTag>>::iterator end();
 
-    NBTTagList *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
-    std::vector<NBTTag*> children;
+    std::vector<std::shared_ptr<NBTTag>> children;
 };
 
 #endif /* defined(__Serveur__NBTTagList__) */

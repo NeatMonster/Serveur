@@ -19,9 +19,9 @@ public:
 
     void set(double_t);
 
-    NBTTagDouble *clone();
+    std::shared_ptr<NBTTag> clone();
 
-    bool equals(NBTTag*);
+    bool equals(std::shared_ptr<NBTTag>);
 
 private:
     double_t value;

@@ -27,10 +27,10 @@ void NBTTagByte::set(byte_t value) {
     this->value = value;
 }
 
-NBTTagByte *NBTTagByte::clone() {
-    return new NBTTagByte(this);
+std::shared_ptr<NBTTag> NBTTagByte::clone() {
+    return std::make_shared<NBTTagByte>(this);
 }
 
-bool NBTTagByte::equals(NBTTag *tag) {
+bool NBTTagByte::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isByte() && tag->getName() == name && tag->asByte()->value == value;
 }

@@ -33,10 +33,10 @@ void NBTTagInt::set(int_t value) {
     this->value = value;
 }
 
-NBTTagInt *NBTTagInt::clone() {
-    return new NBTTagInt(this);
+std::shared_ptr<NBTTag> NBTTagInt::clone() {
+    return std::make_shared<NBTTagInt>(this);
 }
 
-bool NBTTagInt::equals(NBTTag *tag) {
+bool NBTTagInt::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isInt() && tag->getName() == name && tag->asInt()->value == value;
 }

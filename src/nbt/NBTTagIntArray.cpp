@@ -62,10 +62,10 @@ void NBTTagIntArray::set(int_t *frm, int_t size) {
     std::memcpy(value.data(), frm, 4 * size);
 }
 
-NBTTagIntArray *NBTTagIntArray::clone() {
-    return new NBTTagIntArray(this);
+std::shared_ptr<NBTTag> NBTTagIntArray::clone() {
+    return std::make_shared<NBTTagIntArray>(this);
 }
 
-bool NBTTagIntArray::equals(NBTTag *tag) {
+bool NBTTagIntArray::equals(std::shared_ptr<NBTTag> tag) {
     return tag->isIntArray() && tag->getName() == name && tag->asIntArray()->value == value;
 }

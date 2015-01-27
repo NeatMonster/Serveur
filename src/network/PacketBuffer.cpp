@@ -114,7 +114,7 @@ void PacketBuffer::getItemStack(std::shared_ptr<ItemStack> &item) {
     }
 }
 
-void PacketBuffer::getNBT(NBTTagCompound *&tag) {
+void PacketBuffer::getNBT(std::shared_ptr<NBTTagCompound> &tag) {
     ubyte_t *data = buffer.data() + position;
     byte_t nbt;
     getByte(nbt);
@@ -226,7 +226,7 @@ void PacketBuffer::putItemStack(std::shared_ptr<ItemStack> item) {
     }
 }
 
-void PacketBuffer::putNBT(NBTTagCompound *tag) {
+void PacketBuffer::putNBT(std::shared_ptr<NBTTagCompound> tag) {
     if (tag == nullptr)
         putByte(0);
     else {

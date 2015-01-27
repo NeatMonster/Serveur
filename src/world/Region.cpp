@@ -46,11 +46,11 @@ bool Region::getChunk(Chunk *chunk) {
     file.read((char*) data.data(), length);
     ubyte_t *plain = Compression::inflateZlib(data.data() + 1, length).first;
     ubyte_t *copy = (ubyte_t*) plain;
-    NBTTag *root = NBTTag::read(copy);
-    NBTTagCompound *level = root->asCompound()->get("Level")->asCompound();
+    std::shared_ptr<NBTTagCompound> root = NBTTag::read(copy);
+    std::shared_ptr<NBTTagCompound> level = root->get("Level")->asCompound();
     level->get("HeightMap")->asIntArray()->get(chunk->heightMap);
-    for (NBTTag *&sectionTag : *(level->get("Sections")->asList())) {
-        NBTTagCompound *sectionCmpd = sectionTag->asCompound();
+    for (std::shared_ptr<NBTTag> sectionTag : *level->get("Sections")->asList()) {
+        std::shared_ptr<NBTTagCompound> sectionCmpd = sectionTag->asCompound();
         byte_t y = sectionCmpd->get("Y")->asByte()->get();
         Section *section = chunk->sections[y];
         section->initialize(false);
@@ -73,7 +73,6 @@ bool Region::getChunk(Chunk *chunk) {
         section->initialized = true;
     }
     level->get("Biomes")->asByteArray()->get(chunk->biomes);
-    delete root;
     std::free(plain);
     return true;
 }
