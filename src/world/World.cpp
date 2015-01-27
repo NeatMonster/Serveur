@@ -7,6 +7,7 @@
 #include "MathUtils.h"
 #include "PacketDestroyEntities.h"
 #include "PacketEntityMetadata.h"
+#include "PacketSoundEffect.h"
 #include "PacketTimeUpdate.h"
 #include "Region.h"
 #include "Section.h"
@@ -208,6 +209,25 @@ std::vector<std::shared_ptr<Entity>> World::getEntityCollisions(AxisAlignedBB bo
                 entities.push_back(otherEntity);
         }
     return entities;
+}
+
+void World::playSound(double_t x, double_t y, double_t z, string_t sound, float_t volume, float_t pitch) {
+    std::shared_ptr<PacketSoundEffect> packet = std::make_shared<PacketSoundEffect>();
+    packet->soundName = sound;
+    packet->positionX = (int_t) (x * 8.);
+    packet->positionY = (int_t) (y * 8.);
+    packet->positionZ = (int_t) (z * 8.);
+    packet->volume = volume;
+    packet->pitch = (ubyte_t) (pitch * 63.);
+    double_t radius = MathUtils::min(volume * 16., 16.);
+    for (std::shared_ptr<EntityPlayer> player : players) {
+        double_t deltaX = player->getX() - x;
+        double_t deltaY = player->getY() - y;
+        double_t deltaZ = player->getZ() - z;
+        double_t delta = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+        if (delta <= radius * radius)
+            player->sendPacket(packet);
+    }
 }
 
 void World::onTick() {

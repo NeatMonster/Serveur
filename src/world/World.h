@@ -64,6 +64,8 @@ public:
 
     std::vector<std::shared_ptr<Entity>> getEntityCollisions(AxisAlignedBB, std::function<bool(std::shared_ptr<Entity>)>);
 
+    void playSound(double_t, double_t, double_t, string_t, float_t, float_t);
+
     void onTick();
 
 private:

@@ -2,6 +2,7 @@
 
 #include "Item.h"
 #include "MathUtils.h"
+#include "PacketCollectItem.h"
 #include "PacketSpawnObject.h"
 #include "World.h"
 
@@ -10,8 +11,17 @@ EntityItem::EntityItem(World *world, std::shared_ptr<ItemStack> stack) : Entity(
     setItem(stack);
 }
 
-void EntityItem::onCollision(std::shared_ptr<EntityPlayer>) {
-    // TODO Permettre aux joueurs de ramasser les items
+void EntityItem::onCollision(std::shared_ptr<EntityPlayer> player) {
+    if (pickupDelay == 0) { // TODO Ajouter l'item à l'inventaire
+        world->playSound(posX, posY, posZ, "random.pop", 0.2, ((MathUtils::random_f() - MathUtils::random_f()) * 0.7 + 1) * 2);
+        std::shared_ptr<PacketCollectItem> packet = std::make_shared<PacketCollectItem>();
+        packet->collectedId = entityId;
+        packet->collectorId = player->getEntityId();
+        player->sendPacket(packet);
+        for (std::shared_ptr<EntityPlayer> watcher : player->getWatchers())
+            watcher->sendPacket(packet);
+        setDead();
+    }
 }
 
 std::shared_ptr<ItemStack> EntityItem::getItem() {
