@@ -18,6 +18,7 @@ void NBTTagCompound::write(ubyte_t *&data, bool header) {
     NBTTag::write(data, header);
     for (auto child : children)
         child.second->write(data, true);
+    *(data++) = Type::END;
 }
 
 void NBTTagCompound::print(int tab, bool header) {

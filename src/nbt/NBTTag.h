@@ -34,7 +34,7 @@ public:
 
     virtual ~NBTTag();
 
-    static std::shared_ptr<NBTTagCompound> read(ubyte_t*&);
+    static std::shared_ptr<NBTTag> read(ubyte_t*&);
 
     void write(ubyte_t*&);
 

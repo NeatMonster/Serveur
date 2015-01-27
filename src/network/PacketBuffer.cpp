@@ -119,7 +119,7 @@ void PacketBuffer::getNBT(std::shared_ptr<NBTTagCompound> &tag) {
     byte_t nbt;
     getByte(nbt);
     if (nbt != 0) {
-        tag = NBTTag::read(data);
+        tag = NBTTag::read(data)->asCompound();
         position = data - buffer.data();
     }
 }

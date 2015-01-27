@@ -46,8 +46,7 @@ bool Region::getChunk(std::shared_ptr<Chunk> chunk) {
     file.read((char*) data.data(), length);
     ubyte_t *plain = Compression::inflateZlib(data.data() + 1, length).first;
     ubyte_t *copy = (ubyte_t*) plain;
-    std::shared_ptr<NBTTagCompound> root = NBTTag::read(copy);
-    std::shared_ptr<NBTTagCompound> level = root->get("Level")->asCompound();
+    std::shared_ptr<NBTTagCompound> level = NBTTag::read(copy)->asCompound()->get("Level")->asCompound();
     level->get("HeightMap")->asIntArray()->get(chunk->heightMap);
     for (std::shared_ptr<NBTTag> sectionTag : *level->get("Sections")->asList()) {
         std::shared_ptr<NBTTagCompound> sectionCmpd = sectionTag->asCompound();

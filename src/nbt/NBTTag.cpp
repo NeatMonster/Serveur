@@ -20,9 +20,9 @@ NBTTag::NBTTag(NBTTag *tag) : type(tag->type), name(tag->name) {}
 
 NBTTag::~NBTTag() {}
 
-std::shared_ptr<NBTTagCompound> NBTTag::read(ubyte_t *&data) {
+std::shared_ptr<NBTTag> NBTTag::read(ubyte_t *&data) {
     Type type = (Type) *(data++);
-    return std::dynamic_pointer_cast<NBTTagCompound>(NBTTag::read(data, type, true));
+    return NBTTag::read(data, type, true);
 }
 
 void NBTTag::write(ubyte_t *&data) {
