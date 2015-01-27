@@ -1,7 +1,6 @@
 #ifndef __Serveur__Item__
 #define __Serveur__Item__
 
-#include "CreativeTabs.h"
 #include "Types.h"
 
 #include <unordered_map>
@@ -224,12 +223,8 @@ private:
 
     int_t maxDamage;
 
-    CreativeTabs* tabToDisplayOn;
-
 protected:
     Item* setMaxDamage(int_t);
-
-    Item* setCreativeTab(CreativeTabs*);
 
     int_t maxStackSize = 64;
 };

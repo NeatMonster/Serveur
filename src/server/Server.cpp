@@ -75,7 +75,6 @@ Server::Server(ushort_t port) : running(true), ticks(0) {
     instance = this;
     Logger() << "Démarrage du serveur version 1.8.1" << std::endl;
     Block::registerBlocks();
-    CreativeTabs::registerTabs();
     Item::registerItems();
     commands = new CommandManager();
     database = new Database();
@@ -91,7 +90,6 @@ Server::Server(ushort_t port) : running(true), ticks(0) {
 
 Server::~Server() {
     Item::deregisterItems();
-    CreativeTabs::deregisterTabs();
     Block::deregisterBlocks();
     delete commands;
     delete database;
