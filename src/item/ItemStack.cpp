@@ -1,32 +1,38 @@
 #include "ItemStack.h"
 
-ItemStack::ItemStack(short_t type) : ItemStack(type, 0, 0) {}
+ItemStack::ItemStack(Item *item) : ItemStack(item, 0, 0) {}
 
-ItemStack::ItemStack(short_t type, byte_t amount) : ItemStack(type, amount, 0) {}
+ItemStack::ItemStack(Item *item, byte_t count) : ItemStack(item, count, 0) {}
 
-ItemStack::ItemStack(short_t type, byte_t amount, short_t damage) : type(type), amount(amount), damage(damage), nbt(nullptr) {}
+ItemStack::ItemStack(Item *item, byte_t count, short_t damage) : item(item), count(count), damage(damage), tag(nullptr) {}
 
-ItemStack::ItemStack(ItemStack *stack) : type(stack->type), amount(stack->amount), damage(stack->damage) {
-    if (stack->nbt == nullptr)
-        nbt = std::shared_ptr<NBTTagCompound>();
+ItemStack::ItemStack(Block *block) : ItemStack(block, 0, 0) {}
+
+ItemStack::ItemStack(Block *block, byte_t count) : ItemStack(block, count, 0) {}
+
+ItemStack::ItemStack(Block *block, byte_t count, short_t damage) : item(Item::getItem(block)), count(count), damage(damage), tag(nullptr) {}
+
+ItemStack::ItemStack(ItemStack *stack) : item(stack->item), count(stack->count), damage(stack->damage) {
+    if (stack->tag == nullptr)
+        tag = nullptr;
     else
-        nbt = std::dynamic_pointer_cast<NBTTagCompound>(stack->nbt->clone());
+        tag = std::dynamic_pointer_cast<NBTTagCompound>(stack->tag->clone());
 }
 
-short_t ItemStack::getType() {
-    return type;
+Item *ItemStack::getItem() {
+    return item;
 }
 
-void ItemStack::setType(short_t type) {
-    this->type = type;
+void ItemStack::setItem(Item *item) {
+    this->item = item;
 }
 
-byte_t ItemStack::getAmount() {
-    return amount;
+byte_t ItemStack::getCount() {
+    return count;
 }
 
-void ItemStack::setAmount(byte_t amount) {
-    this->amount = amount;
+void ItemStack::setCount(byte_t count) {
+    this->count = count;
 }
 
 short_t ItemStack::getDamage() {
@@ -37,8 +43,16 @@ void ItemStack::setDamage(short_t damage) {
     this->damage = damage;
 }
 
-std::shared_ptr<NBTTagCompound> ItemStack::getNBT() {
-    return nbt;
+std::shared_ptr<NBTTagCompound> ItemStack::getTag() {
+    return tag == nullptr ? nullptr : std::dynamic_pointer_cast<NBTTagCompound>(tag->clone());
+}
+
+void ItemStack::setTag(std::shared_ptr<NBTTagCompound> tag) {
+    this->tag = std::dynamic_pointer_cast<NBTTagCompound>(tag->clone());
+}
+
+bool ItemStack::isStackable() {
+    return getItem()->getMaxStackSize() > 1 && damage == 0;
 }
 
 std::shared_ptr<ItemStack> ItemStack::clone() {

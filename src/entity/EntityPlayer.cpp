@@ -22,7 +22,7 @@
 #include <cmath>
 
 EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect),
-        gameMode(CREATIVE) {
+        inventory(InventoryPlayer(this)), gameMode(CREATIVE) {
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
     setSize(0.6, 1.8);

@@ -58,4 +58,4 @@ private:
     std::set<Block*> effectiveBlocks;
 };
 
-#endif // __Serveur__ItemTool__
+#endif /* defined(__Serveur__ItemTool__) */

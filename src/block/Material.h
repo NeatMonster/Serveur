@@ -1,7 +1,7 @@
 #ifndef __Serveur__Material__
 #define __Serveur__Material__
 
-#include <vector>
+#include "Types.h"
 
 class Material {
 public:
@@ -45,34 +45,29 @@ public:
 
     static void deregisterMaterials();
 
-    Material(); //TODO Ajouter la MapColor (pas prioritaire)
-
-private:
-    bool canBurn;
-    bool replaceable;
-    bool isTranslucent;
-    bool requiresNoTool = true;
-    bool isAdventureModeExempt;
-    int mobilityFlag;
-
-    static std::vector<Material*> materialList;
+    Material();
 
 protected:
     Material* setBurning();
-    Material* setReplaceable();
-    Material* setTranslucent();
-    Material* setRequiresTool();
-    Material* setNoPushMobility();
-    Material* setImmovableMobility();
-    Material* setAdventureModeExempt();
 
-public:
-    bool getCanBurn();
-    bool isReplaceable();
-    bool isOpaque();
-    bool blocksMovement();
-    bool blocksLight();
-    int getMaterialMobility();
+    Material* setReplaceable();
+
+    Material* setTranslucent();
+
+    Material* setRequiresTool();
+
+    Material* setNoPushMobility();
+
+    Material* setImmovableMobility();
+
+private:
+    bool burning;
+    bool replaceable;
+    bool translucent;
+    int mobility;
+    bool requiresNoTool = true;
+
+    static std::vector<Material*> materials;
 };
 
-#endif // __Serveur__Material__
+#endif /* defined(__Serveur__BlockAir__) */

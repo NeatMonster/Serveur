@@ -137,7 +137,7 @@ void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction 
     if (packet->slot == -1)
         connect->player.lock()->drop(packet->stack);
     else
-        connect->player.lock()->getInventory().putStack(packet->slot, packet->stack);
+        connect->player.lock()->getInventory().putItemStack(packet->slot, packet->stack);
 }
 
 void PacketHandler::handleRotation(float_t yaw, float_t pitch) {

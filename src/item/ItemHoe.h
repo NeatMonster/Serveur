@@ -12,4 +12,4 @@ class ItemHoe : public Item
         ItemTool::ToolMaterial toolMaterial;
 };
 
-#endif // __Serveur__ItemHoe__
+#endif /* defined(__Serveur__ItemHoe__) */

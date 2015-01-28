@@ -33,7 +33,7 @@ int_t ItemTool::ToolMaterial::getEnchantability() {
 
 ItemTool::ItemTool(float_t damageVsEntity, ToolMaterial material, std::set<Block*> effectiveBlocks) :
                    toolMaterial(material), effectiveBlocks(effectiveBlocks) {
-    maxStackSize = 1;
+    setMaxStackSize(1);
     setMaxDamage(material.getMaxUses());
     this->damageVsEntity = damageVsEntity + material.getDamageVsEntity();
     efficiency = material.getEfficiency();

@@ -1,5 +1,7 @@
 #include "PacketBuffer.h"
 
+#include "Item.h"
+
 #include <arpa/inet.h>
 #include <cstring>
 
@@ -100,21 +102,21 @@ void PacketBuffer::getString(string_t &s) {
     s = string_t((char*) bs.data(), size);
 }
 
-void PacketBuffer::getItemStack(std::shared_ptr<ItemStack> &item) {
-    item = nullptr;
+void PacketBuffer::getItemStack(std::shared_ptr<ItemStack> &stack) {
+    stack = nullptr;
     short_t type;
     getShort(type);
     if (type >= 0) {
-        byte_t amount;
-        getByte(amount);
+        byte_t count;
+        getByte(count);
         short_t damage;
         getShort(damage);
-        item = std::make_shared<ItemStack>(type, amount, damage);
-        getNBT(item->nbt);
+        stack = std::make_shared<ItemStack>(Item::getItem(type), count, damage);
+        getTag(stack->tag);
     }
 }
 
-void PacketBuffer::getNBT(std::shared_ptr<NBTTagCompound> &tag) {
+void PacketBuffer::getTag(std::shared_ptr<NBTTagCompound> &tag) {
     ubyte_t *data = buffer.data() + position;
     byte_t nbt;
     getByte(nbt);
@@ -215,18 +217,18 @@ void PacketBuffer::putString(string_t s) {
     putUBytes(ubytes_t(s.begin(), s.end()));
 }
 
-void PacketBuffer::putItemStack(std::shared_ptr<ItemStack> item) {
-    if (item == nullptr)
+void PacketBuffer::putItemStack(std::shared_ptr<ItemStack> stack) {
+    if (stack == nullptr)
         putShort(-1);
     else {
-        putShort(item->getType());
-        putByte(item->getAmount());
-        putShort(item->getDamage());
-        putNBT(item->nbt);
+        putShort(Item::getItemType(stack->getItem()));
+        putByte(stack->getCount());
+        putShort(stack->getDamage());
+        putTag(stack->getTag());
     }
 }
 
-void PacketBuffer::putNBT(std::shared_ptr<NBTTagCompound> tag) {
+void PacketBuffer::putTag(std::shared_ptr<NBTTagCompound> tag) {
     if (tag == nullptr)
         putByte(0);
     else {

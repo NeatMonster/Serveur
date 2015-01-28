@@ -12,7 +12,8 @@ EntityItem::EntityItem(World *world, std::shared_ptr<ItemStack> stack) : Entity(
 }
 
 void EntityItem::onCollision(std::shared_ptr<EntityPlayer> player) {
-    if (pickupDelay == 0) { // TODO Ajouter l'item à l'inventaire
+    std::shared_ptr<ItemStack> stack = getItem();
+    if (pickupDelay == 0 && player->getInventory().addItemStack(stack)) {
         world->playSound(posX, posY, posZ, "random.pop", 0.2, ((MathUtils::random_f() - MathUtils::random_f()) * 0.7 + 1) * 2);
         std::shared_ptr<PacketCollectItem> packet = std::make_shared<PacketCollectItem>();
         packet->collectedId = entityId;
@@ -20,7 +21,9 @@ void EntityItem::onCollision(std::shared_ptr<EntityPlayer> player) {
         player->sendPacket(packet);
         for (std::shared_ptr<EntityPlayer> watcher : player->getWatchers())
             watcher->sendPacket(packet);
-        setDead();
+        setItem(stack);
+        if (stack->getCount() <= 0)
+            setDead();
     }
 }
 
@@ -71,15 +74,15 @@ bool EntityItem::combineItems(std::shared_ptr<EntityItem> other) {
     if (other.get() == this || isDead() || other->isDead()
         || pickupDelay == 32767 || other->pickupDelay == 32767
         || ticks == -32768 || other->ticks == -32768
-        || stack->getType() != otherStack->getType()
-        || stack->getAmount() + stack->getAmount() > Item::getItem(stack->getType())->getMaxStackSize()
+        || stack->getItem() != otherStack->getItem()
+        || stack->getCount() + stack->getCount() > stack->getItem()->getMaxStackSize()
         || stack->getDamage() != otherStack->getDamage()
-        || stack->getNBT() != nullptr ^ otherStack->getNBT() != nullptr
-        || (stack->getNBT() != nullptr && !stack->getNBT()->equals(otherStack->getNBT())))
+        || stack->getTag() != nullptr ^ otherStack->getTag() != nullptr
+        || (stack->getTag() != nullptr && !stack->getTag()->equals(otherStack->getTag())))
         return false;
-    if (stack->getAmount() > otherStack->getAmount())
+    if (stack->getCount() > otherStack->getCount())
         return other->combineItems(std::dynamic_pointer_cast<EntityItem>(shared_from_this()));
-    otherStack->setAmount(otherStack->getAmount() + stack->getAmount());
+    otherStack->setCount(otherStack->getCount() + stack->getCount());
     other->setItem(otherStack);
     other->pickupDelay = MathUtils::max(other->pickupDelay, pickupDelay);
     other->ticks = MathUtils::min(other->ticks, ticks);

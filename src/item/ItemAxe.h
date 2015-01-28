@@ -16,4 +16,4 @@ class ItemAxe : public ItemTool
         static const std::set<Block*> effectiveBlocks;
 };
 
-#endif // __Serveur__ItemAxe__
+#endif /* defined(__Serveur__ItemAxe__) */

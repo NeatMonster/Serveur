@@ -94,7 +94,7 @@ public:
     static Block* clay;
     static Block* reeds;
     static Block* jukebox;
-    static Block* fence;
+    static Block* oak_fence;
     static Block* pumpkin;
     static Block* netherrack;
     static Block* soul_sand;
@@ -116,7 +116,7 @@ public:
     static Block* pumpkin_stem;
     static Block* melon_stem;
     static Block* vine;
-    static Block* fence_gate;
+    static Block* oak_fence_gate;
     static Block* brick_stairs;
     static Block* stone_brick_stairs;
     static Block* mycelium;
@@ -174,12 +174,12 @@ public:
     static Block* log2;
     static Block* acacia_stairs;
     static Block* dark_oak_stairs;
-    static Block* slime;
+    static Block* slime_block;
     static Block* barrier;
     static Block* iron_trapdoor;
     static Block* prismarine;
     static Block* sea_lantern;
-    static Block* hay_bale;
+    static Block* hay_block;
     static Block* carpet;
     static Block* hardened_clay;
     static Block* coal_block;
@@ -218,39 +218,33 @@ public:
 
     static Block *getBlock(string_t);
 
-    static ubyte_t getBlockId(string_t);
+    static ubyte_t getBlockType(Block*);
+
+    static ubyte_t getBlockType(string_t);
+
+    static string_t getBlockName(Block*);
 
     static string_t getBlockName(ubyte_t);
 
-    /*
-
-    A propos des constructeurs :
-    Seul le constructeur Block(Material) est accepté.
-    Cependant, étant donné que l'initialisation des blocks ne pourra se faire correctement
-    que lorsque toutes les classes de Block auront été implémentées (ce qui va prendre du temps),
-    je laisse ici ce constructeur Block(). Il devra être remplacé soit par Block(Material),
-    soit par les constructeurs spécifiques des blocks qui ont une classe spécifique.
-    Si vous ne comprenez pas, go sur le repo avec le code du NMS dans la classe Block.
-
-    */
     Block();
 
     Block(Material*);
 
-    AxisAlignedBB getBoundingBox();
-
     Material* getMaterial();
 
+    AxisAlignedBB getBoundingBox();
+
 private:
-    static std::unordered_map<ubyte_t, string_t> idToName;
-    static std::unordered_map<ubyte_t, Block*> idToBlock;
-    static std::unordered_map<string_t, ubyte_t> nameToId;
+    static std::unordered_map<ubyte_t, Block*> typeToBlock;
     static std::unordered_map<string_t, Block*> nameToBlock;
+    static std::unordered_map<Block*, ubyte_t> blockToType;
+    static std::unordered_map<string_t, ubyte_t> nameToType;
+    static std::unordered_map<Block*, string_t> blockToName;
+    static std::unordered_map<ubyte_t, string_t> typeToName;
 
 protected:
+    Material *material;
     AxisAlignedBB boundingBox;
-
-    Material* blockMaterial;
 };
 
 #endif /* defined(__Serveur__Block__) */

@@ -1,10 +1,11 @@
 #ifndef __Serveur__Item__
 #define __Serveur__Item__
 
-#include "CreativeTabs.h"
 #include "Types.h"
 
 #include <unordered_map>
+
+class Block;
 
 class Item {
 public:
@@ -198,15 +199,23 @@ public:
 
     static void registerItem(ushort_t, string_t, Item*);
 
+    static void registerItemBlock(Block*);
+
     static void registerItems();
 
     static void deregisterItems();
+
+    static Item *getItem(Block*);
 
     static Item *getItem(ushort_t);
 
     static Item *getItem(string_t);
 
-    static ushort_t getItemId(string_t);
+    static ushort_t getItemType(Item*);
+
+    static ushort_t getItemType(string_t);
+
+    static string_t getItemName(Item*);
 
     static string_t getItemName(ushort_t);
 
@@ -217,21 +226,21 @@ public:
     int_t getMaxStackSize();
 
 private:
-    static std::unordered_map<ushort_t, string_t> idToName;
-    static std::unordered_map<ushort_t, Item*> idToItem;
-    static std::unordered_map<string_t, ushort_t> nameToId;
+    static std::unordered_map<Block*, Item*> blockToItem;
+    static std::unordered_map<ubyte_t, Item*> typeToItem;
     static std::unordered_map<string_t, Item*> nameToItem;
+    static std::unordered_map<Item*, ubyte_t> itemToType;
+    static std::unordered_map<string_t, ubyte_t> nameToType;
+    static std::unordered_map<Item*, string_t> itemToName;
+    static std::unordered_map<ubyte_t, string_t> typeToName;
 
-    int_t maxDamage;
-
-    CreativeTabs* tabToDisplayOn;
+    int_t maxDamage = 0;
+    int_t maxStackSize = 64;
 
 protected:
     Item* setMaxDamage(int_t);
 
-    Item* setCreativeTab(CreativeTabs*);
-
-    int_t maxStackSize = 64;
+    Item* setMaxStackSize(int_t);
 };
 
 #endif /* defined(__Serveur__Item__) */

@@ -14,4 +14,4 @@ class ItemSpade : public ItemTool
         static const std::set<Block*> effectiveBlocks;
 };
 
-#endif // __Serveur__ItemSpade__
+#endif /* defined(__Serveur__ItemSpade_) */

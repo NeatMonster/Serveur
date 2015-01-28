@@ -36,57 +36,53 @@ Material* Material::web;
 Material* Material::piston;
 Material* Material::barrier;
 
-std::vector<Material*> Material::materialList;
-
 void Material::registerMaterials() {
-    materialList.push_back(air = new Material());
-    materialList.push_back(grass = new Material());
-    materialList.push_back(ground = new Material());
-    materialList.push_back(wood = (new Material())->setBurning());
-    materialList.push_back(rock = (new Material())->setRequiresTool());
-    materialList.push_back(iron = (new Material())->setRequiresTool());
-    materialList.push_back(anvil = (new Material())->setRequiresTool()->setImmovableMobility());
-    materialList.push_back(water = (new Material())->setNoPushMobility());
-    materialList.push_back(lava = (new Material())->setNoPushMobility());
-    materialList.push_back(leaves = (new Material())->setBurning()->setTranslucent()->setNoPushMobility());
-    materialList.push_back(plants = (new Material())->setNoPushMobility());
-    materialList.push_back(vine = (new Material())->setBurning()->setNoPushMobility()->setReplaceable());
-    materialList.push_back(sponge = new Material());
-    materialList.push_back(cloth = (new Material())->setBurning());
-    materialList.push_back(fire = (new Material())->setNoPushMobility());
-    materialList.push_back(sand = new Material());
-    materialList.push_back(circuits = (new Material())->setNoPushMobility());
-    materialList.push_back(carpet = (new Material())->setBurning());
-    materialList.push_back(glass = (new Material())->setTranslucent()->setAdventureModeExempt());
-    materialList.push_back(redstoneLight = (new Material())->setAdventureModeExempt());
-    materialList.push_back(tnt = (new Material())->setBurning()->setTranslucent());
-    materialList.push_back(coral = (new Material())->setNoPushMobility());
-    materialList.push_back(ice = (new Material())->setTranslucent()->setAdventureModeExempt());
-    materialList.push_back(packedIce = (new Material())->setAdventureModeExempt());
-    materialList.push_back(snow = (new Material())->setReplaceable()->setTranslucent()->setRequiresTool()->setNoPushMobility());
-    materialList.push_back(craftedSnow = (new Material())->setRequiresTool());
-    materialList.push_back(cactus = (new Material())->setTranslucent()->setNoPushMobility());
-    materialList.push_back(clay = new Material());
-    materialList.push_back(gourd = (new Material())->setNoPushMobility());
-    materialList.push_back(dragonEgg = (new Material())->setNoPushMobility());
-    materialList.push_back(portal = (new Material())->setImmovableMobility());
-    materialList.push_back(cake = (new Material())->setNoPushMobility());
-    materialList.push_back(web = new Material());
-    materialList.push_back(piston = (new Material())->setImmovableMobility());
-    materialList.push_back(barrier = (new Material())->setRequiresTool()->setImmovableMobility());
+    materials.push_back(air = new Material());
+    materials.push_back(grass = new Material());
+    materials.push_back(ground = new Material());
+    materials.push_back(wood = (new Material())->setBurning());
+    materials.push_back(rock = (new Material())->setRequiresTool());
+    materials.push_back(iron = (new Material())->setRequiresTool());
+    materials.push_back(anvil = (new Material())->setRequiresTool()->setImmovableMobility());
+    materials.push_back(water = (new Material())->setNoPushMobility());
+    materials.push_back(lava = (new Material())->setNoPushMobility());
+    materials.push_back(leaves = (new Material())->setBurning()->setTranslucent()->setNoPushMobility());
+    materials.push_back(plants = (new Material())->setNoPushMobility());
+    materials.push_back(vine = (new Material())->setBurning()->setNoPushMobility()->setReplaceable());
+    materials.push_back(sponge = new Material());
+    materials.push_back(cloth = (new Material())->setBurning());
+    materials.push_back(fire = (new Material())->setNoPushMobility());
+    materials.push_back(sand = new Material());
+    materials.push_back(circuits = (new Material())->setNoPushMobility());
+    materials.push_back(carpet = (new Material())->setBurning());
+    materials.push_back(glass = (new Material())->setTranslucent());
+    materials.push_back(redstoneLight = new Material());
+    materials.push_back(tnt = (new Material())->setBurning()->setTranslucent());
+    materials.push_back(coral = (new Material())->setNoPushMobility());
+    materials.push_back(ice = (new Material())->setTranslucent());
+    materials.push_back(packedIce = new Material());
+    materials.push_back(snow = (new Material())->setReplaceable()->setTranslucent()->setRequiresTool()->setNoPushMobility());
+    materials.push_back(craftedSnow = (new Material())->setRequiresTool());
+    materials.push_back(cactus = (new Material())->setTranslucent()->setNoPushMobility());
+    materials.push_back(clay = new Material());
+    materials.push_back(gourd = (new Material())->setNoPushMobility());
+    materials.push_back(dragonEgg = (new Material())->setNoPushMobility());
+    materials.push_back(portal = (new Material())->setImmovableMobility());
+    materials.push_back(cake = (new Material())->setNoPushMobility());
+    materials.push_back(web = new Material());
+    materials.push_back(piston = (new Material())->setImmovableMobility());
+    materials.push_back(barrier = (new Material())->setRequiresTool()->setImmovableMobility());
 }
 
 void Material::deregisterMaterials() {
-    for (Material* material : materialList)
+    for (Material *material : materials)
         delete material;
 }
 
-Material::Material() {
-    //Implémenter le mapcolor par la suite
-}
+Material::Material() {}
 
 Material* Material::setBurning() {
-    canBurn = true;
+    burning = true;
     return this;
 }
 
@@ -96,7 +92,7 @@ Material* Material::setReplaceable() {
 }
 
 Material* Material::setTranslucent() {
-    isTranslucent = true;
+    translucent = true;
     return this;
 }
 
@@ -106,40 +102,13 @@ Material* Material::setRequiresTool() {
 }
 
 Material* Material::setNoPushMobility() {
-    mobilityFlag = 1;
+    mobility = 1;
     return this;
 }
 
 Material* Material::setImmovableMobility() {
-    mobilityFlag = 2;
+    mobility = 2;
     return this;
 }
 
-Material* Material::setAdventureModeExempt() {
-    isAdventureModeExempt = true;
-    return this;
-}
-
-bool Material::blocksLight() {
-    return true;
-}
-
-bool Material::blocksMovement() {
-    return true;
-}
-
-bool Material::isReplaceable() {
-    return replaceable;
-}
-
-bool Material::isOpaque() {
-    return isTranslucent ? false : blocksMovement();
-}
-
-bool Material::getCanBurn() {
-    return canBurn;
-}
-
-int Material::getMaterialMobility() {
-    return mobilityFlag;
-}
+std::vector<Material*> Material::materials;

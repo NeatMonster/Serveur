@@ -15,4 +15,4 @@ private:
     static const std::set<Block*> effectiveBlocks;
 };
 
-#endif // __Serveur__ItemPickaxe__
+#endif /* defined(__Serveur__ItemPickaxe__) */

@@ -87,7 +87,7 @@ Block* Block::cactus;
 Block* Block::clay;
 Block* Block::reeds;
 Block* Block::jukebox;
-Block* Block::fence;
+Block* Block::oak_fence;
 Block* Block::pumpkin;
 Block* Block::netherrack;
 Block* Block::soul_sand;
@@ -109,7 +109,7 @@ Block* Block::melon_block;
 Block* Block::pumpkin_stem;
 Block* Block::melon_stem;
 Block* Block::vine;
-Block* Block::fence_gate;
+Block* Block::oak_fence_gate;
 Block* Block::brick_stairs;
 Block* Block::stone_brick_stairs;
 Block* Block::mycelium;
@@ -167,12 +167,12 @@ Block* Block::leaves2;
 Block* Block::log2;
 Block* Block::acacia_stairs;
 Block* Block::dark_oak_stairs;
-Block* Block::slime;
+Block* Block::slime_block;
 Block* Block::barrier;
 Block* Block::iron_trapdoor;
 Block* Block::prismarine;
 Block* Block::sea_lantern;
-Block* Block::hay_bale;
+Block* Block::hay_block;
 Block* Block::carpet;
 Block* Block::hardened_clay;
 Block* Block::coal_block;
@@ -201,11 +201,13 @@ Block* Block::jungle_door;
 Block* Block::acacia_door;
 Block* Block::dark_oak_door;
 
-void Block::registerBlock(ubyte_t id, string_t name, Block *block) {
-    idToName[id] = name;
-    idToBlock[id] = block;
-    nameToId[name] = id;
+void Block::registerBlock(ubyte_t type, string_t name, Block *block) {
+    typeToBlock[type] = block;
     nameToBlock[name] = block;
+    blockToType[block] = type;
+    nameToType[name] = type;
+    blockToName[block] = name;
+    typeToName[type] = name;
 }
 
 void Block::registerBlocks() {
@@ -295,7 +297,7 @@ void Block::registerBlocks() {
     registerBlock(82, "clay", clay = new Block());
     registerBlock(83, "reeds", reeds = new Block());
     registerBlock(84, "jukebox", jukebox = new Block());
-    registerBlock(85, "fence", fence = new Block());
+    registerBlock(85, "fence", oak_fence = new Block());
     registerBlock(86, "pumpkin", pumpkin = new Block());
     registerBlock(87, "netherrack", netherrack = new Block());
     registerBlock(88, "soul_sand", soul_sand = new Block());
@@ -317,7 +319,7 @@ void Block::registerBlocks() {
     registerBlock(104, "pumpkin_stem", pumpkin_stem = new Block());
     registerBlock(105, "melon_stem", melon_stem = new Block());
     registerBlock(106, "vine", vine = new Block());
-    registerBlock(107, "fence_gate", fence_gate = new Block());
+    registerBlock(107, "fence_gate", oak_fence_gate = new Block());
     registerBlock(108, "brick_stairs", brick_stairs = new Block());
     registerBlock(109, "stone_brick_stairs", stone_brick_stairs = new Block());
     registerBlock(110, "mycelium", mycelium = new Block());
@@ -375,12 +377,12 @@ void Block::registerBlocks() {
     registerBlock(162, "log2", log2 = new Block());
     registerBlock(163, "acacia_stairs", acacia_stairs = new Block());
     registerBlock(164, "dark_oak_stairs", dark_oak_stairs = new Block());
-    registerBlock(165, "slime", slime = new Block());
+    registerBlock(165, "slime", slime_block = new Block());
     registerBlock(166, "barrier", barrier = new Block());
     registerBlock(167, "iron_trapdoor", iron_trapdoor = new Block());
     registerBlock(168, "prismarine", prismarine = new Block());
     registerBlock(169, "sea_lantern", sea_lantern = new Block());
-    registerBlock(170, "hay_bale", hay_bale = new Block());
+    registerBlock(170, "hay_block", hay_block = new Block());
     registerBlock(171, "carpet", carpet = new Block());
     registerBlock(172, "hardened_clay", hardened_clay = new Block());
     registerBlock(173, "coal_block", coal_block = new Block(Material::rock));
@@ -417,40 +419,45 @@ void Block::deregisterBlocks() {
     Material::deregisterMaterials();
 }
 
-Block *Block::getBlock(ubyte_t id) {
-    return idToBlock[id];
+Block *Block::getBlock(ubyte_t type) {
+    return typeToBlock[type];
 }
 
 Block *Block::getBlock(string_t name) {
     return nameToBlock[name];
 }
 
-ubyte_t Block::getBlockId(string_t name) {
-    return nameToId[name];
+ubyte_t Block::getBlockType(Block *block) {
+    return blockToType[block];
 }
 
-string_t Block::getBlockName(ubyte_t id) {
-    return idToName[id];
+ubyte_t Block::getBlockType(string_t name) {
+    return nameToType[name];
 }
 
-Material* Block::getMaterial() {
-    return blockMaterial;
+string_t Block::getBlockName(Block *block) {
+    return blockToName[block];
 }
 
-Block::Block() : boundingBox({0, 0, 0, 1, 1, 1}), blockMaterial(Material::air) {}
+string_t Block::getBlockName(ubyte_t type) {
+    return typeToName[type];
+}
 
-Block::Block(Material* materialIn) : boundingBox({0, 0, 0, 1, 1, 1}) {
-    if(materialIn != nullptr)
-        blockMaterial = materialIn;
-    else
-        blockMaterial = Material::air;
+Block::Block() : Block(Material::rock) {}
+
+Block::Block(Material *material) : material(material), boundingBox({0, 0, 0, 1, 1, 1}) {}
+
+Material *Block::getMaterial() {
+    return material;
 }
 
 AxisAlignedBB Block::getBoundingBox() {
     return boundingBox;
 }
 
-std::unordered_map<ubyte_t, string_t> Block::idToName;
-std::unordered_map<ubyte_t, Block*> Block::idToBlock;
-std::unordered_map<string_t, ubyte_t> Block::nameToId;
+std::unordered_map<ubyte_t, Block*> Block::typeToBlock;
 std::unordered_map<string_t, Block*> Block::nameToBlock;
+std::unordered_map<Block*, ubyte_t> Block::blockToType;
+std::unordered_map<string_t, ubyte_t> Block::nameToType;
+std::unordered_map<Block*, string_t> Block::blockToName;
+std::unordered_map<ubyte_t, string_t> Block::typeToName;
