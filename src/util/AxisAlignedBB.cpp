@@ -81,7 +81,8 @@ AxisAlignedBB &AxisAlignedBB::expand(double_t x, double_t y, double_t z) {
 }
 
 bool AxisAlignedBB::intersects(AxisAlignedBB other) {
-    return other.maxX > minX && other.minX < maxX && other.maxY > minY
+    return minX != maxX && minY != maxY && minZ != maxZ
+        && other.maxX > minX && other.minX < maxX && other.maxY > minY
         && other.minY < maxY && other.maxZ > minZ && other.minZ < maxZ;
 }
 

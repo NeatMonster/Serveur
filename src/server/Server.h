@@ -9,6 +9,7 @@
 #include "Types.h"
 
 #include <unordered_set>
+#include <set>
 
 class Player;
 class World;
@@ -27,17 +28,13 @@ public:
 
     static EntityPlayer *getPlayer(string_t);
 
-    static const std::unordered_set<EntityPlayer*> &getPlayers();
+    static std::set<EntityPlayer*> getPlayers();
 
     Server(ushort_t);
 
     virtual ~Server();
 
     void stop();
-
-    void addPlayer(EntityPlayer*);
-
-    void removePlayer(EntityPlayer*);
 
     string_t getName();
 
@@ -53,7 +50,6 @@ private:
     bool running;
     long_t ticks;
     World *world;
-    std::unordered_set<EntityPlayer*> players;
 
     void run();
 };

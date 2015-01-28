@@ -16,12 +16,14 @@ void EntityLiving::jump() {}
 
 void EntityLiving::onTick() {
     Entity::onTick();
+    if (ticks % getUpdateFrequency() > 0)
+        return;
     int_t headYaw = (int_t) MathUtils::floor_f(this->headYaw / 360. * 256.);
     if (headYaw != lastHeadYaw) {
         std::shared_ptr<PacketEntityHeadLook> packet = std::make_shared<PacketEntityHeadLook>();
         packet->entityId = entityId;
         packet->headYaw = headYaw;
-        for (std::shared_ptr<EntityPlayer> watcher : getWatchers())
+        for (EntityPlayer *watcher : getWatchers())
             watcher->sendPacket(packet);
     }
     lastHeadYaw = headYaw;

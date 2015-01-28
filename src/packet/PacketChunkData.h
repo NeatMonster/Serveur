@@ -6,7 +6,7 @@
 
 class PacketChunkData : public ServerPacket {
 public:
-    PacketChunkData(std::shared_ptr<Chunk>, bool);
+    PacketChunkData(Chunk*, bool);
 
     ~PacketChunkData();
 

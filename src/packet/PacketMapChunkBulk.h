@@ -8,7 +8,7 @@
 
 class PacketMapChunkBulk : public ServerPacket {
 public:
-    PacketMapChunkBulk(std::vector<std::shared_ptr<Chunk>>);
+    PacketMapChunkBulk(std::vector<Chunk*>);
 
     ~PacketMapChunkBulk();
 

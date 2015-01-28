@@ -34,7 +34,7 @@ Region::~Region() {
     file.close();
 }
 
-bool Region::getChunk(std::shared_ptr<Chunk> chunk) {
+bool Region::getChunk(Chunk *chunk) {
     int_t offset = locations[MathUtils::mod(chunk->getX(), 32) + 32 * MathUtils::mod(chunk->getZ(), 32)] >> 8;
     if (offset == 0)
         return false;

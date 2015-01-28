@@ -5,7 +5,7 @@
 #include "DataWatcher.h"
 #include "Types.h"
 
-#include <unordered_set>
+#include <set>
 
 class Chunk;
 class EntityPlayer;
@@ -34,11 +34,11 @@ public:
 
     bool isDead();
 
-    void setDead();
+    virtual void setDead();
 
     World *getWorld();
 
-    std::shared_ptr<Chunk> getChunk();
+    Chunk *getChunk();
 
     double_t getX();
 
@@ -60,7 +60,7 @@ public:
 
     DataWatcher &getDataWatcher();
 
-    double_t getDistance(std::shared_ptr<Entity>);
+    double_t getDistance(Entity*);
 
     void move(double_t, double_t, double_t);
 
@@ -72,13 +72,13 @@ public:
 
     bool pushOutOfBlocks(double_t, double_t, double_t);
 
-    std::unordered_set<std::shared_ptr<EntityPlayer>> getWatchers();
+    std::set<EntityPlayer*> getWatchers();
 
     virtual std::shared_ptr<ServerPacket> getSpawnPacket() = 0;
 
-    virtual void onChunk(std::shared_ptr<Chunk>, std::shared_ptr<Chunk>);
+    virtual void onChunk(Chunk*, Chunk*);
 
-    virtual void onCollision(std::shared_ptr<EntityPlayer>);
+    virtual void onCollision(EntityPlayer*);
 
     virtual void onTick();
 

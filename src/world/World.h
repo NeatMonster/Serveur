@@ -8,6 +8,7 @@
 #include <functional>
 #include <unordered_set>
 #include <unordered_map>
+#include <set>
 #include <vector>
 
 class Block;
@@ -26,29 +27,29 @@ public:
 
     string_t getName();
 
-    const std::unordered_set<std::shared_ptr<Entity>> &getEntities();
+    std::set<Entity*> getEntities();
 
-    void addEntity(std::shared_ptr<Entity>);
+    void addEntity(varint_t, std::shared_ptr<Entity>);
 
-    void removeEntity(std::shared_ptr<Entity>);
+    std::shared_ptr<Entity> removeEntity(varint_t);
 
-    const std::unordered_set<std::shared_ptr<EntityPlayer>> &getPlayers();
+    std::set<EntityPlayer*> getPlayers();
 
-    void addPlayer(std::shared_ptr<EntityPlayer>);
+    void addPlayer(varint_t, std::shared_ptr<EntityPlayer>);
 
-    void removePlayer(std::shared_ptr<EntityPlayer>);
+    std::shared_ptr<EntityPlayer> removePlayer(varint_t);
 
-    std::shared_ptr<Region> getRegion(int_t, int_t);
+    Region *getRegion(int_t, int_t);
 
-    std::shared_ptr<Region> loadRegion(int_t, int_t);
+    Region *loadRegion(int_t, int_t);
 
-    std::shared_ptr<Chunk> getChunk(int_t, int_t);
+    Chunk *getChunk(int_t, int_t);
 
-    std::shared_ptr<Chunk> tryGetChunk(int_t, int_t);
+    Chunk *tryGetChunk(int_t, int_t);
 
-    std::shared_ptr<Chunk> loadChunk(int_t, int_t);
+    Chunk *loadChunk(int_t, int_t);
 
-    std::shared_ptr<Chunk> tryLoadChunk(int_t, int_t);
+    Chunk *tryLoadChunk(int_t, int_t);
 
     void unloadChunk(int_t, int_t);
 
@@ -58,11 +59,11 @@ public:
 
     bool isFullBlock(int_t, int_t, int_t);
 
-    std::vector<AxisAlignedBB> getCollisions(std::shared_ptr<Entity>, AxisAlignedBB);
+    std::vector<AxisAlignedBB> getCollisions(Entity*, AxisAlignedBB);
 
     std::vector<AxisAlignedBB> getBlockCollisions(AxisAlignedBB);
 
-    std::vector<std::shared_ptr<Entity>> getEntityCollisions(AxisAlignedBB, std::function<bool(std::shared_ptr<Entity>)>);
+    std::vector<Entity*> getEntityCollisions(AxisAlignedBB, std::function<bool(Entity*)>);
 
     void playSound(double_t, double_t, double_t, string_t, float_t, float_t);
 
@@ -71,8 +72,8 @@ public:
 private:
     Level *level;
     string_t name;
-    std::unordered_set<std::shared_ptr<Entity>> entities;
-    std::unordered_set<std::shared_ptr<EntityPlayer>> players;
+    std::unordered_map<varint_t, std::shared_ptr<Entity>> entities;
+    std::unordered_map<varint_t, std::shared_ptr<EntityPlayer>> players;
     std::unordered_map<long_t, std::shared_ptr<Chunk>> chunks;
     std::unordered_map<long_t, std::shared_ptr<Region>> regions;
 

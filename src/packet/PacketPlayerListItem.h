@@ -3,7 +3,7 @@
 
 #include "ServerPacket.h"
 
-#include <unordered_set>
+#include <set>
 #include <vector>
 
 class EntityPlayer;
@@ -15,7 +15,7 @@ public:
 
     PacketPlayerListItem(Type, EntityPlayer*);
 
-    PacketPlayerListItem(Type, std::unordered_set<EntityPlayer*>);
+    PacketPlayerListItem(Type, std::set<EntityPlayer*>);
 
     void write(PacketBuffer&);
 

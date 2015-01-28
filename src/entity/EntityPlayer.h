@@ -23,6 +23,8 @@ public:
 
     bool sendVelocityUpdates() { return false; }
 
+    void setDead() { Entity::setDead(); connect = nullptr; }
+
     World *getWorld();
 
     string_t getUUID();
@@ -51,7 +53,7 @@ public:
 
     std::shared_ptr<ServerPacket> getSpawnPacket();
 
-    void onChunk(std::shared_ptr<Chunk>, std::shared_ptr<Chunk>);
+    void onChunk(Chunk*, Chunk*);
 
     void onTick();
 

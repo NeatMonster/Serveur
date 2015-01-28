@@ -44,7 +44,7 @@ Server *Server::getServer() {
 }
 
 void Server::broadcast(ChatMessage &message) {
-    for (EntityPlayer *const &player : instance->players)
+    for (EntityPlayer *player : getPlayers())
         player->sendMessage(message);
 }
 
@@ -61,14 +61,14 @@ NetworkManager *Server::getNetwork() {
 }
 
 EntityPlayer *Server::getPlayer(string_t name) {
-    for (EntityPlayer *const &player : instance->players)
+    for (EntityPlayer *player : getPlayers())
         if (player->getName() == name)
             return player;
     return nullptr;
 }
 
-const std::unordered_set<EntityPlayer*> &Server::getPlayers() {
-    return instance->players;
+std::set<EntityPlayer*> Server::getPlayers() {
+    return getServer()->world->getPlayers();
 }
 
 Server::Server(ushort_t port) : running(true), ticks(0) {
@@ -100,14 +100,6 @@ Server::~Server() {
 void Server::stop() {
     running = false;
     Logger() << "Extinction du serveur" << std::endl;
-}
-
-void Server::addPlayer(EntityPlayer *player) {
-    players.insert(player);
-}
-
-void Server::removePlayer(EntityPlayer *player) {
-    players.erase(player);
 }
 
 string_t Server::getName() {

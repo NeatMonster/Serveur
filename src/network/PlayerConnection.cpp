@@ -13,7 +13,7 @@
 #include "Logger.h"
 
 PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket),
-        closed(false), phase(HANDSHAKE), profile(nullptr), ping(0) {
+        closed(false), phase(HANDSHAKE), player(nullptr), profile(nullptr), ping(0) {
     handler = new PacketHandler(this);
     readThread = std::thread(&PlayerConnection::runRead, this);
     writeThread = std::thread(&PlayerConnection::runWrite, this);
@@ -21,8 +21,8 @@ PlayerConnection::PlayerConnection(ClientSocket *socket) : socket(socket),
 }
 
 PlayerConnection::~PlayerConnection() {
-    if (!player.expired())
-        player.lock()->setDead();
+    if (player != nullptr)
+        player->setDead();
     if (profile != nullptr)
         delete profile;
     delete handler;

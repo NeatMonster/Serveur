@@ -4,6 +4,7 @@
 #include "Types.h"
 
 #include <unordered_set>
+#include <set>
 
 class Block;
 class Entity;
@@ -32,17 +33,17 @@ public:
 
     int_t getZ();
 
-    const std::unordered_set<std::shared_ptr<Entity>> &getEntities();
+    std::set<Entity*> getEntities();
 
-    void addEntity(std::shared_ptr<Entity>);
+    void addEntity(Entity*);
 
-    void removeEntity(std::shared_ptr<Entity>);
+    void removeEntity(Entity*);
 
-    const std::unordered_set<std::shared_ptr<EntityPlayer>> &getPlayers();
+    std::set<EntityPlayer*> getPlayers();
 
-    void addPlayer(std::shared_ptr<EntityPlayer>);
+    void addPlayer(EntityPlayer*);
 
-    void removePlayer(std::shared_ptr<EntityPlayer>);
+    void removePlayer(EntityPlayer*);
 
     Block *getBlock(int_t, int_t, int_t);
 
@@ -57,8 +58,8 @@ private:
     ubyte_t biomes[256];
     int_t heightMap[256];
     Section *sections[16];
-    std::unordered_set<std::shared_ptr<Entity>> entities;
-    std::unordered_set<std::shared_ptr<EntityPlayer>> players;
+    std::unordered_set<Entity*> entities;
+    std::unordered_set<EntityPlayer*> players;
 };
 
 #endif /* defined(__Serveur__Chunk__) */

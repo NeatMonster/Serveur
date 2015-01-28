@@ -23,9 +23,9 @@ PacketPlayerListItem::PacketPlayerListItem(Type type, EntityPlayer *player) : Se
     actions.push_back(action);
 }
 
-PacketPlayerListItem::PacketPlayerListItem(Type type, std::unordered_set<EntityPlayer*> players) : ServerPacket(0x38) {
+PacketPlayerListItem::PacketPlayerListItem(Type type, std::set<EntityPlayer*> players) : ServerPacket(0x38) {
     this->type = type;
-    for (EntityPlayer *const &player : players) {
+    for (EntityPlayer *player : players) {
         Action action;
         action.uuid = player->getUUID();
         if (type == Type::ADD_PLAYER)
