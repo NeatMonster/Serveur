@@ -17,10 +17,7 @@ public:
     void putItemStack(int, std::shared_ptr<ItemStack>);
 
 private:
-    std::shared_ptr<ItemStack> main[36];
-    std::shared_ptr<ItemStack> armor[4];
-    std::shared_ptr<ItemStack> matrix[4];
-    std::shared_ptr<ItemStack> result[1];
+    std::shared_ptr<ItemStack> slots[45];
     EntityPlayer *player;
 
     int getFirstEmpty();

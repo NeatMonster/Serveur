@@ -1,6 +1,7 @@
 #include "InventoryPlayer.h"
 
 #include "EntityPlayer.h"
+#include "PacketSetSlot.h"
 
 InventoryPlayer::InventoryPlayer(EntityPlayer *player) : player(player) {}
 
@@ -10,7 +11,7 @@ bool InventoryPlayer::addItemStack(std::shared_ptr<ItemStack> stack) {
     if (stack->getDamage() > 0) {
         int firstEmpty = getFirstEmpty();
         if (firstEmpty >= 0)
-            main[firstEmpty] = stack->clone();
+            putItemStack(firstEmpty, stack->clone());
         else if (player->getGameMode() == EntityPlayer::GameMode::CREATIVE)
             stack->setCount(0);
         else
@@ -32,29 +33,35 @@ bool InventoryPlayer::addItemStack(std::shared_ptr<ItemStack> stack) {
 }
 
 std::shared_ptr<ItemStack> InventoryPlayer::getItemStack(int slot) {
-    if (slot >= 9 && slot <= 44)
-        return main[slot - 9];
-    return nullptr;
+    return slots[slot];
 }
 
 void InventoryPlayer::putItemStack(int slot, std::shared_ptr<ItemStack> stack) {
-    if (slot >= 9 && slot <= 44)
-        main[slot - 9] = stack;
+    slots[slot] = stack;
+    std::shared_ptr<PacketSetSlot> packet = std::make_shared<PacketSetSlot>();
+    packet->windowId = 0;
+    packet->slot = slot;
+    packet->stack = stack;
+    player->sendPacket(packet);
 }
 
 int InventoryPlayer::getFirstEmpty() {
-    for (int slot = 0; slot < 36; slot++)
-        if (main[slot] != nullptr)
-            return slot;
+    for (int y = 4; y > 0; y--)
+        for (int x = 0; x < 9; x++)
+            if (slots[y * 9 + x] == nullptr)
+                return y * 9 + x;
     return -1;
 }
 
 int InventoryPlayer::storeItemStack(std::shared_ptr<ItemStack> stack) {
-    for (int slot = 0; slot < 36; slot++)
-        if (main[slot] != nullptr && main[slot]->isStackable() && main[slot]->getItem() == stack->getItem()
-                && main[slot]->getCount() < main[slot]->getItem()->getMaxStackSize() && main[slot]->getDamage() == stack->getDamage()
-                && ((main[slot]->getTag() == nullptr && stack->getTag() == nullptr) || main[slot]->getTag()->equals(stack->getTag())))
-            return slot;
+    for (int y = 4; y > 0; y--)
+        for (int x = 0; x < 9; x++) {
+            std::shared_ptr<ItemStack> slotStack = slots[y * 9 + x];
+            if (slotStack != nullptr && slotStack->isStackable() && slotStack->getItem() == stack->getItem()
+                    && slotStack->getCount() < slotStack->getItem()->getMaxStackSize() && slotStack->getDamage() == stack->getDamage()
+                    && ((slotStack->getTag() == nullptr && stack->getTag() == nullptr) || slotStack->getTag()->equals(stack->getTag())))
+                return y * 9 + x;
+        }
     return -1;
 }
 
@@ -66,19 +73,21 @@ int InventoryPlayer::storePartialItemStack(std::shared_ptr<ItemStack> stack) {
     if (slot < 0)
         return count;
     else {
-        if (main[slot] == nullptr) {
-            main[slot] = std::make_shared<ItemStack>(stack->getItem(), 0, stack->getDamage());
+        if (slots[slot] == nullptr) {
+            std::shared_ptr<ItemStack> slotStack = std::make_shared<ItemStack>(stack->getItem(), 0, stack->getDamage());
             if (stack->getTag() != nullptr)
-                main[slot]->setTag(stack->getTag());
+                slotStack->setTag(stack->getTag());
+            putItemStack(slot, slotStack);
         }
         int stored = count;
-        if (count > main[slot]->getItem()->getMaxStackSize() - main[slot]->getCount())
-            stored = main[slot]->getItem()->getMaxStackSize() - main[slot]->getCount();
+        if (count > slots[slot]->getItem()->getMaxStackSize() - slots[slot]->getCount())
+            stored = slots[slot]->getItem()->getMaxStackSize() - slots[slot]->getCount();
         if (stored == 0)
             return count;
         else {
             count -= stored;
-            main[slot]->setCount(main[slot]->getCount() + stored);
+            slots[slot]->setCount(slots[slot]->getCount() + stored);
+            putItemStack(slot, slots[slot]);
             return count;
         }
     }
