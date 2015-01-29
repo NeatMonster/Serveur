@@ -4,6 +4,7 @@
 #include "EntityItem.h"
 #include "Level.h"
 #include "MathUtils.h"
+#include "PacketChangeGameState.h"
 #include "PacketChatMessage.h"
 #include "PacketChunkData.h"
 #include "PacketDestroyEntities.h"
@@ -54,6 +55,14 @@ EntityPlayer::GameMode EntityPlayer::getGameMode() {
 
 void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
     this->gameMode = gameMode;
+    std::shared_ptr<PacketPlayerListItem> listPacket =
+        std::make_shared<PacketPlayerListItem>(PacketPlayerListItem::Type::UPDATE_GAMEMODE, this);
+    for (EntityPlayer *player : Server::getPlayers())
+        player->sendPacket(listPacket);
+    std::shared_ptr<PacketChangeGameState> statePacket = std::make_shared<PacketChangeGameState>();
+    statePacket->reason = 3;
+    statePacket->value = gameMode;
+    sendPacket(statePacket);
 }
 
 void EntityPlayer::sendMessage(ChatMessage &message) {
