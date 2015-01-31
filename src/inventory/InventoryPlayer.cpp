@@ -2,6 +2,7 @@
 
 #include "EntityPlayer.h"
 #include "PacketSetSlot.h"
+#include "PacketWindowItems.h"
 
 InventoryPlayer::InventoryPlayer(EntityPlayer *player) : player(player) {}
 
@@ -42,6 +43,14 @@ void InventoryPlayer::putItemStack(int slot, std::shared_ptr<ItemStack> stack) {
     packet->windowId = 0;
     packet->slot = slot;
     packet->stack = stack;
+    player->sendPacket(packet);
+}
+
+void InventoryPlayer::sendContent() {
+    std::shared_ptr<PacketWindowItems> packet = std::make_shared<PacketWindowItems>();
+    packet->windowId = 0;
+    for (std::shared_ptr<ItemStack> slot : slots)
+        packet->stacks.push_back(slot);
     player->sendPacket(packet);
 }
 

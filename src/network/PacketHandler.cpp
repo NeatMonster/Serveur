@@ -2,6 +2,7 @@
 
 #include "EntityItem.h"
 #include "EntityPlayer.h"
+#include "InventoryPlayer.h"
 #include "Level.h"
 #include "Logger.h"
 #include "MathUtils.h"
@@ -59,6 +60,7 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     Position spawn = world->getLevel()->getSpawn();
     player->setPosition(spawn.x, spawn.y, spawn.z);
     world->addEntity(player->getEntityId(), player);
+    player->getInventory().sendContent();
     connect->player = player.get();
     Logger() << player->getName() << " [/" << player->getConnection()->getIP() << ":" << player->getConnection()->getPort()
         << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
@@ -134,10 +136,14 @@ void PacketHandler::handleAnimation(PacketAnimation*) {
 }
 
 void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction *packet) {
-    if (packet->slot == -1)
-        connect->player->drop(packet->stack);
-    else
-        connect->player->getInventory().putItemStack(packet->slot, packet->stack);
+    if (connect->player->getGameMode() == EntityPlayer::GameMode::CREATIVE) {
+        bool valid = packet->stack != nullptr && packet->stack->getItem() != nullptr && packet->stack->getCount() > 0
+            && packet->stack->getCount() <= 64 && packet->stack->getDamage() >= 0;
+        if (packet->slot == -1 && valid)
+            connect->player->drop(packet->stack);
+        else if (packet->slot >= 9 && packet->slot <= 44 && (packet->stack == nullptr || valid))
+            connect->player->getInventory().putItemStack(packet->slot, packet->stack);
+    }
 }
 
 void PacketHandler::handleRotation(float_t yaw, float_t pitch) {

@@ -16,6 +16,8 @@ public:
 
     void putItemStack(int, std::shared_ptr<ItemStack>);
 
+    void sendContent();
+
 private:
     std::shared_ptr<ItemStack> slots[45];
     EntityPlayer *player;
