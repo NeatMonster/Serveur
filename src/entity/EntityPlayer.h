@@ -73,6 +73,9 @@ private:
     string_t uuid;
     string_t name;
     GameMode gameMode;
+    float_t lastHealth;
+    int_t lastFoodLevel;
+    bool wasHungry;
 };
 
 #endif /* defined(__Serveur__EntityPlayer__) */
