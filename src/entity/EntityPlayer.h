@@ -4,6 +4,7 @@
 #include "ChatMessage.h"
 #include "CommandSender.h"
 #include "EntityLiving.h"
+#include "FoodStats.h"
 #include "InventoryPlayer.h"
 
 class PlayerConnection;
@@ -39,6 +40,10 @@ public:
 
     void setGameMode(GameMode);
 
+    FoodStats& getFoodStats();
+
+    bool shouldHeal();
+
     void drop(std::shared_ptr<ItemStack>);
 
     void disconnect(string_t);
@@ -60,6 +65,7 @@ public:
 private:
     PlayerConnection *connect;
     InventoryPlayer inventory;
+    FoodStats foodStats;
     string_t uuid;
     string_t name;
     GameMode gameMode;

@@ -53,6 +53,14 @@ EntityPlayer::GameMode EntityPlayer::getGameMode() {
     return gameMode;
 }
 
+FoodStats& EntityPlayer::getFoodStats() {
+    return foodStats;
+}
+
+bool EntityPlayer::shouldHeal() {
+    return getHealth() > 0.0F && getHealth() < getMaxHealth();
+}
+
 void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
     this->gameMode = gameMode;
     std::shared_ptr<PacketPlayerListItem> listPacket =
@@ -233,4 +241,5 @@ void EntityPlayer::onTick() {
     });
     for (Entity *entity : entities)
         entity->onCollision(this);
+    foodStats.onUpdate(this);
 }
