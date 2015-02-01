@@ -17,6 +17,14 @@ public:
 
     virtual void onTick();
 
+    void setHealth(float_t);
+
+    float_t getHealth();
+
+    float_t getMaxHealth();
+
+    void heal(float_t);
+
 protected:
     int_t headYaw, lastHeadYaw;
 };

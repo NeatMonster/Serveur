@@ -27,6 +27,11 @@ namespace MathUtils {
     }
 
     template<class T>
+    inline T clamp(T x, T a, T b) {
+        return x < a ? a : (x > b ? b : x);
+    }
+
+    template<class T>
     inline T mod(T x, T y) {
         while (x >= y)
             x -= y;

@@ -16,6 +16,7 @@
 #include "PacketSpawnPlayer.h"
 #include "PacketSpawnPosition.h"
 #include "PacketTimeUpdate.h"
+#include "PacketUpdateHealth.h"
 #include "PlayerConnection.h"
 #include "Server.h"
 #include "World.h"
@@ -27,6 +28,9 @@ EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLivi
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
     setSize(0.6, 1.8);
+    lastHealth = -1.0E8F;
+    lastFoodLevel = -99999999;
+    wasHungry = true;
 }
 
 World *EntityPlayer::getWorld() {
@@ -51,6 +55,18 @@ InventoryPlayer &EntityPlayer::getInventory() {
 
 EntityPlayer::GameMode EntityPlayer::getGameMode() {
     return gameMode;
+}
+
+FoodStats& EntityPlayer::getFoodStats() {
+    return foodStats;
+}
+
+bool EntityPlayer::shouldHeal() {
+    return getHealth() > 0.0F && getHealth() < getMaxHealth();
+}
+
+bool EntityPlayer::canEat(bool value) {
+    return (value || foodStats.needFood()) && !capabilities.disableDamage;
 }
 
 void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
@@ -233,4 +249,16 @@ void EntityPlayer::onTick() {
     });
     for (Entity *entity : entities)
         entity->onCollision(this);
+    foodStats.onUpdate(this);
+
+    if(getHealth() != lastHealth || foodStats.getFoodLevel() != lastFoodLevel || foodStats.getSaturationLevel() == 0.0F != wasHungry) {
+        std::shared_ptr<PacketUpdateHealth> packet = std::make_shared<PacketUpdateHealth>();
+        packet->health = getHealth();
+        packet->foodLevel = foodStats.getFoodLevel();
+        packet->foodSaturationLevel = foodStats.getSaturationLevel();
+        sendPacket(packet);
+        lastHealth = getHealth();
+        lastFoodLevel = foodStats.getFoodLevel();
+        wasHungry = foodStats.getSaturationLevel() == 0.0F;
+    }
 }

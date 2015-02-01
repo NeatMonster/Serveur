@@ -4,7 +4,9 @@
 #include "MathUtils.h"
 #include "PacketEntityHeadLook.h"
 
-EntityLiving::EntityLiving(World *world) : Entity(world), headYaw(0), lastHeadYaw(0) {}
+EntityLiving::EntityLiving(World *world) : Entity(world), headYaw(0), lastHeadYaw(0) {
+    dataWatcher.setFloat(6, getMaxHealth());
+}
 
 EntityLiving::~EntityLiving() {}
 
@@ -27,4 +29,21 @@ void EntityLiving::onTick() {
             watcher->sendPacket(packet);
     }
     lastHeadYaw = headYaw;
+}
+
+void EntityLiving::setHealth(float_t amount) {
+    dataWatcher.setFloat(6, MathUtils::clamp(amount, 0.0F, getMaxHealth()));
+}
+
+float_t EntityLiving::getHealth() {
+    return getDataWatcher().getFloat(6);
+}
+
+float_t EntityLiving::getMaxHealth() {
+    return 20.0F; //TODO Récupérer cette valeur en fonction de l'entité.
+}
+
+void EntityLiving::heal(float_t amount) {
+    if(getHealth() > 0.0F)
+        setHealth(getHealth() + amount);
 }

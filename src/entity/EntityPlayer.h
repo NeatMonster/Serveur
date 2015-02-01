@@ -4,7 +4,9 @@
 #include "ChatMessage.h"
 #include "CommandSender.h"
 #include "EntityLiving.h"
+#include "FoodStats.h"
 #include "InventoryPlayer.h"
+#include "PlayerCapabilities.h"
 
 class PlayerConnection;
 class ServerPacket;
@@ -39,6 +41,12 @@ public:
 
     void setGameMode(GameMode);
 
+    FoodStats& getFoodStats();
+
+    bool shouldHeal();
+
+    bool canEat(bool);
+
     void drop(std::shared_ptr<ItemStack>);
 
     void disconnect(string_t);
@@ -60,9 +68,14 @@ public:
 private:
     PlayerConnection *connect;
     InventoryPlayer inventory;
+    FoodStats foodStats;
+    PlayerCapabilities capabilities;
     string_t uuid;
     string_t name;
     GameMode gameMode;
+    float_t lastHealth;
+    int_t lastFoodLevel;
+    bool wasHungry;
 };
 
 #endif /* defined(__Serveur__EntityPlayer__) */
