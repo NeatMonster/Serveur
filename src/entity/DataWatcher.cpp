@@ -39,6 +39,8 @@ byte_t DataWatcher::getByte(size_t index) {
 
 void DataWatcher::setByte(size_t index, byte_t b) {
     changed = true;
+    if(data[index] != nullptr)
+        delete (byte_t*) data[index];
     data[index] = new byte_t(b);
     type[index] = BYTE;
 }
@@ -49,6 +51,8 @@ short_t DataWatcher::getShort(size_t index) {
 
 void DataWatcher::setShort(size_t index, short_t s) {
     changed = true;
+    if(data[index] != nullptr)
+        delete (short_t*) data[index];
     data[index] = new short_t(s);
     type[index] = SHORT;
 }
@@ -59,6 +63,8 @@ int_t DataWatcher::getInt(size_t index) {
 
 void DataWatcher::setInt(size_t index, int_t i) {
     changed = true;
+    if(data[index] != nullptr)
+        delete (int_t*) data[index];
     data[index] = new int_t(i);
     type[index] = INT;
 }
@@ -69,6 +75,8 @@ float_t DataWatcher::getFloat(size_t index) {
 
 void DataWatcher::setFloat(size_t index, float_t f) {
     changed = true;
+    if(data[index] != nullptr)
+        delete (float_t*) data[index];
     data[index] = new float_t(f);
     type[index] = FLOAT;
 }
@@ -79,6 +87,8 @@ string_t DataWatcher::getString(size_t index) {
 
 void DataWatcher::setString(size_t index, string_t str) {
     changed = true;
+    if(data[index] != nullptr)
+        delete (string_t*) data[index];
     data[index] = new string_t(str);
     type[index] = STRING;
 }
@@ -89,6 +99,8 @@ std::shared_ptr<ItemStack> DataWatcher::getItemStack(size_t index) {
 
 void DataWatcher::setItemStack(size_t index, std::shared_ptr<ItemStack> stack) {
     changed = true;
+    if(data[index] != nullptr)
+        delete (ItemStack*) data[index];
     data[index] = stack == nullptr ? nullptr : new ItemStack(stack.get());
     type[index] = ITEMSTACK;
 }
