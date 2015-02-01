@@ -6,6 +6,7 @@
 #include "EntityLiving.h"
 #include "FoodStats.h"
 #include "InventoryPlayer.h"
+#include "PlayerCapabilities.h"
 
 class PlayerConnection;
 class ServerPacket;
@@ -44,6 +45,8 @@ public:
 
     bool shouldHeal();
 
+    bool canEat(bool);
+
     void drop(std::shared_ptr<ItemStack>);
 
     void disconnect(string_t);
@@ -66,6 +69,7 @@ private:
     PlayerConnection *connect;
     InventoryPlayer inventory;
     FoodStats foodStats;
+    PlayerCapabilities capabilities;
     string_t uuid;
     string_t name;
     GameMode gameMode;

@@ -61,6 +61,10 @@ bool EntityPlayer::shouldHeal() {
     return getHealth() > 0.0F && getHealth() < getMaxHealth();
 }
 
+bool EntityPlayer::canEat(bool value) {
+    return (value || foodStats.needFood()) && !capabilities.disableDamage;
+}
+
 void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
     this->gameMode = gameMode;
     std::shared_ptr<PacketPlayerListItem> listPacket =

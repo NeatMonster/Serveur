@@ -3,6 +3,7 @@
 #include "Block.h"
 #include "ItemAxe.h"
 #include "ItemBlock.h"
+#include "ItemFood.h"
 #include "ItemHoe.h"
 #include "ItemPickaxe.h"
 #include "ItemSpade.h"
@@ -361,11 +362,12 @@ void Item::registerItems() {
     registerItemBlock(Block::red_sandstone);
     registerItemBlock(Block::red_sandstone_stairs);
     registerItemBlock(Block::stone_slab2);
+
     registerItem(256, "iron_shovel", iron_shovel = new ItemSpade(ItemTool::ToolMaterial::IRON));
     registerItem(257, "iron_pickaxe", iron_pickaxe = new ItemPickaxe(ItemTool::ToolMaterial::IRON));
     registerItem(258, "iron_axe", iron_axe = new ItemAxe(ItemTool::ToolMaterial::IRON));
     registerItem(259, "flint_and_steel", flint_and_steel = new Item());
-    registerItem(260, "apple", apple = new Item());
+    registerItem(260, "apple", apple = new ItemFood(4, 0.3F, false));
     registerItem(261, "bow", bow = new Item());
     registerItem(262, "arrow", arrow = new Item());
     registerItem(263, "coal", coal = new Item());
@@ -402,7 +404,7 @@ void Item::registerItems() {
     registerItem(294, "golden_hoe", golden_hoe = new ItemHoe(ItemTool::ToolMaterial::GOLD));
     registerItem(295, "wheat_seeds", wheat_seeds = new Item());
     registerItem(296, "wheat", wheat = new Item());
-    registerItem(297, "bread", bread = new Item());
+    registerItem(297, "bread", bread = new ItemFood(5, 0.6F, false));
     registerItem(298, "leather_helmet", leather_helmet = new Item());
     registerItem(299, "leather_chestplate", leather_chestplate = new Item());
     registerItem(300, "leather_leggings", leather_leggings = new Item());
@@ -424,8 +426,8 @@ void Item::registerItems() {
     registerItem(316, "golden_leggings", golden_leggings = new Item());
     registerItem(317, "golden_boots", golden_boots = new Item());
     registerItem(318, "flint", flint = new Item());
-    registerItem(319, "porkchop", porkchop = new Item());
-    registerItem(320, "cooked_porkchop", cooked_porkchop = new Item());
+    registerItem(319, "porkchop", porkchop = new ItemFood(3, 0.3F, true));
+    registerItem(320, "cooked_porkchop", cooked_porkchop = new ItemFood(8, 0.8F, true));
     registerItem(321, "painting", painting = new Item());
     registerItem(322, "golden_apple", golden_apple = new Item());
     registerItem(323, "sign", sign = new Item());
@@ -462,17 +464,17 @@ void Item::registerItems() {
     registerItem(354, "cake", cake = new Item());
     registerItem(355, "bed", bed = new Item());
     registerItem(356, "repeater", repeater = new Item());
-    registerItem(357, "cookie", cookie = new Item());
+    registerItem(357, "cookie", cookie = new ItemFood(2, 0.1F, false));
     registerItem(358, "filled_map", filled_map = new Item());
     registerItem(359, "shears", shears = new Item());
-    registerItem(360, "melon", melon = new Item());
+    registerItem(360, "melon", melon = new ItemFood(2, 0.3F, false));
     registerItem(361, "pumpkin_seeds", pumpkin_seeds = new Item());
     registerItem(362, "melon_seeds", melon_seeds = new Item());
-    registerItem(363, "beef", beef = new Item());
-    registerItem(364, "cooked_beef", cooked_beef = new Item());
-    registerItem(365, "chicken", chicken = new Item());
-    registerItem(366, "cooked_chicken", cooked_chicken = new Item());
-    registerItem(367, "rotten_flesh", rotten_flesh = new Item());
+    registerItem(363, "beef", beef = new ItemFood(3, 0.3F, true));
+    registerItem(364, "cooked_beef", cooked_beef = new ItemFood(8, 0.8F, true));
+    registerItem(365, "chicken", chicken = new ItemFood(2, 0.3F, true));
+    registerItem(366, "cooked_chicken", cooked_chicken = new ItemFood(6, 0.6F, true));
+    registerItem(367, "rotten_flesh", rotten_flesh = new ItemFood(4, 0.1F, true));
     registerItem(368, "ender_pearl", ender_pearl = new Item());
     registerItem(369, "blaze_rod", blaze_rod = new Item());
     registerItem(370, "ghast_tear", ghast_tear = new Item());
@@ -480,7 +482,7 @@ void Item::registerItems() {
     registerItem(372, "nether_wart", nether_wart = new Item());
     registerItem(373, "potion", potion = new Item());
     registerItem(374, "glass_bottle", glass_bottle = new Item());
-    registerItem(375, "spider_eye", spider_eye = new Item());
+    registerItem(375, "spider_eye", spider_eye = new ItemFood(2, 0.8F, false));
     registerItem(376, "fermented_spider_eye", fermented_spider_eye = new Item());
     registerItem(377, "blaze_powder", blaze_powder = new Item());
     registerItem(378, "magma_cream", magma_cream = new Item());
@@ -498,14 +500,14 @@ void Item::registerItems() {
     registerItem(390, "flower_pot", flower_pot = new Item());
     registerItem(391, "carrot", carrot = new Item());
     registerItem(392, "potato", potato = new Item());
-    registerItem(393, "baked_potato", baked_potato = new Item());
-    registerItem(394, "poisonous_potato", poisonous_potato = new Item());
+    registerItem(393, "baked_potato", baked_potato = new ItemFood(5, 0.6F, false));
+    registerItem(394, "poisonous_potato", poisonous_potato = new ItemFood(2, 0.3F, false));
     registerItem(395, "map", map = new Item());
-    registerItem(396, "golden_carrot", golden_carrot = new Item());
+    registerItem(396, "golden_carrot", golden_carrot = new ItemFood(6, 1.2F, false));
     registerItem(397, "skull", skull = new Item());
     registerItem(398, "carrot_on_a_stick", carrot_on_a_stick = new Item());
     registerItem(399, "nether_star", nether_star = new Item());
-    registerItem(400, "pumpkin_pie", pumpkin_pie = new Item());
+    registerItem(400, "pumpkin_pie", pumpkin_pie = new ItemFood(8, 0.3, false));
     registerItem(401, "fireworks", fireworks = new Item());
     registerItem(402, "firework_charge", firework_charge = new Item());
     registerItem(403, "enchanted_book", enchanted_book = new Item());
@@ -516,8 +518,8 @@ void Item::registerItems() {
     registerItem(408, "hopper_minecart", hopper_minecart = new Item());
     registerItem(409, "prismarine_shard", prismarine_shard = new Item());
     registerItem(410, "prismarine_crystals", prismarine_crystals = new Item());
-    registerItem(411, "rabbit", rabbit = new Item());
-    registerItem(412, "cooked_rabbit", cooked_rabbit = new Item());
+    registerItem(411, "rabbit", rabbit = new ItemFood(3, 0.3F, true));
+    registerItem(412, "cooked_rabbit", cooked_rabbit = new ItemFood(5, 0.6F, true));
     registerItem(413, "rabbit_stew", rabbit_stew = new Item());
     registerItem(414, "rabbit_foot", rabbit_foot = new Item());
     registerItem(415, "rabbit_hide", rabbit_hide = new Item());
@@ -528,8 +530,8 @@ void Item::registerItems() {
     registerItem(420, "lead", lead = new Item());
     registerItem(421, "name_tag", name_tag = new Item());
     registerItem(422, "command_block_minecart", command_block_minecart = new Item());
-    registerItem(423, "mutton", mutton = new Item());
-    registerItem(424, "cooked_mutton", cooked_mutton = new Item());
+    registerItem(423, "mutton", mutton = new ItemFood(2, 0.3F, true));
+    registerItem(424, "cooked_mutton", cooked_mutton = new ItemFood(6, 0.8F, true));
     registerItem(425, "banner", banner = new Item());
     registerItem(427, "spruce_door", spruce_door = new Item());
     registerItem(428, "birch_door", birch_door = new Item());
