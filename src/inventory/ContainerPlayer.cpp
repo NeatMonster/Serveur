@@ -17,6 +17,10 @@ ContainerPlayer::ContainerPlayer(InventoryPlayer &inventory, EntityPlayer *playe
     onCraftMatrixChanged(craftMatrix);
 }
 
+bool ContainerPlayer::canTakeFromSlot(std::shared_ptr<ItemStack> stack, Slot *slot) {
+    return &slot->inventory != &craftResult && Container::canTakeFromSlot(stack, slot);
+}
+
 std::shared_ptr<ItemStack> ContainerPlayer::transferStackInSlot(EntityPlayer *player, short_t index) {
     std::shared_ptr<ItemStack> stack = nullptr;
     Slot *slot = getSlot(index);

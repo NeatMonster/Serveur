@@ -47,6 +47,13 @@ std::shared_ptr<ItemStack> InventoryPlayer::decrStackSize(short_t index, int cou
         return nullptr;
 }
 
+short_t InventoryPlayer::getFirstEmpty() {
+    for (short_t index = 0; index < 36; ++index)
+        if (main[index] == nullptr)
+            return index;
+    return -1;
+}
+
 int InventoryPlayer::getInventoryStackLimit() {
     return 64;
 }
@@ -77,13 +84,6 @@ bool InventoryPlayer::addStack(std::shared_ptr<ItemStack> &stack) {
         } else
             return stack->getCount() < amount;
     }
-}
-
-short_t InventoryPlayer::getFirstEmpty() {
-    for (short_t index = 0; index < 36; ++index)
-        if (main[index] == nullptr)
-            return index;
-    return -1;
 }
 
 int InventoryPlayer::storeItemStack(std::shared_ptr<ItemStack> stack) {

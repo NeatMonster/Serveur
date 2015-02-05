@@ -36,6 +36,8 @@ public:
 protected:
     void addSlot(Slot*);
 
+    virtual bool canTakeFromSlot(std::shared_ptr<ItemStack>, Slot*);
+
     bool mergeItemStack(std::shared_ptr<ItemStack>, short_t, short_t, bool);
 
     void resetDrag();

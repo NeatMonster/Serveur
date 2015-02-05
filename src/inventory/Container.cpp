@@ -157,9 +157,74 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
                     }
                 }
             }
+        } else if (mode == 2 && button >= 0 && button < 9) {
+            Slot *slot = getSlot(slotId);
+            if (slot->canTakeStack(player)) {
+                std::shared_ptr<ItemStack> stack = inventory.getStack(button);
+                bool valid = stack == nullptr || (&slot->inventory == &inventory && slot->isValid(stack));
+                short_t index = -1;
+                if (!valid) {
+                    index = inventory.getFirstEmpty();
+                    valid |= index > -1;
+                }
+                if (slot->hasStack() && valid) {
+                    std::shared_ptr<ItemStack> swapStack = slot->getStack();
+                    inventory.setStack(button, swapStack->clone());
+                    if ((&slot->inventory != &inventory || !slot->isValid(stack)) && stack != nullptr) {
+                        if (index > -1) {
+                            inventory.addStack(stack);
+                            slot->decrStackSize(swapStack->getCount());
+                            slot->putStack(nullptr);
+                            slot->onPickupFromSlot(player, swapStack);
+                        }
+                    } else {
+                        slot->decrStackSize(swapStack->getCount());
+                        slot->putStack(stack);
+                        slot->onPickupFromSlot(player, swapStack);
+                    }
+                } else if (!slot->hasStack() && stack != nullptr && slot->isValid(stack)) {
+                    inventory.setStack(button, nullptr);
+                    slot->putStack(stack);
+                }
+            }
+        } else if (mode == 3 && player->getCapabilities().isCreativeMode && inventory.getCursor() == nullptr && slotId >= 0) {
+            Slot *slot = getSlot(slotId);
+            if (slot != nullptr && slot->hasStack()) {
+                std::shared_ptr<ItemStack> stack = slot->getStack()->clone();
+                stack->setCount(stack->getMaxStackSize());
+                inventory.setCursor(stack);
+            }
+        } else if (mode == 4 && inventory.getCursor() == nullptr && slotId >= 0) {
+            Slot *slot = getSlot(slotId);
+            if (slot != nullptr && slot->hasStack() && slot->canTakeStack(player)) {
+                std::shared_ptr<ItemStack> stack = slot->decrStackSize(button == 0 ? 1 : slot->getStack()->getCount());
+                slot->onPickupFromSlot(player, stack);
+                player->drop(stack);
+            }
+        } else if (mode == 6 && slotId >= 0) {
+            Slot *slot = getSlot(slotId);
+            std::shared_ptr<ItemStack> cursor = inventory.getCursor();
+            if (cursor != nullptr && (slot == nullptr || !slot->hasStack() || !slot->canTakeStack(player))) {
+                int start = button == 0 ? 0 : slots.size() - 1;
+                int increment = button == 0 ? 1 : -1;
+                for (int row = 0; row < 2; ++row)
+                    for (short_t index = start; index >= 0 && index < slots.size() && cursor->getCount() < cursor->getMaxStackSize(); index += increment) {
+                        slot = getSlot(index);
+                        if (slot->hasStack() && canAddItemToSlot(slot, cursor) && slot->canTakeStack(player) && canTakeFromSlot(cursor, slot)
+                            && (row != 0 || slot->getStack()->getCount() == slot->getStack()->getMaxStackSize())) {
+                            int count = MathUtils::min(cursor->getMaxStackSize() - cursor->getCount(), (int) slot->getStack()->getCount());
+                            std::shared_ptr<ItemStack> stack = slot->decrStackSize(count);
+                            cursor->setCount(cursor->getCount() + count);
+                            if (stack->getCount() < 0)
+                                slot->putStack(nullptr);
+                            slot->onPickupFromSlot(player, stack);
+                        }
+                    }
+            }
+            detectAndSendChanges();
         }
     }
-    // TODO Implémenter les autres modes
+    return result;
 }
 
 void Container::detectAndSendChanges() {
@@ -183,6 +248,10 @@ void Container::addSlot(Slot *slot) {
     slot->slotNumber = slots.size();
     slots.push_back(slot);
     stacks.push_back(nullptr);
+}
+
+bool canTakeFromSlot(std::shared_ptr<ItemStack>, Slot*) {
+    return true;
 }
 
 bool Container::mergeItemStack(std::shared_ptr<ItemStack> stack, short_t startIndex, short_t endIndex, bool useEndIndex) {

@@ -19,6 +19,8 @@ public:
 
     std::shared_ptr<ItemStack> decrStackSize(short_t, int);
 
+    short_t getFirstEmpty();
+
     int getInventoryStackLimit();
 
     bool addStack(std::shared_ptr<ItemStack>&);
@@ -29,8 +31,6 @@ private:
     std::shared_ptr<ItemStack> cursor;
     //short_t currentItem;
     EntityPlayer *player;
-
-    short_t getFirstEmpty();
 
     int storeItemStack(std::shared_ptr<ItemStack> stack);
 

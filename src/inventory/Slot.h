@@ -8,6 +8,7 @@ class EntityPlayer;
 
 class Slot {
 public:
+    Inventory &inventory;
     short_t slotNumber;
 
     Slot(Inventory&, short_t);
@@ -40,7 +41,6 @@ protected:
     virtual void onCrafting(std::shared_ptr<ItemStack>, int);
 
 private:
-    Inventory &inventory;
     short_t slotIndex;
 
 };

@@ -12,6 +12,8 @@ class ContainerPlayer : public Container {
 public:
     ContainerPlayer(InventoryPlayer&, EntityPlayer*);
 
+    bool canTakeFromSlot(std::shared_ptr<ItemStack>, Slot*);
+
     std::shared_ptr<ItemStack> transferStackInSlot(EntityPlayer*, short_t);
 
 private:
