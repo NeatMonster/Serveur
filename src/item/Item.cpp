@@ -614,6 +614,8 @@ Item *Item::setMaxStackSize(int_t maxStackSize) {
     return this;
 }
 
+void Item::onCreated(std::shared_ptr<ItemStack>, EntityPlayer*) {}
+
 std::unordered_map<Block*, Item*> Item::blockToItem;
 std::unordered_map<ubyte_t, Item*> Item::typeToItem;
 std::unordered_map<string_t, Item*> Item::nameToItem;

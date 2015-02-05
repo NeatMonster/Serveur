@@ -12,6 +12,8 @@ class ContainerPlayer : public Container {
 public:
     ContainerPlayer(InventoryPlayer&, EntityPlayer*);
 
+    std::shared_ptr<ItemStack> transferStackInSlot(EntityPlayer*, short_t);
+
 private:
     //EntityPlayer *player;
     InventoryCrafting craftMatrix;

@@ -17,6 +17,8 @@ public:
 
     void setStack(short_t, std::shared_ptr<ItemStack>);
 
+    std::shared_ptr<ItemStack> decrStackSize(short_t, int);
+
     int getInventoryStackLimit();
 
     bool addStack(std::shared_ptr<ItemStack>&);

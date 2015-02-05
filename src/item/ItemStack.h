@@ -6,6 +6,8 @@
 #include "NBTTagCompound.h"
 #include "Types.h"
 
+class EntityPlayer;
+
 class ItemStack : public std::enable_shared_from_this<ItemStack> {
     friend class PacketBuffer;
 
@@ -47,6 +49,8 @@ public:
     bool isStackable();
 
     int getMaxStackSize();
+
+    void onCrafting(EntityPlayer*);
 
     std::shared_ptr<ItemStack> splitStack(int);
 

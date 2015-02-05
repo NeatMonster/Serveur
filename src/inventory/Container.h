@@ -11,7 +11,7 @@ class Container {
 public:
     static bool canAddItemToSlot(Slot*, std::shared_ptr<ItemStack>);
 
-    static void computeStackSize(std::set<Slot*>, ubyte_t, std::shared_ptr<ItemStack>&, int);
+    static void computeStackSize(std::set<Slot*>, ubyte_t, std::shared_ptr<ItemStack>, int);
 
     Container();
 
@@ -31,8 +31,12 @@ public:
 
     void putStack(short_t, std::shared_ptr<ItemStack>);
 
+    virtual std::shared_ptr<ItemStack> transferStackInSlot(EntityPlayer*, short_t);
+
 protected:
     void addSlot(Slot*);
+
+    bool mergeItemStack(std::shared_ptr<ItemStack>, short_t, short_t, bool);
 
     void resetDrag();
 

@@ -11,6 +11,12 @@ public:
 
     bool isValid(std::shared_ptr<ItemStack>);
 
+    void onCrafting(std::shared_ptr<ItemStack>);
+
+    void onCrafting(std::shared_ptr<ItemStack>, int);
+
+    void onPickupFromSlot(EntityPlayer*, std::shared_ptr<ItemStack>);
+
 private:
     EntityPlayer *player;
     InventoryCrafting &craftMatrix;

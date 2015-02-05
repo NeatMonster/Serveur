@@ -4,6 +4,8 @@
 #include "Inventory.h"
 #include "ItemStack.h"
 
+class EntityPlayer;
+
 class Slot {
 public:
     short_t slotNumber;
@@ -16,13 +18,26 @@ public:
 
     std::shared_ptr<ItemStack> getStack();
 
-    void setStack(std::shared_ptr<ItemStack>);
+    void putStack(std::shared_ptr<ItemStack>);
+
+    void onSlotChange(std::shared_ptr<ItemStack>, std::shared_ptr<ItemStack>);
+
+    virtual bool canTakeStack(EntityPlayer*);
+
+    virtual std::shared_ptr<ItemStack> decrStackSize(int);
 
     virtual bool isValid(std::shared_ptr<ItemStack>);
 
     virtual int getSlotMaxSize(std::shared_ptr<ItemStack>);
 
     virtual int getSlotStackLimit();
+
+    virtual void onPickupFromSlot(EntityPlayer*, std::shared_ptr<ItemStack>);
+
+protected:
+    virtual void onCrafting(std::shared_ptr<ItemStack>);
+
+    virtual void onCrafting(std::shared_ptr<ItemStack>, int);
 
 private:
     Inventory &inventory;

@@ -67,6 +67,10 @@ int ItemStack::getMaxStackSize() {
     return getItem()->getMaxStackSize();
 }
 
+void ItemStack::onCrafting(EntityPlayer *player) {
+    item->onCreated(shared_from_this(), player);
+}
+
 std::shared_ptr<ItemStack> ItemStack::splitStack(int amount) {
     std::shared_ptr<ItemStack> stack = std::make_shared<ItemStack>(item, amount, damage);
     stack->setTag(getTag());

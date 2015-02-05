@@ -26,6 +26,27 @@ void InventoryPlayer::setStack(short_t index, std::shared_ptr<ItemStack> stack) 
         main[index] = stack;
 }
 
+std::shared_ptr<ItemStack> InventoryPlayer::decrStackSize(short_t index, int count) {
+    std::shared_ptr<ItemStack> *inv = main;
+    if (index >= 36) {
+        inv = armor;
+        index -= 36;
+    }
+    if (inv[index] != nullptr) {
+        if (inv[index]->getCount() <= count) {
+            std::shared_ptr<ItemStack> stack = inv[index];
+            inv[index] = nullptr;
+            return stack;
+        } else {
+            std::shared_ptr<ItemStack> stack = inv[index]->splitStack(count);
+            if (inv[index]->getCount() == 0)
+                inv[index] = nullptr;
+            return stack;
+        }
+    } else
+        return nullptr;
+}
+
 int InventoryPlayer::getInventoryStackLimit() {
     return 64;
 }

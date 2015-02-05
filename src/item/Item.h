@@ -6,6 +6,8 @@
 #include <unordered_map>
 
 class Block;
+class EntityPlayer;
+class ItemStack;
 
 class Item {
 public:
@@ -226,6 +228,8 @@ public:
     int_t getMaxDamage();
 
     int_t getMaxStackSize();
+
+    void onCreated(std::shared_ptr<ItemStack>, EntityPlayer*);
 
 private:
     static std::unordered_map<Block*, Item*> blockToItem;
