@@ -9,11 +9,11 @@ class InventoryPlayer : public Inventory {
 public:
     InventoryPlayer(EntityPlayer*);
 
-    std::shared_ptr<ItemStack> getStack();
+    std::shared_ptr<ItemStack> getCursor();
+
+    void setCursor(std::shared_ptr<ItemStack>);
 
     std::shared_ptr<ItemStack> getStack(short_t);
-
-    void setStack(std::shared_ptr<ItemStack>);
 
     void setStack(short_t, std::shared_ptr<ItemStack>);
 
@@ -24,8 +24,8 @@ public:
 private:
     std::shared_ptr<ItemStack> main[36];
     std::shared_ptr<ItemStack> armor[4];
-    std::shared_ptr<ItemStack> stack;
-    short_t currentItem;
+    std::shared_ptr<ItemStack> cursor;
+    //short_t currentItem;
     EntityPlayer *player;
 
     short_t getFirstEmpty();

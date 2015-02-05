@@ -13,7 +13,7 @@ public:
     ContainerPlayer(InventoryPlayer&, EntityPlayer*);
 
 private:
-    EntityPlayer *player;
+    //EntityPlayer *player;
     InventoryCrafting craftMatrix;
     InventoryCraftResult craftResult;
 };

@@ -12,9 +12,17 @@ public:
 
     virtual ~Slot();
 
-    virtual std::shared_ptr<ItemStack> getStack();
+    bool hasStack();
 
-    virtual void setStack(std::shared_ptr<ItemStack>);
+    std::shared_ptr<ItemStack> getStack();
+
+    void setStack(std::shared_ptr<ItemStack>);
+
+    virtual bool isValid(std::shared_ptr<ItemStack>);
+
+    virtual int getSlotMaxSize(std::shared_ptr<ItemStack>);
+
+    virtual int getSlotStackLimit();
 
 private:
     Inventory &inventory;

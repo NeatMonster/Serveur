@@ -60,7 +60,11 @@ bool ItemStack::isDamaged() {
 }
 
 bool ItemStack::isStackable() {
-    return getItem()->getMaxStackSize() > 1 && (!isDamageable() || !isDamaged());
+    return getMaxStackSize() > 1 && (!isDamageable() || !isDamaged());
+}
+
+int ItemStack::getMaxStackSize() {
+    return getItem()->getMaxStackSize();
 }
 
 std::shared_ptr<ItemStack> ItemStack::splitStack(int amount) {

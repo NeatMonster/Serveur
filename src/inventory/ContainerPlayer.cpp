@@ -4,7 +4,7 @@
 #include "SlotArmor.h"
 #include "SlotCrafting.h"
 
-ContainerPlayer::ContainerPlayer(InventoryPlayer &inventory, EntityPlayer *player) : player(player), craftMatrix(2) {
+ContainerPlayer::ContainerPlayer(InventoryPlayer &inventory, EntityPlayer *player) : /*player(player),*/ craftMatrix(2) {
     addSlot(new SlotCrafting(player, craftMatrix, craftResult, 0));
     for (short_t index = 0; index < 4; ++index)
         addSlot(new Slot(craftMatrix, index));

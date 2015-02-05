@@ -6,6 +6,10 @@
 class SlotArmor : public Slot {
 public:
     SlotArmor(Inventory&, short_t);
+
+    bool isValid(std::shared_ptr<ItemStack>);
+
+    int getSlotStackLimit();
 };
 
 #endif /* defined(__Serveur__SlotArmor__) */

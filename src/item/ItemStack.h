@@ -46,6 +46,8 @@ public:
 
     bool isStackable();
 
+    int getMaxStackSize();
+
     std::shared_ptr<ItemStack> splitStack(int);
 
     bool equals(std::shared_ptr<ItemStack>, bool, bool);

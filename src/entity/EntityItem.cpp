@@ -75,7 +75,7 @@ bool EntityItem::combineItems(EntityItem *other) {
         || pickupDelay == 32767 || other->pickupDelay == 32767
         || ticks == -32768 || other->ticks == -32768
         || stack->equals(otherStack, false, true)
-        || stack->getCount() + stack->getCount() > stack->getItem()->getMaxStackSize())
+        || stack->getCount() + stack->getCount() > stack->getMaxStackSize())
         return false;
     if (stack->getCount() > otherStack->getCount())
         return other->combineItems(this);

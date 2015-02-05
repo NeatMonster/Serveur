@@ -9,6 +9,8 @@ class SlotCrafting : public Slot {
 public:
     SlotCrafting(EntityPlayer*, InventoryCrafting&, Inventory&, short_t);
 
+    bool isValid(std::shared_ptr<ItemStack>);
+
 private:
     EntityPlayer *player;
     InventoryCrafting &craftMatrix;

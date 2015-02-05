@@ -2,10 +2,14 @@
 
 #include "EntityPlayer.h"
 
-InventoryPlayer::InventoryPlayer(EntityPlayer *player) : currentItem(0), player(player) {}
+InventoryPlayer::InventoryPlayer(EntityPlayer *player) : /*currentItem(0),*/ player(player) {}
 
-std::shared_ptr<ItemStack> InventoryPlayer::getStack() {
-    return stack;
+std::shared_ptr<ItemStack> InventoryPlayer::getCursor() {
+    return cursor;
+}
+
+void InventoryPlayer::setCursor(std::shared_ptr<ItemStack> cursor) {
+    this->cursor = cursor;
 }
 
 std::shared_ptr<ItemStack> InventoryPlayer::getStack(short_t index) {
@@ -13,10 +17,6 @@ std::shared_ptr<ItemStack> InventoryPlayer::getStack(short_t index) {
         return armor[index - 36];
     else
         return main[index];
-}
-
-void InventoryPlayer::setStack(std::shared_ptr<ItemStack> stack) {
-    this->stack = stack;
 }
 
 void InventoryPlayer::setStack(short_t index, std::shared_ptr<ItemStack> stack) {
@@ -68,7 +68,7 @@ short_t InventoryPlayer::getFirstEmpty() {
 int InventoryPlayer::storeItemStack(std::shared_ptr<ItemStack> stack) {
     for (short_t index = 0; index < 36; ++index)
         if (main[index] != nullptr && main[index]->equals(stack, false, true) && main[index]->isStackable()
-            && main[index]->getCount() < main[index]->getItem()->getMaxStackSize()
+            && main[index]->getCount() < main[index]->getMaxStackSize()
             && main[index]->getCount() < getInventoryStackLimit())
             return index;
     return -1;
@@ -87,8 +87,8 @@ int InventoryPlayer::storePartialItemStack(std::shared_ptr<ItemStack> stack) {
             main[slot]->setTag(stack->getTag());
         }
         int stored = count;
-        if (count > main[slot]->getItem()->getMaxStackSize() - main[slot]->getCount())
-            stored = main[slot]->getItem()->getMaxStackSize() - main[slot]->getCount();
+        if (count > main[slot]->getMaxStackSize() - main[slot]->getCount())
+            stored = main[slot]->getMaxStackSize() - main[slot]->getCount();
         if (stored > getInventoryStackLimit() - main[slot]->getCount())
             stored = getInventoryStackLimit() - main[slot]->getCount();
         if (stored == 0)
