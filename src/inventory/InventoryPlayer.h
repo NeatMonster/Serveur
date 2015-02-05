@@ -2,7 +2,6 @@
 #define __Serveur__InventoryPlayer__
 
 #include "Inventory.h"
-#include "ItemStack.h"
 
 class EntityPlayer;
 
@@ -10,23 +9,30 @@ class InventoryPlayer : public Inventory {
 public:
     InventoryPlayer(EntityPlayer*);
 
-    bool addItemStack(std::shared_ptr<ItemStack>);
+    std::shared_ptr<ItemStack> getStack();
 
-    std::shared_ptr<ItemStack> getItemStack(int);
+    std::shared_ptr<ItemStack> getStack(short_t);
 
-    void putItemStack(int, std::shared_ptr<ItemStack>);
+    void setStack(std::shared_ptr<ItemStack>);
 
-    void sendContent();
+    void setStack(short_t, std::shared_ptr<ItemStack>);
+
+    int getInventoryStackLimit();
+
+    bool addStack(std::shared_ptr<ItemStack>&);
 
 private:
-    std::shared_ptr<ItemStack> slots[45];
+    std::shared_ptr<ItemStack> main[36];
+    std::shared_ptr<ItemStack> armor[4];
+    std::shared_ptr<ItemStack> stack;
+    short_t currentItem;
     EntityPlayer *player;
 
-    int getFirstEmpty();
+    short_t getFirstEmpty();
 
-    int storeItemStack(std::shared_ptr<ItemStack>);
+    int storeItemStack(std::shared_ptr<ItemStack> stack);
 
-    int storePartialItemStack(std::shared_ptr<ItemStack>);
+    int storePartialItemStack(std::shared_ptr<ItemStack> stack);
 };
 
 #endif /* defined(__Serveur__InventoryPlayer__) */

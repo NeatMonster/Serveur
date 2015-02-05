@@ -26,7 +26,7 @@ Region::Region(string_t worldName, int_t x, int_t z) {
         for (int_t &i : timestamps)
             i = ntohl(i);
     } else
-        for (int i = 0; i < 1024; i++)
+        for (int i = 0; i < 1024; ++i)
             locations[i] = timestamps[i] = 0;
 }
 
@@ -58,9 +58,9 @@ bool Region::getChunk(Chunk *chunk) {
         sectionCmpd->get("Blocks")->asByteArray()->get(blockType);
         ubyte_t blockData[2048];
         sectionCmpd->get("Data")->asByteArray()->get(blockData);
-        for (int i = 0; i < 4096; i++) {
+        for (int i = 0; i < 4096; ++i) {
             if (blockType[i] > 0)
-                blockCount++;
+                ++blockCount;
             if (i % 2 == 0)
                 section->blockData[i] = ((blockType[i] & 0xff) << 4) | (blockData[i / 2] & 0xf);
             else

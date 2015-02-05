@@ -16,7 +16,7 @@ void NBTTagIntArray::read(ubyte_t *&data, bool header) {
     *(((ubyte_t*) &size) + 1) = *(data++);
     *(((ubyte_t*) &size) + 0) = *(data++);
     value = ints_t(size);
-    for (int_t i = 0; i < size; i++) {
+    for (int_t i = 0; i < size; ++i) {
         *(((ubyte_t*) &value.data()[i]) + 3) = *(data++);
         *(((ubyte_t*) &value.data()[i]) + 2) = *(data++);
         *(((ubyte_t*) &value.data()[i]) + 1) = *(data++);
@@ -43,7 +43,7 @@ void NBTTagIntArray::write(ubyte_t *&data, bool header) {
 void NBTTagIntArray::print(int tab, bool header) {
     NBTTag::print(tab, header);
     std::cout << "TAG_IntArray(" << (header ? ("'" + name + "'") : "None") << "): [";
-    for (int_t i = 0; i < MathUtils::min<int_t>(10, value.size()); i++) {
+    for (int_t i = 0; i < MathUtils::min<int_t>(10, value.size()); ++i) {
         if (i > 0)
             std::cout << ", ";
         std::cout << value[i];
@@ -67,5 +67,5 @@ std::shared_ptr<NBTTag> NBTTagIntArray::clone() {
 }
 
 bool NBTTagIntArray::equals(std::shared_ptr<NBTTag> tag) {
-    return tag->isIntArray() && tag->getName() == name && tag->asIntArray()->value == value;
+    return tag != nullptr && tag->isIntArray() && tag->getName() == name && tag->asIntArray()->value == value;
 }

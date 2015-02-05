@@ -15,7 +15,7 @@ void NBTTagList::read(ubyte_t *&data, bool header) {
     *(((ubyte_t*) &size) + 2) = *(data++);
     *(((ubyte_t*) &size) + 1) = *(data++);
     *(((ubyte_t*) &size) + 0) = *(data++);
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; ++i)
         children.push_back(NBTTag::read(data, type, false));
 }
 
@@ -55,12 +55,12 @@ std::shared_ptr<NBTTag> NBTTagList::clone() {
 }
 
 bool NBTTagList::equals(std::shared_ptr<NBTTag> tag) {
-    if (!tag->isList() || tag->getName() != name)
+    if (tag == nullptr || !tag->isList() || tag->getName() != name)
         return false;
     std::shared_ptr<NBTTagList> list = tag->asList();
     if (children.size() != list->children.size())
         return false;
-    for (size_t i = 0; i < children.size(); i++)
+    for (size_t i = 0; i < children.size(); ++i)
         if (!children[i]->equals(list->children[i]))
             return false;
     return true;

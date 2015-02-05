@@ -88,8 +88,8 @@ std::shared_ptr<EntityPlayer> World::removePlayer(varint_t entityId) {
     players.erase(players.find(entityId));
     int_t xChunk = (int_t) floor(player->getX()) >> 4;
     int_t zChunk = (int_t) floor(player->getZ()) >> 4;
-    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; ++x)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; ++z)
             tryUnloadChunk(xChunk + x, zChunk + z);
     return player;
 }
@@ -128,9 +128,9 @@ Chunk *World::loadChunk(int_t x, int_t z) {
         Section *section = chunk->sections[0];
         section->blockCount = 1024;
         section->initialize(true);
-        for (ubyte_t y = 0; y < 4; y++)
-            for (ubyte_t z = 0; z < 16; z++)
-                for (ubyte_t x = 0; x < 16; x++) {
+        for (ubyte_t y = 0; y < 4; ++y)
+            for (ubyte_t z = 0; z < 16; ++z)
+                for (ubyte_t x = 0; x < 16; ++x) {
                     if (y == 0)
                         section->setBlockType(x + z * 16 + y * 256, 7);
                     else if (y == 1 || y == 2)
@@ -162,8 +162,8 @@ void World::unloadChunk(int_t x, int_t z) {
 void World::tryUnloadChunk(int_t x, int_t z) {
     if (chunks.find(hash(x, z)) == chunks.end())
         return;
-    for (int_t xDist = -VIEW_DISTANCE; xDist <= VIEW_DISTANCE; xDist++)
-        for (int_t zDist = -VIEW_DISTANCE; zDist <= VIEW_DISTANCE; zDist++) {
+    for (int_t xDist = -VIEW_DISTANCE; xDist <= VIEW_DISTANCE; ++xDist)
+        for (int_t zDist = -VIEW_DISTANCE; zDist <= VIEW_DISTANCE; ++zDist) {
             Chunk *chunk = tryGetChunk(x + xDist, z + zDist);
             if (chunk != nullptr && chunk->getPlayers().size() > 0)
                 return;
@@ -195,9 +195,9 @@ std::vector<AxisAlignedBB> World::getCollisions(Entity *entity, AxisAlignedBB bo
 
 std::vector<AxisAlignedBB> World::getBlockCollisions(AxisAlignedBB boundingBox) {
     std::vector<AxisAlignedBB> collisions;
-    for (int_t x = MathUtils::floor_d(boundingBox.minX); x < MathUtils::floor_d(boundingBox.maxX + 1); x++)
-        for (int_t y = MathUtils::floor_d(boundingBox.minY); y < MathUtils::floor_d(boundingBox.maxY + 1); y++)
-            for (int_t z = MathUtils::floor_d(boundingBox.minZ); z < MathUtils::floor_d(boundingBox.maxZ + 1); z++) {
+    for (int_t x = MathUtils::floor_d(boundingBox.minX); x < MathUtils::floor_d(boundingBox.maxX + 1); ++x)
+        for (int_t y = MathUtils::floor_d(boundingBox.minY); y < MathUtils::floor_d(boundingBox.maxY + 1); ++y)
+            for (int_t z = MathUtils::floor_d(boundingBox.minZ); z < MathUtils::floor_d(boundingBox.maxZ + 1); ++z) {
                 AxisAlignedBB otherBoundingBox = getBlock(x, y, z)->getBoundingBox().offset(x, y, z);
                 if (otherBoundingBox.intersects(boundingBox))
                     collisions.push_back(otherBoundingBox);

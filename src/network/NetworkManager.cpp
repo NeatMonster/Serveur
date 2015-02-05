@@ -55,7 +55,7 @@ bool NetworkManager::stop() {
 
 void NetworkManager::handlePackets() {
     for (auto connect = connects.end(); connect != connects.begin();) {
-        connect--;
+        --connect;
         if ((*connect)->isClosed()) {
             (*connect)->join();
             delete *connect;

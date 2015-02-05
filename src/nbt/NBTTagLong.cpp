@@ -46,5 +46,5 @@ std::shared_ptr<NBTTag> NBTTagLong::clone() {
 }
 
 bool NBTTagLong::equals(std::shared_ptr<NBTTag> tag) {
-    return tag->isLong() && tag->getName() == name && tag->asLong()->value == value;
+    return tag != nullptr && tag->isLong() && tag->getName() == name && tag->asLong()->value == value;
 }

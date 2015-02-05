@@ -46,5 +46,5 @@ std::shared_ptr<NBTTag> NBTTagDouble::clone() {
 }
 
 bool NBTTagDouble::equals(std::shared_ptr<NBTTag> tag) {
-    return tag->isDouble() && tag->getName() == name && tag->asDouble()->value == value;
+    return tag != nullptr && tag->isDouble() && tag->getName() == name && tag->asDouble()->value == value;
 }

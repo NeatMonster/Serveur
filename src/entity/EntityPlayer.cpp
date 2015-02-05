@@ -24,7 +24,7 @@
 #include <cmath>
 
 EntityPlayer::EntityPlayer(World *world, PlayerConnection *connect) : EntityLiving(world), connect(connect),
-        inventory(InventoryPlayer(this)), gameMode(CREATIVE) {
+        inventory(this), container(inventory, this), openContainer(container), gameMode(CREATIVE) {
     uuid = connect->getProfile()->getUUID();
     name = connect->getProfile()->getName();
     setSize(0.6, 1.8);
@@ -49,12 +49,20 @@ PlayerConnection *EntityPlayer::getConnection() {
     return connect;
 }
 
+ContainerPlayer &EntityPlayer::getContainer() {
+    return container;
+}
+
 InventoryPlayer &EntityPlayer::getInventory() {
     return inventory;
 }
 
 EntityPlayer::GameMode EntityPlayer::getGameMode() {
     return gameMode;
+}
+
+PlayerCapabilities &EntityPlayer::getCapabilities() {
+    return capabilities;
 }
 
 FoodStats& EntityPlayer::getFoodStats() {
@@ -154,13 +162,16 @@ void EntityPlayer::onJoinGame() {
     sendPacket(posPacket);
 
     sendPacket(std::make_shared<PacketTimeUpdate>(world->getLevel()->getTime(), world->getLevel()->getDayTime()));
+
+    container.onCraftGuiOpened(this);
+
     int_t xChunk = (int_t) floor(posX) >> 4;
     int_t zChunk = (int_t) floor(posZ) >> 4;
     std::vector<Chunk*> chunks = {world->getChunk(xChunk, zChunk)};
-    for (int_t distance = 1; distance <= VIEW_DISTANCE; distance++) {
-        for (int_t x = -distance; x < distance; x++)
+    for (int_t distance = 1; distance <= VIEW_DISTANCE; ++distance) {
+        for (int_t x = -distance; x < distance; ++x)
             chunks.push_back(world->getChunk(xChunk + x, zChunk - distance));
-        for (int_t z = -distance; z < distance; z++)
+        for (int_t z = -distance; z < distance; ++z)
             chunks.push_back(world->getChunk(xChunk + distance, zChunk + z));
         for (int_t x = distance; x > -distance; x--)
             chunks.push_back(world->getChunk(xChunk + x, zChunk + distance));
@@ -206,8 +217,8 @@ std::shared_ptr<ServerPacket> EntityPlayer::getSpawnPacket() {
 void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
     oldChunk->removePlayer(this);
     newChunk->addPlayer(this);
-    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; ++x)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; ++z)
             if (newChunk->getX() + x < oldChunk->getX() - VIEW_DISTANCE
                 || newChunk->getX() + x > oldChunk->getX() + VIEW_DISTANCE
                 || newChunk->getZ() + z < oldChunk->getZ() - VIEW_DISTANCE
@@ -221,8 +232,8 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
                         player->sendPacket(packet);
                     }
             }
-    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; x++)
-        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; z++)
+    for (int_t x = -VIEW_DISTANCE; x <= VIEW_DISTANCE; ++x)
+        for (int_t z = -VIEW_DISTANCE; z <= VIEW_DISTANCE; ++z)
             if (oldChunk->getX() + x < newChunk->getX() - VIEW_DISTANCE
                 || oldChunk->getX() + x > newChunk->getX() + VIEW_DISTANCE
                 || oldChunk->getZ() + z < newChunk->getZ() - VIEW_DISTANCE
@@ -243,6 +254,7 @@ void EntityPlayer::onChunk(Chunk *oldChunk, Chunk *newChunk) {
 
 void EntityPlayer::onTick() {
     EntityLiving::onTick();
+    openContainer.detectAndSendChanges();
     std::vector<Entity*> entities = world->getEntityCollisions(boundingBox.clone().expand(1, 0.5, 1),
     [this] (Entity *entity) {
         return entity != this;

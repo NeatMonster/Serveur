@@ -62,7 +62,7 @@ ubyte_t Section::getSkyLight(int_t index) {
 void Section::setBlockType(int_t index, ubyte_t type) {
     ubyte_t oldType = getBlockType(index);
     if (type > 0 && oldType == 0)
-        blockCount++;
+        ++blockCount;
     else if (type == 0 && oldType > 0)
         blockCount--;
     blockData[index] = ((type & 0xff) << 4) | (blockData[index] & 0xf);

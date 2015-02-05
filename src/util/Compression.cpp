@@ -31,7 +31,7 @@ Compression::result_t Compression::inflateGzip(ubyte_t *in, size_t inSize) {
     size_t outSize = stream.total_out;
     inflateEnd(&stream);
     ubyte_t *out = (ubyte_t*) std::malloc(outSize);
-    for (size_t i = 0; i < buffers.size(); i++) {
+    for (size_t i = 0; i < buffers.size(); ++i) {
         std::memcpy(out + i * BUFFER_SIZE, buffers[i], MathUtils::min<size_t>(BUFFER_SIZE, outSize - i * BUFFER_SIZE));
         delete[] buffers[i];
     }
@@ -65,7 +65,7 @@ Compression::result_t Compression::inflateZlib(ubyte_t *in, size_t inSize) {
     size_t outSize = stream.total_out;
     inflateEnd(&stream);
     ubyte_t *out = (ubyte_t*) std::malloc(outSize);
-    for (size_t i = 0; i < buffers.size(); i++) {
+    for (size_t i = 0; i < buffers.size(); ++i) {
         std::memcpy(out + i * BUFFER_SIZE, buffers[i], MathUtils::min<size_t>(BUFFER_SIZE, outSize - i * BUFFER_SIZE));
         delete[] buffers[i];
     }

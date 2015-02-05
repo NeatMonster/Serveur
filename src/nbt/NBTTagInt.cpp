@@ -38,5 +38,5 @@ std::shared_ptr<NBTTag> NBTTagInt::clone() {
 }
 
 bool NBTTagInt::equals(std::shared_ptr<NBTTag> tag) {
-    return tag->isInt() && tag->getName() == name && tag->asInt()->value == value;
+    return tag != nullptr && tag->isInt() && tag->getName() == name && tag->asInt()->value == value;
 }

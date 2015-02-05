@@ -189,8 +189,8 @@ std::set<EntityPlayer*> Entity::getWatchers() {
     int_t xChunk = (int_t) floor(posX) >> 4;
     int_t zChunk = (int_t) floor(posZ) >> 4;
     int viewDistance = MathUtils::min(VIEW_DISTANCE, 1 + getTrackingRange() / 16);
-    for (int x = -viewDistance; x <= viewDistance; x++)
-        for (int z = -viewDistance; z <= viewDistance; z++) {
+    for (int x = -viewDistance; x <= viewDistance; ++x)
+        for (int z = -viewDistance; z <= viewDistance; ++z) {
             Chunk *chunk = world->tryGetChunk(xChunk + x, zChunk + z);
             if (chunk != nullptr)
                 for (EntityPlayer *watcher : chunk->getPlayers())

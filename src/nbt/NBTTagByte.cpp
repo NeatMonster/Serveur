@@ -32,5 +32,5 @@ std::shared_ptr<NBTTag> NBTTagByte::clone() {
 }
 
 bool NBTTagByte::equals(std::shared_ptr<NBTTag> tag) {
-    return tag->isByte() && tag->getName() == name && tag->asByte()->value == value;
+    return tag != nullptr && tag->isByte() && tag->getName() == name && tag->asByte()->value == value;
 }

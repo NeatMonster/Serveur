@@ -5,6 +5,8 @@
 
 class PacketAnimation;
 class PacketChatMessage;
+class PacketClickWindow;
+class PacketCreativeInventoryAction;
 class PacketHandshake;
 class PacketKeepAlive;
 class PacketLoginStart;
@@ -13,7 +15,6 @@ class PacketPlayerLook;
 class PacketPlayerPosition;
 class PacketPlayerPositionLook;
 class PacketPluginMessage;
-class PacketCreativeInventoryAction;
 class PlayerConnection;
 
 class PacketHandler {
@@ -43,6 +44,8 @@ public:
     void handleAnimation(PacketAnimation*);
 
     void handleCreativeInventoryAction(PacketCreativeInventoryAction*);
+
+    void handleClickWindow(PacketClickWindow*);
 
     void handlePosition(double_t, double_t, double_t, bool);
 

@@ -587,11 +587,20 @@ string_t Item::getItemName(ushort_t type) {
 
 Item::Item() {}
 
+bool Item::getHasSubtypes() {
+    return hasSubtypes;
+}
+
+Item *Item::setHasSubtypes(bool hasSubtypes) {
+    this->hasSubtypes = hasSubtypes;
+    return this;
+}
+
 int_t Item::getMaxDamage() {
     return maxDamage;
 }
 
-Item* Item::setMaxDamage(int_t maxDamage) {
+Item *Item::setMaxDamage(int_t maxDamage) {
     this->maxDamage = maxDamage;
     return this;
 }

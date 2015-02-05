@@ -15,7 +15,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char* argv[]) {
     ushort_t port = 25566;
-    for (int i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; ++i) {
         string_t arg = string_t(argv[i]);
         if (arg == "-h" || arg == "--help") {
             std::cout << "Usage : " << string_t(argv[0]) << " [options]" << std::endl;

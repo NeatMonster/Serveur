@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "PacketAnimation.h"
 #include "PacketChatMessage.h"
+#include "PacketClickWindow.h"
 #include "PacketCreativeInventoryAction.h"
 #include "PacketHandshake.h"
 #include "PacketKeepAlive.h"
@@ -60,7 +61,6 @@ void PacketHandler::handleLoginStart(PacketLoginStart *packet) {
     Position spawn = world->getLevel()->getSpawn();
     player->setPosition(spawn.x, spawn.y, spawn.z);
     world->addEntity(player->getEntityId(), player);
-    player->getInventory().sendContent();
     connect->player = player.get();
     Logger() << player->getName() << " [/" << player->getConnection()->getIP() << ":" << player->getConnection()->getPort()
         << "] s'est connecté avec l'ID d'entité " << player->getEntityId()
@@ -93,7 +93,7 @@ void PacketHandler::handlePluginMessage(PacketPluginMessage *packet) {
         varint_t size;
         buffer.getVarInt(size);
         string_t server, servers = "Liste des serveurs : ";
-        for (size_t i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; ++i) {
             buffer.getString(server);
             if (i > 0)
                 servers += ", ";
@@ -142,9 +142,11 @@ void PacketHandler::handleCreativeInventoryAction(PacketCreativeInventoryAction 
         if (packet->slot == -1 && valid)
             connect->player->drop(packet->stack);
         else if (packet->slot >= 9 && packet->slot <= 44 && (packet->stack == nullptr || valid))
-            connect->player->getInventory().putItemStack(packet->slot, packet->stack);
+            connect->player->getContainer().putStack(packet->slot, packet->stack);
     }
 }
+
+void PacketHandler::handleClickWindow(PacketClickWindow *packet) {}
 
 void PacketHandler::handleRotation(float_t yaw, float_t pitch) {
     connect->player->setRotation(yaw, pitch);

@@ -9,9 +9,9 @@ PacketChunkData::PacketChunkData(Chunk *chunk, bool unload) : ServerPacket(0x21)
     } else {
         meta = chunk->getMeta();
         size_t count = 0;
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < 16; ++i)
             if ((meta.bitmask >> i) & 1)
-                count++;
+                ++count;
         size = 256 + count * 12288;
         data = new ubyte_t[size];
         ubyte_t *data = this->data;

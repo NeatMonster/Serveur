@@ -38,5 +38,5 @@ std::shared_ptr<NBTTag> NBTTagFloat::clone() {
 }
 
 bool NBTTagFloat::equals(std::shared_ptr<NBTTag> tag) {
-    return tag->isFloat() && tag->getName() == name && tag->asFloat()->value == value;
+    return tag != nullptr && tag->isFloat() && tag->getName() == name && tag->asFloat()->value == value;
 }

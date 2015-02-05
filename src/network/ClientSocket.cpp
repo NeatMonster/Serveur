@@ -56,7 +56,7 @@ size_t ClientSocket::receive(ubyte_t *buffer, size_t size) {
     int remaining = size;
     while (remaining-- > 0) {
         *(buffer++) = *(readPointer++);
-        dataLength--;
+        --dataLength;
     }
     return size;
 }

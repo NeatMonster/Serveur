@@ -195,6 +195,6 @@ void NBTTag::write(ubyte_t *&data, bool header) {
 }
 
 void NBTTag::print(int tab, bool) {
-    for (int i = 0; i < 2 * tab; i++)
+    for (int i = 0; i < 2 * tab; ++i)
         std::cout << " ";
 }

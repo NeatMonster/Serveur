@@ -3,14 +3,14 @@
 #include "PacketBuffer.h"
 
 DataWatcher::DataWatcher() : changed(false) {
-    for (size_t i = 0; i < 23; i++) {
+    for (size_t i = 0; i < 23; ++i) {
         data[i] = nullptr;
         type[i] = NONE;
     }
 }
 
 DataWatcher::~DataWatcher() {
-    for (size_t i = 0; i < 23; i++)
+    for (size_t i = 0; i < 23; ++i)
         switch (type[i]) {
             case BYTE:
                 delete (byte_t*) data[i];
@@ -149,7 +149,7 @@ void DataWatcher::read(PacketBuffer &buffer) {
 }
 
 void DataWatcher::write(PacketBuffer &buffer) {
-    for (byte_t index = 0; index < 23; index++) {
+    for (byte_t index = 0; index < 23; ++index) {
         if (type[index] == NONE)
             continue;
         buffer.putByte(type[index] << 5 | (index & 0x1f));

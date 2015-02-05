@@ -3,6 +3,7 @@
 
 #include "ChatMessage.h"
 #include "CommandSender.h"
+#include "ContainerPlayer.h"
 #include "EntityLiving.h"
 #include "FoodStats.h"
 #include "InventoryPlayer.h"
@@ -35,11 +36,15 @@ public:
 
     PlayerConnection *getConnection();
 
+    ContainerPlayer &getContainer();
+
     InventoryPlayer &getInventory();
 
     GameMode getGameMode();
 
     void setGameMode(GameMode);
+
+    PlayerCapabilities& getCapabilities();
 
     FoodStats& getFoodStats();
 
@@ -68,6 +73,8 @@ public:
 private:
     PlayerConnection *connect;
     InventoryPlayer inventory;
+    ContainerPlayer container;
+    ContainerPlayer &openContainer;
     FoodStats foodStats;
     PlayerCapabilities capabilities;
     string_t uuid;

@@ -8,12 +8,12 @@
 Chunk::Chunk(World *world, int_t x, int_t z) : world(world), x(x), z(z) {
     std::memset(biomes, 255, 256);
     std::memset(heightMap, 0, 1024);
-    for (int_t y = 0; y < 16; y++)
+    for (int_t y = 0; y < 16; ++y)
         sections[y] = new Section(y);
 }
 
 Chunk::~Chunk() {
-    for (int_t y = 0; y < 16; y++)
+    for (int_t y = 0; y < 16; ++y)
         delete sections[y];
 }
 
@@ -59,7 +59,7 @@ Block *Chunk::getBlock(int_t x, int_t y, int_t z) {
 
 Chunk::Meta Chunk::getMeta() {
     ushort bitmask = 0;
-    for (int y = 0; y < 16; y++)
+    for (int y = 0; y < 16; ++y)
         if (sections[y]->blockCount > 0)
             bitmask |= 1 << y;
     return {x, z, bitmask};
@@ -81,6 +81,6 @@ void Chunk::write(ubyte_t *&data) {
             std::memcpy(data, section->skyLight, 2048);
             data += 2048;
         }
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < 256; ++i)
         *(data++) = biomes[i];
 }

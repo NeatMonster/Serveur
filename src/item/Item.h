@@ -221,6 +221,8 @@ public:
 
     Item();
 
+    bool getHasSubtypes();
+
     int_t getMaxDamage();
 
     int_t getMaxStackSize();
@@ -234,13 +236,16 @@ private:
     static std::unordered_map<Item*, string_t> itemToName;
     static std::unordered_map<ubyte_t, string_t> typeToName;
 
+    bool hasSubtypes = false;
     int_t maxDamage = 0;
     int_t maxStackSize = 64;
 
 protected:
-    Item* setMaxDamage(int_t);
+    Item *setHasSubtypes(bool);
 
-    Item* setMaxStackSize(int_t);
+    Item *setMaxDamage(int_t);
+
+    Item *setMaxStackSize(int_t);
 };
 
 #endif /* defined(__Serveur__Item__) */

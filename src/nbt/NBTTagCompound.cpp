@@ -45,7 +45,7 @@ std::shared_ptr<NBTTag> NBTTagCompound::clone() {
 }
 
 bool NBTTagCompound::equals(std::shared_ptr<NBTTag> tag) {
-    if (!tag->isCompound() || tag->getName() != name)
+    if (tag == nullptr || !tag->isCompound() || tag->getName() != name)
         return false;
     std::shared_ptr<NBTTagCompound> compound = tag->asCompound();
     if (children.size() != compound->children.size())

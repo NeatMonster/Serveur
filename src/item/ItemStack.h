@@ -40,7 +40,15 @@ public:
 
     void setTag(std::shared_ptr<NBTTagCompound>);
 
+    bool isDamageable();
+
+    bool isDamaged();
+
     bool isStackable();
+
+    std::shared_ptr<ItemStack> splitStack(int);
+
+    bool equals(std::shared_ptr<ItemStack>, bool, bool);
 
     std::shared_ptr<ItemStack> clone();
 

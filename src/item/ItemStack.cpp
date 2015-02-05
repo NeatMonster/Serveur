@@ -48,11 +48,33 @@ std::shared_ptr<NBTTagCompound> ItemStack::getTag() {
 }
 
 void ItemStack::setTag(std::shared_ptr<NBTTagCompound> tag) {
-    this->tag = std::dynamic_pointer_cast<NBTTagCompound>(tag->clone());
+    this->tag = tag == nullptr ? nullptr : std::dynamic_pointer_cast<NBTTagCompound>(tag->clone());
+}
+
+bool ItemStack::isDamageable() {
+    return item != nullptr && item->getMaxDamage() > 0 && (getTag() == nullptr || getTag()->get("Unbreakable")->asByte() != 0);
+}
+
+bool ItemStack::isDamaged() {
+    return isDamageable() && damage > 0;
 }
 
 bool ItemStack::isStackable() {
-    return getItem()->getMaxStackSize() > 1 && damage == 0;
+    return getItem()->getMaxStackSize() > 1 && (!isDamageable() || !isDamaged());
+}
+
+std::shared_ptr<ItemStack> ItemStack::splitStack(int amount) {
+    std::shared_ptr<ItemStack> stack = std::make_shared<ItemStack>(item, amount, damage);
+    stack->setTag(getTag());
+    count -= amount;
+    return stack;
+}
+
+bool ItemStack::equals(std::shared_ptr<ItemStack> stack, bool compareCount, bool compareTags) {
+    return stack != nullptr && item == stack->getItem()
+        && (!compareCount || count == stack->getCount())
+        && (!item->getHasSubtypes() || damage == stack->getDamage())
+        && (!compareTags || (tag == nullptr && stack->getTag() == nullptr) || tag->equals(stack->getTag()));
 }
 
 std::shared_ptr<ItemStack> ItemStack::clone() {

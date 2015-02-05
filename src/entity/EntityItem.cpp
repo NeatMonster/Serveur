@@ -13,7 +13,7 @@ EntityItem::EntityItem(World *world, std::shared_ptr<ItemStack> stack) : Entity(
 
 void EntityItem::onCollision(EntityPlayer *player) {
     std::shared_ptr<ItemStack> stack = getItem();
-    if (pickupDelay == 0 && player->getInventory().addItemStack(stack)) {
+    if (pickupDelay == 0 && player->getInventory().addStack(stack)) {
         world->playSound(posX, posY, posZ, "random.pop", 0.2, ((MathUtils::random_f() - MathUtils::random_f()) * 0.7 + 1) * 2);
         std::shared_ptr<PacketCollectItem> packet = std::make_shared<PacketCollectItem>();
         packet->collectedId = entityId;
@@ -38,7 +38,7 @@ void EntityItem::setItem(std::shared_ptr<ItemStack> stack) {
 void EntityItem::onTick() {
     Entity::onTick();
     if (pickupDelay > 0 && pickupDelay != 32767)
-        pickupDelay--;
+        --pickupDelay;
     double_t prevX = posX, prevY = posY, prevZ = posZ;
     motY -= 0.04;
     noClip = pushOutOfBlocks(posX, (boundingBox.minY + boundingBox.maxY) / 2, posZ);
@@ -74,11 +74,8 @@ bool EntityItem::combineItems(EntityItem *other) {
     if (other == this || isDead() || other->isDead()
         || pickupDelay == 32767 || other->pickupDelay == 32767
         || ticks == -32768 || other->ticks == -32768
-        || stack->getItem() != otherStack->getItem()
-        || stack->getCount() + stack->getCount() > stack->getItem()->getMaxStackSize()
-        || stack->getDamage() != otherStack->getDamage()
-        || stack->getTag() != nullptr ^ otherStack->getTag() != nullptr
-        || (stack->getTag() != nullptr && !stack->getTag()->equals(otherStack->getTag())))
+        || stack->equals(otherStack, false, true)
+        || stack->getCount() + stack->getCount() > stack->getItem()->getMaxStackSize())
         return false;
     if (stack->getCount() > otherStack->getCount())
         return other->combineItems(this);
