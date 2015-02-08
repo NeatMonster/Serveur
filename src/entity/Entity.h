@@ -60,6 +60,16 @@ public:
 
     DataWatcher &getDataWatcher();
 
+    bool getFlag(int);
+
+    bool isBurning();
+
+    bool isSneaking();
+
+    bool isSprinting();
+
+    bool isInvisible();
+
     double_t getDistance(Entity*);
 
     void move(double_t, double_t, double_t);

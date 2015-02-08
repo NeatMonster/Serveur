@@ -77,6 +77,18 @@ bool EntityPlayer::canEat(bool value) {
     return (value || foodStats.needFood()) && !capabilities.disableDamage;
 }
 
+void EntityPlayer::addExhaustion(float value) {
+    if(!capabilities.disableDamage)
+        foodStats.addExhaustion(value);
+}
+
+void EntityPlayer::jump() {
+    if(isSprinting())
+        addExhaustion(0.8F);
+    else
+        addExhaustion(0.2F);
+}
+
 void EntityPlayer::setGameMode(EntityPlayer::GameMode gameMode) {
     this->gameMode = gameMode;
     std::shared_ptr<PacketPlayerListItem> listPacket =
@@ -261,6 +273,7 @@ void EntityPlayer::onTick() {
     });
     for (Entity *entity : entities)
         entity->onCollision(this);
+
     foodStats.onUpdate(this);
 
     if(getHealth() != lastHealth || foodStats.getFoodLevel() != lastFoodLevel || foodStats.getSaturationLevel() == 0.0F != wasHungry) {

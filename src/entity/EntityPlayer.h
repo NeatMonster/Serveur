@@ -52,6 +52,10 @@ public:
 
     bool canEat(bool);
 
+    void addExhaustion(float);
+
+    void jump();
+
     void drop(std::shared_ptr<ItemStack>);
 
     void disconnect(string_t);
