@@ -13,7 +13,7 @@ void InventoryCrafting::setStack(short_t index, std::shared_ptr<ItemStack> stack
         stacks[index] = stack;
 }
 
-std::shared_ptr<ItemStack> InventoryCrafting::decrStackSize(short_t index, int count) {
+std::shared_ptr<ItemStack> InventoryCrafting::decrStackSize(short_t index, count_t count) {
     if (stacks[index] != nullptr) {
         if (stacks[index]->getCount() <= count) {
             std::shared_ptr<ItemStack> stack = stacks[index];
@@ -31,6 +31,6 @@ std::shared_ptr<ItemStack> InventoryCrafting::decrStackSize(short_t index, int c
         return nullptr;
 }
 
-int InventoryCrafting::getInventoryStackLimit() {
+count_t InventoryCrafting::getInventoryStackLimit() {
     return 64;
 }

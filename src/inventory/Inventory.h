@@ -9,9 +9,9 @@ public:
 
     virtual void setStack(short_t, std::shared_ptr<ItemStack>) = 0;
 
-    virtual std::shared_ptr<ItemStack> decrStackSize(short_t, int);
+    virtual std::shared_ptr<ItemStack> decrStackSize(short_t, count_t) = 0;
 
-    virtual int getInventoryStackLimit() = 0;
+    virtual count_t getInventoryStackLimit() = 0;
 };
 
 #endif /* defined(__Serveur__Inventory__) */

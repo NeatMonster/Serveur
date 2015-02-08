@@ -9,9 +9,9 @@ public:
 
     void setStack(short_t, std::shared_ptr<ItemStack>);
 
-    std::shared_ptr<ItemStack> decrStackSize(short_t, int);
+    std::shared_ptr<ItemStack> decrStackSize(short_t, count_t);
 
-    int getInventoryStackLimit();
+    count_t getInventoryStackLimit();
 
 private:
     std::shared_ptr<ItemStack> stack;

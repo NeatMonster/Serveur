@@ -225,31 +225,31 @@ public:
 
     bool getHasSubtypes();
 
-    int_t getMaxDamage();
+    ushort_t getMaxDamage();
 
-    int_t getMaxStackSize();
+    count_t getMaxStackSize();
 
     void onCreated(std::shared_ptr<ItemStack>, EntityPlayer*);
 
 private:
     static std::unordered_map<Block*, Item*> blockToItem;
-    static std::unordered_map<ubyte_t, Item*> typeToItem;
+    static std::unordered_map<ushort_t, Item*> typeToItem;
     static std::unordered_map<string_t, Item*> nameToItem;
-    static std::unordered_map<Item*, ubyte_t> itemToType;
-    static std::unordered_map<string_t, ubyte_t> nameToType;
+    static std::unordered_map<Item*, ushort_t> itemToType;
+    static std::unordered_map<string_t, ushort_t> nameToType;
     static std::unordered_map<Item*, string_t> itemToName;
     static std::unordered_map<ubyte_t, string_t> typeToName;
 
     bool hasSubtypes = false;
-    int_t maxDamage = 0;
-    int_t maxStackSize = 64;
+    ushort_t maxDamage = 0;
+    count_t maxStackSize = 64;
 
 protected:
     Item *setHasSubtypes(bool);
 
-    Item *setMaxDamage(int_t);
+    Item *setMaxDamage(ushort_t);
 
-    Item *setMaxStackSize(int_t);
+    Item *setMaxStackSize(count_t);
 };
 
 #endif /* defined(__Serveur__Item__) */

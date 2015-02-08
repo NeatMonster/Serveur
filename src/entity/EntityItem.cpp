@@ -6,9 +6,13 @@
 #include "PacketSpawnObject.h"
 #include "World.h"
 
-EntityItem::EntityItem(World *world, std::shared_ptr<ItemStack> stack) : Entity(world), pickupDelay(10) {
+EntityItem::EntityItem(World *world, std::shared_ptr<ItemStack> stack) : Entity(world), age(0), pickupDelay(10) {
     setSize(0.25, 0.25);
     setItem(stack);
+}
+
+void EntityItem::fromCreative() {
+    age = 4800;
 }
 
 void EntityItem::onCollision(EntityPlayer *player) {
@@ -51,7 +55,9 @@ void EntityItem::onTick() {
     motZ *= 0.98 * (onGround ? 0.6 : 1);
     if (onGround)
         motY *= -0.5;
-    if (ticks >= 1200)
+    if (age != -32768)
+        ++age;
+    if (age >= 6000)
         setDead();
 }
 
@@ -73,8 +79,8 @@ bool EntityItem::combineItems(EntityItem *other) {
     std::shared_ptr<ItemStack> otherStack = other->getItem();
     if (other == this || isDead() || other->isDead()
         || pickupDelay == 32767 || other->pickupDelay == 32767
-        || ticks == -32768 || other->ticks == -32768
-        || stack->equals(otherStack, false, true)
+        || age == -32768 || other->age == -32768
+        || !stack->equals(otherStack, false)
         || stack->getCount() + stack->getCount() > stack->getMaxStackSize())
         return false;
     if (stack->getCount() > otherStack->getCount())

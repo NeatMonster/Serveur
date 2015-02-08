@@ -15,6 +15,8 @@ public:
 
     void print(int, bool);
 
+    int size(bool);
+
     void get(ubyte_t*);
 
     void set(ubyte_t*, int_t);

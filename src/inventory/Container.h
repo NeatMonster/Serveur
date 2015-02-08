@@ -11,15 +11,25 @@ class Container {
 public:
     static bool canAddItemToSlot(Slot*, std::shared_ptr<ItemStack>);
 
-    static void computeStackSize(std::set<Slot*>, ubyte_t, std::shared_ptr<ItemStack>, int);
+    static void computeStackSize(std::set<Slot*>, ubyte_t, std::shared_ptr<ItemStack>, count_t);
 
     Container();
 
     ~Container();
 
+    byte_t getWindowId();
+
     std::shared_ptr<ItemStack> slotClick(short_t, ubyte_t, ubyte_t, EntityPlayer*);
 
+    bool canCraft(EntityPlayer*);
+
+    void setCanCraft(EntityPlayer*, bool);
+
     void detectAndSendChanges();
+
+    void detectAndSendChanges(EntityPlayer*);
+
+    virtual void onContainerClosed(EntityPlayer*);
 
     void onCraftGuiOpened(EntityPlayer*);
 
@@ -30,6 +40,8 @@ public:
     std::vector<std::shared_ptr<ItemStack>> getInventory();
 
     void putStack(short_t, std::shared_ptr<ItemStack>);
+
+    void sendContainer(EntityPlayer*);
 
     virtual std::shared_ptr<ItemStack> transferStackInSlot(EntityPlayer*, short_t);
 
@@ -49,6 +61,7 @@ private:
     ubyte_t dragMode;
     ubyte_t dragEvent;
     std::set<Slot*> dragSlots;
+    std::set<EntityPlayer*> crafters;
     std::set<EntityPlayer*> watchers;
 };
 

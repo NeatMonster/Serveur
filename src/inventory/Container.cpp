@@ -7,12 +7,12 @@
 #include "SlotCrafting.h"
 
 bool Container::canAddItemToSlot(Slot* slot, std::shared_ptr<ItemStack> stack) {
-    return slot == nullptr || !slot->hasStack() || (stack->equals(slot->getStack(), false, true)
+    return slot == nullptr || !slot->hasStack() || (stack->equals(slot->getStack(), false)
         && slot->getStack()->getCount() < stack->getMaxStackSize());
 }
 
 void Container::computeStackSize(std::set<Slot*> dragSlots, ubyte_t dragMode,
-                                 std::shared_ptr<ItemStack> dragStack, int slotStackSize) {
+                                 std::shared_ptr<ItemStack> dragStack, count_t slotStackSize) {
     if (dragMode == 0)
         dragStack->setCount(MathUtils::floor_f((float_t) dragStack->getCount() / (float_t) dragSlots.size()));
     else if (dragMode == 1)
@@ -22,11 +22,15 @@ void Container::computeStackSize(std::set<Slot*> dragSlots, ubyte_t dragMode,
     dragStack->setCount(dragStack->getCount() + slotStackSize);
 }
 
-Container::Container() : windowId(0) {}
+Container::Container() : windowId(0), dragMode(0), dragEvent(0) {}
 
 Container::~Container() {
     for (Slot *slot : slots)
         delete slot;
+}
+
+byte_t Container::getWindowId() {
+    return windowId;
 }
 
 std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, ubyte_t mode, EntityPlayer *player) {
@@ -54,12 +58,12 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
         } else if (dragEvent == 2) {
             if (!dragSlots.empty()) {
                 std::shared_ptr<ItemStack> cursor = inventory.getCursor();
-                int cursorSize = cursor->getCount();
+                count_t cursorSize = cursor->getCount();
                 for (Slot *slot : dragSlots)
                     if (slot != nullptr && canAddItemToSlot(slot, inventory.getCursor()) && slot->isValid(inventory.getCursor())
-                        && inventory.getCursor()->getCount() > dragSlots.size()) {
+                        && inventory.getCursor()->getCount() >= dragSlots.size()) {
                         std::shared_ptr<ItemStack> stack = cursor->clone();
-                        int slotStackSize = slot->hasStack() ? slot->getStack()->getCount() : 0;
+                        count_t slotStackSize = slot->hasStack() ? slot->getStack()->getCount() : 0;
                         computeStackSize(dragSlots, dragMode, stack, slotStackSize);
                         if (stack->getCount() > stack->getMaxStackSize())
                             stack->setCount(stack->getMaxStackSize());
@@ -69,7 +73,7 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
                         slot->putStack(stack);
                     }
                 cursor->setCount(cursorSize);
-                if (cursor->getCount())
+                if (cursor->getCount() <= 0)
                     cursor = nullptr;
                 inventory.setCursor(cursor);
             }
@@ -114,7 +118,7 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
                         result = stack->clone();
                     if (stack == nullptr) {
                         if (cursor != nullptr && slot->isValid(cursor)) {
-                            int count = button == 0 ? cursor->getCount() : 1;
+                            count_t count = button == 0 ? cursor->getCount() : 1;
                             if (count > slot->getSlotMaxSize(cursor))
                                 count = slot->getSlotMaxSize(cursor);
                             if (cursor->getCount() >= count)
@@ -124,28 +128,28 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
                         }
                     } else if (slot->canTakeStack(player)) {
                         if (cursor == nullptr) {
-                            int count = button == 0 ? stack->getCount() : (stack->getCount() + 1) / 2;
+                            count_t count = button == 0 ? stack->getCount() : (stack->getCount() + 1) / 2;
                             inventory.setCursor(slot->decrStackSize(count));
                             if (stack->getCount() == 0)
                                 slot->putStack(nullptr);
                             slot->onPickupFromSlot(player, inventory.getCursor());
                         } else if (slot->isValid(cursor)) {
-                            if (stack->equals(cursor, false, true)) {
-                                int count = button == 0 ? cursor->getCount() : 1;
+                            if (stack->equals(cursor, false)) {
+                                count_t count = button == 0 ? cursor->getCount() : 1;
                                 if (count > slot->getSlotMaxSize(cursor) - stack->getCount())
                                     count = slot->getSlotMaxSize(cursor) - stack->getCount();
                                 if (count > cursor->getMaxStackSize() - stack->getCount())
                                     count = cursor->getMaxStackSize() - stack->getCount();
                                 cursor->splitStack(count);
                                 if (cursor->getCount() == 0)
-                                    inventory.setCursor(cursor);
+                                    inventory.setCursor(nullptr);
                                 stack->setCount(stack->getCount() + count);
                             } else if (cursor->getCount() <= slot->getSlotMaxSize(cursor)) {
                                 slot->putStack(cursor);
                                 inventory.setCursor(stack);
                             }
-                        } else if (stack->equals(cursor, false, true) && cursor->getMaxStackSize() > 1) {
-                            int count = stack->getCount();
+                        } else if (stack->equals(cursor, false) && cursor->getMaxStackSize() > 1) {
+                            count_t count = stack->getCount();
                             if (count > 0 && count + cursor->getCount() <= cursor->getMaxStackSize()) {
                                 cursor->setCount(cursor->getCount() + count);
                                 stack = slot->decrStackSize(count);
@@ -212,7 +216,7 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
                         slot = getSlot(index);
                         if (slot->hasStack() && canAddItemToSlot(slot, cursor) && slot->canTakeStack(player) && canTakeFromSlot(cursor, slot)
                             && (row != 0 || slot->getStack()->getCount() == slot->getStack()->getMaxStackSize())) {
-                            int count = MathUtils::min(cursor->getMaxStackSize() - cursor->getCount(), (int) slot->getStack()->getCount());
+                            count_t count = MathUtils::min(cursor->getMaxStackSize() - cursor->getCount(), (count_t) slot->getStack()->getCount());
                             std::shared_ptr<ItemStack> stack = slot->decrStackSize(count);
                             cursor->setCount(cursor->getCount() + count);
                             if (stack->getCount() < 0)
@@ -227,18 +231,34 @@ std::shared_ptr<ItemStack> Container::slotClick(short_t slotId, ubyte_t button, 
     return result;
 }
 
+bool Container::canCraft(EntityPlayer *player) {
+    return crafters.find(player) != crafters.end();
+}
+
+void Container::setCanCraft(EntityPlayer *player, bool canCraft) {
+    if (canCraft)
+        crafters.insert(player);
+    else
+        crafters.erase(player);
+}
+
 void Container::detectAndSendChanges() {
+    detectAndSendChanges(nullptr);
+}
+
+void Container::detectAndSendChanges(EntityPlayer *player) {
     for (int slotId = 0; slotId < slots.size(); ++slotId) {
         std::shared_ptr<ItemStack> stack = slots[slotId]->getStack();
-        if ((stacks[slotId] == nullptr && stack != nullptr) || (stacks[slotId] != nullptr && !stacks[slotId]->equals(stack, true, true))) {
+        if ((stacks[slotId] == nullptr && stack != nullptr) || (stacks[slotId] != nullptr && !stacks[slotId]->equals(stack))) {
             stacks[slotId] = stack == nullptr ? nullptr : stack->clone();
             if (dynamic_cast<SlotCrafting*>(getSlot(slotId)) == nullptr) {
                 std::shared_ptr<PacketSetSlot> packet = std::make_shared<PacketSetSlot>();
                 packet->windowId = windowId;
                 packet->slot = slotId;
-                packet->stack = stack->clone();
+                packet->stack = stack == nullptr ? nullptr : stack->clone();
                 for (EntityPlayer *watcher : watchers)
-                    watcher->sendPacket(packet);
+                    if (watcher != player)
+                        watcher->sendPacket(packet);
             }
         }
     }
@@ -250,20 +270,20 @@ void Container::addSlot(Slot *slot) {
     stacks.push_back(nullptr);
 }
 
-bool canTakeFromSlot(std::shared_ptr<ItemStack>, Slot*) {
+bool Container::canTakeFromSlot(std::shared_ptr<ItemStack>, Slot*) {
     return true;
 }
 
 bool Container::mergeItemStack(std::shared_ptr<ItemStack> stack, short_t startIndex, short_t endIndex, bool useEndIndex) {
     bool slotChanged = false;
-    int index = startIndex;
+    short_t index = startIndex;
     if (useEndIndex)
         index = endIndex - 1;
     if (stack->isStackable()) {
         while (stack->getCount() > 0 && ((!useEndIndex && index < endIndex) || (useEndIndex && index >= startIndex))) {
             std::shared_ptr<ItemStack> slotStack = getSlot(index)->getStack();
-            if (slotStack != nullptr && slotStack->equals(stack, false, true)) {
-                int count = slotStack->getCount() + stack->getCount();
+            if (slotStack != nullptr && slotStack->equals(stack, false)) {
+                count_t count = slotStack->getCount() + stack->getCount();
                 if (count <= stack->getMaxStackSize()) {
                     stack->setCount(0);
                     slotStack->setCount(count);
@@ -325,13 +345,7 @@ void Container::putStack(short_t index, std::shared_ptr<ItemStack> stack) {
     getSlot(index)->putStack(stack);
 }
 
-std::shared_ptr<ItemStack> Container::transferStackInSlot(EntityPlayer*, short_t index) {
-    Slot *slot = getSlot(index);
-    return slot != nullptr ? slot->getStack() : nullptr;
-}
-
-void Container::onCraftGuiOpened(EntityPlayer *player) {
-    watchers.insert(player);
+void Container::sendContainer(EntityPlayer *player) {
     std::shared_ptr<PacketWindowItems> itemsPacket = std::make_shared<PacketWindowItems>();
     itemsPacket->windowId = windowId;
     itemsPacket->stacks = getInventory();
@@ -341,7 +355,27 @@ void Container::onCraftGuiOpened(EntityPlayer *player) {
     slotPacket->slot = -1;
     slotPacket->stack = player->getInventory().getCursor();
     player->sendPacket(slotPacket);
+}
+
+std::shared_ptr<ItemStack> Container::transferStackInSlot(EntityPlayer*, short_t index) {
+    Slot *slot = getSlot(index);
+    return slot != nullptr ? slot->getStack() : nullptr;
+}
+
+void Container::onContainerClosed(EntityPlayer *player) {
+    InventoryPlayer &inventory = player->getInventory();
+    if (inventory.getCursor() != nullptr) {
+        player->drop(inventory.getCursor());
+        inventory.setCursor(nullptr);
+    }
+}
+
+void Container::onCraftGuiOpened(EntityPlayer *player) {
+    watchers.insert(player);
+    sendContainer(player);
     detectAndSendChanges();
 }
 
-void Container::onCraftMatrixChanged(Inventory&) {}
+void Container::onCraftMatrixChanged(Inventory&) {
+    detectAndSendChanges();
+}

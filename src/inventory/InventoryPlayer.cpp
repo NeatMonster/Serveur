@@ -26,7 +26,15 @@ void InventoryPlayer::setStack(short_t index, std::shared_ptr<ItemStack> stack) 
         main[index] = stack;
 }
 
-std::shared_ptr<ItemStack> InventoryPlayer::decrStackSize(short_t index, int count) {
+short_t InventoryPlayer::getCurrentItem() {
+    return currentItem;
+}
+
+void InventoryPlayer::setCurrentItem(short_t currentItem) {
+    this->currentItem = currentItem;
+}
+
+std::shared_ptr<ItemStack> InventoryPlayer::decrStackSize(short_t index, count_t count) {
     std::shared_ptr<ItemStack> *inv = main;
     if (index >= 36) {
         inv = armor;
@@ -54,11 +62,11 @@ short_t InventoryPlayer::getFirstEmpty() {
     return -1;
 }
 
-int InventoryPlayer::getInventoryStackLimit() {
+count_t InventoryPlayer::getInventoryStackLimit() {
     return 64;
 }
 
-bool InventoryPlayer::addStack(std::shared_ptr<ItemStack> &stack) {
+bool InventoryPlayer::addStack(std::shared_ptr<ItemStack> stack) {
     if (stack == nullptr || stack->getCount() == 0 || stack->getItem() == nullptr)
         return false;
     if (stack->isDamaged()) {
@@ -88,7 +96,7 @@ bool InventoryPlayer::addStack(std::shared_ptr<ItemStack> &stack) {
 
 int InventoryPlayer::storeItemStack(std::shared_ptr<ItemStack> stack) {
     for (short_t index = 0; index < 36; ++index)
-        if (main[index] != nullptr && main[index]->equals(stack, false, true) && main[index]->isStackable()
+        if (main[index] != nullptr && main[index]->equals(stack, false) && main[index]->isStackable()
             && main[index]->getCount() < main[index]->getMaxStackSize()
             && main[index]->getCount() < getInventoryStackLimit())
             return index;
@@ -96,7 +104,7 @@ int InventoryPlayer::storeItemStack(std::shared_ptr<ItemStack> stack) {
 }
 
 int InventoryPlayer::storePartialItemStack(std::shared_ptr<ItemStack> stack) {
-    int count = stack->getCount();
+    count_t count = stack->getCount();
     short_t slot = storeItemStack(stack);
     if (slot < 0)
         slot = getFirstEmpty();
@@ -105,9 +113,10 @@ int InventoryPlayer::storePartialItemStack(std::shared_ptr<ItemStack> stack) {
     else {
         if (main[slot] == nullptr) {
             main[slot] = std::make_shared<ItemStack>(stack->getItem(), 0, stack->getDamage());
-            main[slot]->setTag(stack->getTag());
+            if (stack->hasTag())
+                main[slot]->setTag(std::dynamic_pointer_cast<NBTTagCompound>(stack->getTag()->clone()));
         }
-        int stored = count;
+        count_t stored = count;
         if (count > main[slot]->getMaxStackSize() - main[slot]->getCount())
             stored = main[slot]->getMaxStackSize() - main[slot]->getCount();
         if (stored > getInventoryStackLimit() - main[slot]->getCount())

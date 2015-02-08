@@ -17,19 +17,23 @@ public:
 
     void setStack(short_t, std::shared_ptr<ItemStack>);
 
-    std::shared_ptr<ItemStack> decrStackSize(short_t, int);
+    short_t getCurrentItem();
+
+    void setCurrentItem(short_t);
+
+    std::shared_ptr<ItemStack> decrStackSize(short_t, count_t);
 
     short_t getFirstEmpty();
 
-    int getInventoryStackLimit();
+    count_t getInventoryStackLimit();
 
-    bool addStack(std::shared_ptr<ItemStack>&);
+    bool addStack(std::shared_ptr<ItemStack>);
 
 private:
     std::shared_ptr<ItemStack> main[36];
     std::shared_ptr<ItemStack> armor[4];
     std::shared_ptr<ItemStack> cursor;
-    //short_t currentItem;
+    short_t currentItem;
     EntityPlayer *player;
 
     int storeItemStack(std::shared_ptr<ItemStack> stack);

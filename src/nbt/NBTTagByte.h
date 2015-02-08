@@ -15,6 +15,8 @@ public:
 
     void print(int, bool);
 
+    int size(bool);
+
     byte_t get();
 
     void set(byte_t);

@@ -53,6 +53,10 @@ void NBTTagIntArray::print(int tab, bool header) {
     std::cout << "]" << std::endl;
 }
 
+int NBTTagIntArray::size(bool header) {
+    return NBTTag::size(header) + 4 + 4 * value.size();
+}
+
 void NBTTagIntArray::get(int_t *dst) {
     std::memcpy(dst, value.data(), 4 * value.size());
 }

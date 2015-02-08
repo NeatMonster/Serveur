@@ -33,6 +33,10 @@ void NBTTag::print() {
     print(0, true);
 }
 
+int NBTTag::size() {
+    return size(true);
+}
+
 string_t NBTTag::getName() {
     return name;
 }
@@ -197,4 +201,8 @@ void NBTTag::write(ubyte_t *&data, bool header) {
 void NBTTag::print(int tab, bool) {
     for (int i = 0; i < 2 * tab; ++i)
         std::cout << " ";
+}
+
+int NBTTag::size(bool header) {
+    return header ? 3 + name.size() : 0;
 }

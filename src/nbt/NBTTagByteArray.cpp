@@ -44,6 +44,10 @@ void NBTTagByteArray::print(int tab, bool header) {
     std::cout << "]" << std::endl;
 }
 
+int NBTTagByteArray::size(bool header) {
+    return NBTTag::size(header) + 4 + value.size();
+}
+
 void NBTTagByteArray::get(ubyte_t *dst) {
     std::memcpy(dst, value.data(), value.size());
 }

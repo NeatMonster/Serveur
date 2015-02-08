@@ -42,6 +42,13 @@ void NBTTagList::print(int tab, bool header) {
     std::cout << "}" << std::endl;
 }
 
+int NBTTagList::size(bool header) {
+    int size = NBTTag::size(header) + 5;
+    for (auto child : children)
+        size += child->size(false);
+    return size;
+}
+
 std::vector<std::shared_ptr<NBTTag>>::iterator NBTTagList::begin() {
     return children.begin();
 }

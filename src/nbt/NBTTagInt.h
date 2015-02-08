@@ -15,6 +15,8 @@ public:
 
     void print(int, bool);
 
+    int size(bool);
+
     int_t get();
 
     void set(int_t);

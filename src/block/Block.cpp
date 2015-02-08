@@ -201,7 +201,7 @@ Block* Block::jungle_door;
 Block* Block::acacia_door;
 Block* Block::dark_oak_door;
 
-void Block::registerBlock(ubyte_t type, string_t name, Block *block) {
+void Block::registerBlock(ushort_t type, string_t name, Block *block) {
     typeToBlock[type] = block;
     nameToBlock[name] = block;
     blockToType[block] = type;
@@ -419,7 +419,7 @@ void Block::deregisterBlocks() {
     Material::deregisterMaterials();
 }
 
-Block *Block::getBlock(ubyte_t type) {
+Block *Block::getBlock(ushort_t type) {
     return typeToBlock[type];
 }
 
@@ -427,11 +427,11 @@ Block *Block::getBlock(string_t name) {
     return nameToBlock[name];
 }
 
-ubyte_t Block::getBlockType(Block *block) {
+ushort_t Block::getBlockType(Block *block) {
     return blockToType[block];
 }
 
-ubyte_t Block::getBlockType(string_t name) {
+ushort_t Block::getBlockType(string_t name) {
     return nameToType[name];
 }
 
@@ -439,7 +439,7 @@ string_t Block::getBlockName(Block *block) {
     return blockToName[block];
 }
 
-string_t Block::getBlockName(ubyte_t type) {
+string_t Block::getBlockName(ushort_t type) {
     return typeToName[type];
 }
 
@@ -455,9 +455,9 @@ AxisAlignedBB Block::getBoundingBox() {
     return boundingBox;
 }
 
-std::unordered_map<ubyte_t, Block*> Block::typeToBlock;
+std::unordered_map<ushort_t, Block*> Block::typeToBlock;
 std::unordered_map<string_t, Block*> Block::nameToBlock;
-std::unordered_map<Block*, ubyte_t> Block::blockToType;
-std::unordered_map<string_t, ubyte_t> Block::nameToType;
+std::unordered_map<Block*, ushort_t> Block::blockToType;
+std::unordered_map<string_t, ushort_t> Block::nameToType;
 std::unordered_map<Block*, string_t> Block::blockToName;
-std::unordered_map<ubyte_t, string_t> Block::typeToName;
+std::unordered_map<ushort_t, string_t> Block::typeToName;

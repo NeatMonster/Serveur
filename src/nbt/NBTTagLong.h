@@ -15,6 +15,8 @@ public:
 
     void print(int, bool);
 
+    int size(bool);
+
     long_t get();
 
     void set(long_t);

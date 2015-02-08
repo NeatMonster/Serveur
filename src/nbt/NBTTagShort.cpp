@@ -21,6 +21,10 @@ void NBTTagShort::print(int tab, bool header) {
     std::cout << "TAG_Short(" << (header ? ("'" + name + "'") : "None") << "): " << value << std::endl;
 }
 
+int NBTTagShort::size(bool header) {
+    return NBTTag::size(header) + 2;
+}
+
 short_t NBTTagShort::get() {
     return value;
 }

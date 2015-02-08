@@ -2,15 +2,15 @@
 
 ItemStack::ItemStack(Item *item) : ItemStack(item, 0, 0) {}
 
-ItemStack::ItemStack(Item *item, byte_t count) : ItemStack(item, count, 0) {}
+ItemStack::ItemStack(Item *item, count_t count) : ItemStack(item, count, 0) {}
 
-ItemStack::ItemStack(Item *item, byte_t count, short_t damage) : item(item), count(count), damage(damage), tag(nullptr) {}
+ItemStack::ItemStack(Item *item, count_t count, ushort_t damage) : item(item), count(count), damage(damage), tag(nullptr) {}
 
 ItemStack::ItemStack(Block *block) : ItemStack(block, 0, 0) {}
 
-ItemStack::ItemStack(Block *block, byte_t count) : ItemStack(block, count, 0) {}
+ItemStack::ItemStack(Block *block, count_t count) : ItemStack(block, count, 0) {}
 
-ItemStack::ItemStack(Block *block, byte_t count, short_t damage) : item(Item::getItem(block)), count(count), damage(damage), tag(nullptr) {}
+ItemStack::ItemStack(Block *block, count_t count, ushort_t damage) : item(Item::getItem(block)), count(count), damage(damage), tag(nullptr) {}
 
 ItemStack::ItemStack(ItemStack *stack) : item(stack->item), count(stack->count), damage(stack->damage) {
     if (stack->tag == nullptr)
@@ -27,32 +27,36 @@ void ItemStack::setItem(Item *item) {
     this->item = item;
 }
 
-byte_t ItemStack::getCount() {
+count_t ItemStack::getCount() {
     return count;
 }
 
-void ItemStack::setCount(byte_t count) {
+void ItemStack::setCount(count_t count) {
     this->count = count;
 }
 
-short_t ItemStack::getDamage() {
+ushort_t ItemStack::getDamage() {
     return damage;
 }
 
-void ItemStack::setDamage(short_t damage) {
+void ItemStack::setDamage(ushort_t damage) {
     this->damage = damage;
 }
 
 std::shared_ptr<NBTTagCompound> ItemStack::getTag() {
-    return tag == nullptr ? nullptr : std::dynamic_pointer_cast<NBTTagCompound>(tag->clone());
+    return tag;
 }
 
 void ItemStack::setTag(std::shared_ptr<NBTTagCompound> tag) {
-    this->tag = tag == nullptr ? nullptr : std::dynamic_pointer_cast<NBTTagCompound>(tag->clone());
+    this->tag = tag;
+}
+
+bool ItemStack::hasTag() {
+    return tag != nullptr;
 }
 
 bool ItemStack::isDamageable() {
-    return item != nullptr && item->getMaxDamage() > 0 && (getTag() == nullptr || getTag()->get("Unbreakable")->asByte() != 0);
+    return item != nullptr && item->getMaxDamage() > 0 && (tag == nullptr || tag->get("Unbreakable")->asByte() != 0);
 }
 
 bool ItemStack::isDamaged() {
@@ -63,7 +67,7 @@ bool ItemStack::isStackable() {
     return getMaxStackSize() > 1 && (!isDamageable() || !isDamaged());
 }
 
-int ItemStack::getMaxStackSize() {
+count_t ItemStack::getMaxStackSize() {
     return getItem()->getMaxStackSize();
 }
 
@@ -71,18 +75,22 @@ void ItemStack::onCrafting(EntityPlayer *player) {
     item->onCreated(shared_from_this(), player);
 }
 
-std::shared_ptr<ItemStack> ItemStack::splitStack(int amount) {
+std::shared_ptr<ItemStack> ItemStack::splitStack(count_t amount) {
     std::shared_ptr<ItemStack> stack = std::make_shared<ItemStack>(item, amount, damage);
-    stack->setTag(getTag());
+    if (tag != nullptr)
+        stack->setTag(std::dynamic_pointer_cast<NBTTagCompound>(tag->clone()));
     count -= amount;
     return stack;
 }
 
-bool ItemStack::equals(std::shared_ptr<ItemStack> stack, bool compareCount, bool compareTags) {
-    return stack != nullptr && item == stack->getItem()
-        && (!compareCount || count == stack->getCount())
+bool ItemStack::equals(std::shared_ptr<ItemStack> stack) {
+    return equals(stack, true);
+}
+
+bool ItemStack::equals(std::shared_ptr<ItemStack> stack, bool sizeMatters) {
+    return stack != nullptr && item == stack->getItem() && (!sizeMatters || count == stack->getCount())
         && (!item->getHasSubtypes() || damage == stack->getDamage())
-        && (!compareTags || (tag == nullptr && stack->getTag() == nullptr) || tag->equals(stack->getTag()));
+        && ((tag == nullptr && stack->getTag() == nullptr) || (tag != nullptr && tag->equals(stack->getTag())));
 }
 
 std::shared_ptr<ItemStack> ItemStack::clone() {

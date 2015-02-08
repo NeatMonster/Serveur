@@ -25,6 +25,10 @@ void NBTTagFloat::print(int tab, bool header) {
     std::cout << "TAG_Float(" << (header ? ("'" + name + "'") : "None") << "): " << value << std::endl;
 }
 
+int NBTTagFloat::size(bool header) {
+    return NBTTag::size(header) + 4;
+}
+
 float_t NBTTagFloat::get() {
     return value;
 }

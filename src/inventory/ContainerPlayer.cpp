@@ -21,6 +21,22 @@ bool ContainerPlayer::canTakeFromSlot(std::shared_ptr<ItemStack> stack, Slot *sl
     return &slot->inventory != &craftResult && Container::canTakeFromSlot(stack, slot);
 }
 
+void ContainerPlayer::onContainerClosed(EntityPlayer *player) {
+    Container::onContainerClosed(player);
+    for (short_t index = 0; index < 4; ++index) {
+        std::shared_ptr<ItemStack> stack = craftMatrix.getStack(index);
+        if (stack != nullptr) {
+            player->drop(stack);
+            craftMatrix.setStack(index, nullptr);
+        }
+    }
+    craftResult.setStack(0, nullptr);
+}
+
+void ContainerPlayer::onCraftMatrixChanged(Inventory&) {
+     craftResult.setStack(0, nullptr); // TODO Rechercher parmi les recettes
+}
+
 std::shared_ptr<ItemStack> ContainerPlayer::transferStackInSlot(EntityPlayer *player, short_t index) {
     std::shared_ptr<ItemStack> stack = nullptr;
     Slot *slot = getSlot(index);
@@ -41,6 +57,9 @@ std::shared_ptr<ItemStack> ContainerPlayer::transferStackInSlot(EntityPlayer *pl
         // TODO Ajouter un cas pour les armures
         else if (index >= 9 && index < 36) {
             if (!mergeItemStack(slotStack, 36, 45, false))
+                return nullptr;
+        } else if (index >= 36 && index < 45) {
+            if (!mergeItemStack(slotStack, 9, 36, false))
                 return nullptr;
         } else if (!mergeItemStack(slotStack, 9, 45, false))
             return nullptr;

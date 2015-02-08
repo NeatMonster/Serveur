@@ -17,6 +17,8 @@ public:
 
     bool sendVelocityUpdates() { return true; }
 
+    void fromCreative();
+
     std::shared_ptr<ItemStack> getItem();
 
     void setItem(std::shared_ptr<ItemStack>);
@@ -28,6 +30,7 @@ public:
     void onTick();
 
 private:
+    int_t age;
     int_t pickupDelay;
 
     void searchForItems();

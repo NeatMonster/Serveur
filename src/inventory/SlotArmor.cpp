@@ -6,6 +6,6 @@ bool SlotArmor::isValid(std::shared_ptr<ItemStack> stack) {
     return false; // TODO Autoriser les armures une fois implémentées
 }
 
-int SlotArmor::getSlotStackLimit() {
+count_t SlotArmor::getSlotStackLimit() {
     return 1;
 }

@@ -33,6 +33,10 @@ void NBTTagDouble::print(int tab, bool header) {
     std::cout << "TAG_Double(" << (header ? ("'" + name + "'") : "None") << "): " << value << std::endl;
 }
 
+int NBTTagDouble::size(bool header) {
+    return NBTTag::size(header) + 8;
+}
+
 double_t NBTTagDouble::get() {
     return value;
 }

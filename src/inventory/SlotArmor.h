@@ -9,7 +9,7 @@ public:
 
     bool isValid(std::shared_ptr<ItemStack>);
 
-    int getSlotStackLimit();
+    count_t getSlotStackLimit();
 };
 
 #endif /* defined(__Serveur__SlotArmor__) */

@@ -25,6 +25,10 @@ void NBTTagInt::print(int tab, bool header) {
     std::cout << "TAG_Int(" << (header ? ("'" + name + "'") : "None") << "): " << value << std::endl;
 }
 
+int NBTTagInt::size(bool header) {
+    return NBTTag::size(header) + 4;
+}
+
 int_t NBTTagInt::get() {
     return value;
 }

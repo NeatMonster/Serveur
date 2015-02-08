@@ -65,6 +65,7 @@ float_t PlayerConnection::getPing() {
 }
 
 void PlayerConnection::handlePackets() {
+    handler->update();
     std::shared_ptr<ClientPacket> packet;
     while (!closed && readQueue.tryPop(packet))
         packet->handle(handler);

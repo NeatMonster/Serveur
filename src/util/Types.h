@@ -27,6 +27,7 @@ typedef double double_t;
 typedef std::string string_t;
 typedef std::vector<int_t> ints_t;
 typedef std::vector<uint_t> uints_t;
+typedef ssize_t count_t;
 
 struct Position {
     int_t x, y, z;

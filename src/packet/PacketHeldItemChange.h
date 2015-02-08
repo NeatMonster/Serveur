@@ -8,6 +8,8 @@ public:
     short_t slot;
 
     void read(PacketBuffer&);
+
+    void handle(PacketHandler*);
 };
 
 #endif /* defined(__Serveur__PacketHeldItemChange__) */

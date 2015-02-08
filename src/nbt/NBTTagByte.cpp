@@ -19,6 +19,10 @@ void NBTTagByte::print(int tab, bool header) {
     std::cout << "TAG_Byte(" << (header ? ("'" + name + "'") : "None") << "): " << (int) value << std::endl;
 }
 
+int NBTTagByte::size(bool header) {
+    return NBTTag::size(header) + 1;
+}
+
 byte_t NBTTagByte::get() {
     return value;
 }

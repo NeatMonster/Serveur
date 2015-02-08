@@ -33,6 +33,10 @@ void NBTTagLong::print(int tab, bool header) {
     std::cout << "TAG_Long(" << (header ? ("'" + name + "'") : "None") << "): " << value << std::endl;
 }
 
+int NBTTagLong::size(bool header) {
+    return NBTTag::size(header) + 8;
+}
+
 long_t NBTTagLong::get() {
     return value;
 }

@@ -16,6 +16,8 @@ public:
 
     void print(int, bool);
 
+    int size(bool);
+
     std::shared_ptr<NBTTag> get(string_t);
 
     void set(string_t, std::shared_ptr<NBTTag>);

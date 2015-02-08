@@ -9,6 +9,7 @@
 #include "InventoryPlayer.h"
 #include "PlayerCapabilities.h"
 
+class EntityItem;
 class PlayerConnection;
 class ServerPacket;
 
@@ -38,6 +39,10 @@ public:
 
     ContainerPlayer &getContainer();
 
+    Container &getOpenContainer();
+
+    void closeOpenContainer();
+
     InventoryPlayer &getInventory();
 
     GameMode getGameMode();
@@ -52,7 +57,7 @@ public:
 
     bool canEat(bool);
 
-    void drop(std::shared_ptr<ItemStack>);
+    EntityItem *drop(std::shared_ptr<ItemStack>);
 
     void disconnect(string_t);
 
@@ -74,7 +79,7 @@ private:
     PlayerConnection *connect;
     InventoryPlayer inventory;
     ContainerPlayer container;
-    ContainerPlayer &openContainer;
+    Container &openContainer;
     FoodStats foodStats;
     PlayerCapabilities capabilities;
     string_t uuid;

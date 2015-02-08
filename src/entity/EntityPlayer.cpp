@@ -53,6 +53,15 @@ ContainerPlayer &EntityPlayer::getContainer() {
     return container;
 }
 
+Container &EntityPlayer::getOpenContainer() {
+    return openContainer;
+}
+
+void EntityPlayer::closeOpenContainer() {
+    openContainer.onContainerClosed(this);
+    openContainer = container;
+}
+
 InventoryPlayer &EntityPlayer::getInventory() {
     return inventory;
 }
@@ -93,7 +102,7 @@ void EntityPlayer::sendMessage(ChatMessage &message) {
     sendPacket(std::make_shared<PacketChatMessage>(message.getJSON()));
 }
 
-void EntityPlayer::drop(std::shared_ptr<ItemStack> stack) {
+EntityItem *EntityPlayer::drop(std::shared_ptr<ItemStack> stack) {
     std::shared_ptr<EntityItem> entity = std::make_shared<EntityItem>(world, stack);
     entity->getItem();
     entity->setPosition(posX, posY + 1.32, posZ);
@@ -107,6 +116,7 @@ void EntityPlayer::drop(std::shared_ptr<ItemStack> stack) {
     motZ += sin(angle) * length;
     entity->setVelocity(motX, motY, motZ);
     world->addEntity(entity->getEntityId(), entity);
+    return entity.get();
 }
 
 void EntityPlayer::disconnect(string_t reason) {

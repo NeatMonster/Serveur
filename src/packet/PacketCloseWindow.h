@@ -8,6 +8,8 @@ public:
     byte_t windowId;
 
     void read(PacketBuffer&);
+
+    void handle(PacketHandler*);
 };
 
 #endif /* defined(__Serveur__PacketCloseWindow__) */

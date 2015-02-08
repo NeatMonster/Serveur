@@ -14,6 +14,10 @@ public:
 
     bool canTakeFromSlot(std::shared_ptr<ItemStack>, Slot*);
 
+    void onContainerClosed(EntityPlayer*);
+
+    void onCraftMatrixChanged(Inventory&);
+
     std::shared_ptr<ItemStack> transferStackInSlot(EntityPlayer*, short_t);
 
 private:

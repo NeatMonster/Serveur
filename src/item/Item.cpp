@@ -596,20 +596,20 @@ Item *Item::setHasSubtypes(bool hasSubtypes) {
     return this;
 }
 
-int_t Item::getMaxDamage() {
+ushort_t Item::getMaxDamage() {
     return maxDamage;
 }
 
-Item *Item::setMaxDamage(int_t maxDamage) {
+Item *Item::setMaxDamage(ushort_t maxDamage) {
     this->maxDamage = maxDamage;
     return this;
 }
 
-int_t Item::getMaxStackSize() {
+count_t Item::getMaxStackSize() {
     return maxStackSize;
 }
 
-Item *Item::setMaxStackSize(int_t maxStackSize) {
+Item *Item::setMaxStackSize(count_t maxStackSize) {
     this->maxStackSize = maxStackSize;
     return this;
 }
@@ -617,9 +617,9 @@ Item *Item::setMaxStackSize(int_t maxStackSize) {
 void Item::onCreated(std::shared_ptr<ItemStack>, EntityPlayer*) {}
 
 std::unordered_map<Block*, Item*> Item::blockToItem;
-std::unordered_map<ubyte_t, Item*> Item::typeToItem;
+std::unordered_map<ushort_t, Item*> Item::typeToItem;
 std::unordered_map<string_t, Item*> Item::nameToItem;
-std::unordered_map<Item*, ubyte_t> Item::itemToType;
-std::unordered_map<string_t, ubyte_t> Item::nameToType;
+std::unordered_map<Item*, ushort_t> Item::itemToType;
+std::unordered_map<string_t, ushort_t> Item::nameToType;
 std::unordered_map<Item*, string_t> Item::itemToName;
 std::unordered_map<ubyte_t, string_t> Item::typeToName;

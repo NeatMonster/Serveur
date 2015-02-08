@@ -2,10 +2,12 @@
 
 #include "PacketAnimation.h"
 #include "PacketChatMessage.h"
-#include "PacketCreativeInventoryAction.h"
+#include "PacketClickWindow.h"
 #include "PacketClientSettings.h"
 #include "PacketClientStatus.h"
 #include "PacketCloseWindow.h"
+#include "PacketConfirmTransaction.h"
+#include "PacketCreativeInventoryAction.h"
 #include "PacketEntityAction.h"
 #include "PacketHeldItemChange.h"
 #include "PacketKeepAlive.h"
@@ -28,10 +30,12 @@ PacketFactory::PacketFactory() {
     registerPacket<PacketPlayerPositionLook>(0x06);
     registerPacket<PacketPlayerDigging>(0x07);
     registerPacket<PacketHeldItemChange>(0x09);
-    registerPacket<PacketCreativeInventoryAction>(0x10);
     registerPacket<PacketAnimation>(0x0a);
     registerPacket<PacketEntityAction>(0x0b);
     registerPacket<PacketCloseWindow>(0x0d);
+    registerPacket<PacketClickWindow>(0x0e);
+    registerPacket<PacketConfirmTransaction>(0x0f);
+    registerPacket<PacketCreativeInventoryAction>(0x10);
     registerPacket<PacketPlayerAbilities>(0x13);
     registerPacket<PacketClientSettings>(0x15);
     registerPacket<PacketClientStatus>(0x16);

@@ -40,6 +40,8 @@ public:
 
     void print();
 
+    int size();
+
     string_t getName();
 
     bool isByte();
@@ -101,6 +103,8 @@ protected:
     virtual void write(ubyte_t*&, bool);
 
     virtual void print(int, bool);
+
+    virtual int size(bool);
 };
 
 #endif /* defined(__Serveur__NBTTag__) */

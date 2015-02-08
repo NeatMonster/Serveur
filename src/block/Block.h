@@ -208,23 +208,23 @@ public:
     static Block* acacia_door;
     static Block* dark_oak_door;
 
-    static void registerBlock(ubyte_t, string_t, Block*);
+    static void registerBlock(ushort_t, string_t, Block*);
 
     static void registerBlocks();
 
     static void deregisterBlocks();
 
-    static Block *getBlock(ubyte_t);
+    static Block *getBlock(ushort_t);
 
     static Block *getBlock(string_t);
 
-    static ubyte_t getBlockType(Block*);
+    static ushort_t getBlockType(Block*);
 
-    static ubyte_t getBlockType(string_t);
+    static ushort_t getBlockType(string_t);
 
     static string_t getBlockName(Block*);
 
-    static string_t getBlockName(ubyte_t);
+    static string_t getBlockName(ushort_t);
 
     Block();
 
@@ -235,12 +235,12 @@ public:
     AxisAlignedBB getBoundingBox();
 
 private:
-    static std::unordered_map<ubyte_t, Block*> typeToBlock;
+    static std::unordered_map<ushort_t, Block*> typeToBlock;
     static std::unordered_map<string_t, Block*> nameToBlock;
-    static std::unordered_map<Block*, ubyte_t> blockToType;
-    static std::unordered_map<string_t, ubyte_t> nameToType;
+    static std::unordered_map<Block*, ushort_t> blockToType;
+    static std::unordered_map<string_t, ushort_t> nameToType;
     static std::unordered_map<Block*, string_t> blockToName;
-    static std::unordered_map<ubyte_t, string_t> typeToName;
+    static std::unordered_map<ushort_t, string_t> typeToName;
 
 protected:
     Material *material;

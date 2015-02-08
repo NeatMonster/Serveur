@@ -25,24 +25,23 @@ public:
 
     virtual bool canTakeStack(EntityPlayer*);
 
-    virtual std::shared_ptr<ItemStack> decrStackSize(int);
+    virtual std::shared_ptr<ItemStack> decrStackSize(count_t);
 
     virtual bool isValid(std::shared_ptr<ItemStack>);
 
-    virtual int getSlotMaxSize(std::shared_ptr<ItemStack>);
+    virtual count_t getSlotMaxSize(std::shared_ptr<ItemStack>);
 
-    virtual int getSlotStackLimit();
+    virtual count_t getSlotStackLimit();
 
     virtual void onPickupFromSlot(EntityPlayer*, std::shared_ptr<ItemStack>);
 
 protected:
     virtual void onCrafting(std::shared_ptr<ItemStack>);
 
-    virtual void onCrafting(std::shared_ptr<ItemStack>, int);
+    virtual void onCrafting(std::shared_ptr<ItemStack>, count_t);
 
 private:
     short_t slotIndex;
-
 };
 
 #endif /* defined(__Serveur__Slot__) */

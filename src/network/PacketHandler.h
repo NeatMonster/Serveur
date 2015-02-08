@@ -3,11 +3,16 @@
 
 #include "Types.h"
 
+#include <map>
+
 class PacketAnimation;
 class PacketChatMessage;
 class PacketClickWindow;
+class PacketCloseWindow;
+class PacketConfirmTransaction;
 class PacketCreativeInventoryAction;
 class PacketHandshake;
+class PacketHeldItemChange;
 class PacketKeepAlive;
 class PacketLoginStart;
 class PacketPlayer;
@@ -47,12 +52,22 @@ public:
 
     void handleClickWindow(PacketClickWindow*);
 
+    void handleConfirmTransaction(PacketConfirmTransaction*);
+
+    void handleCloseWindow(PacketCloseWindow*);
+
+    void handleHeldItemChange(PacketHeldItemChange*);
+
     void handlePosition(double_t, double_t, double_t, bool);
 
     void handleRotation(float_t, float_t);
 
+    void update();
+
 private:
     PlayerConnection *connect;
+    int dropThreshold;
+    std::map<byte_t, short_t> fails;
 };
 
 #endif /* defined(__Serveur__PacketHandler__) */

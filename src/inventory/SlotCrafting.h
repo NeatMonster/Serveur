@@ -13,7 +13,7 @@ public:
 
     void onCrafting(std::shared_ptr<ItemStack>);
 
-    void onCrafting(std::shared_ptr<ItemStack>, int);
+    void onCrafting(std::shared_ptr<ItemStack>, count_t);
 
     void onPickupFromSlot(EntityPlayer*, std::shared_ptr<ItemStack>);
 

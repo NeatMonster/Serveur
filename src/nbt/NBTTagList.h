@@ -18,6 +18,8 @@ public:
 
     void print(int, bool);
 
+    int size(bool);
+
     std::vector<std::shared_ptr<NBTTag>>::iterator begin();
 
     std::vector<std::shared_ptr<NBTTag>>::iterator end();

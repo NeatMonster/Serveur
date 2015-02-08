@@ -14,15 +14,15 @@ class ItemStack : public std::enable_shared_from_this<ItemStack> {
 public:
     ItemStack(Item*);
 
-    ItemStack(Item*, byte_t);
+    ItemStack(Item*, count_t);
 
-    ItemStack(Item*, byte_t, short_t);
+    ItemStack(Item*, count_t, ushort_t);
 
     ItemStack(Block*);
 
-    ItemStack(Block*, byte_t);
+    ItemStack(Block*, count_t);
 
-    ItemStack(Block*, byte_t, short_t);
+    ItemStack(Block*, count_t, ushort_t);
 
     ItemStack(ItemStack*);
 
@@ -30,17 +30,19 @@ public:
 
     void setItem(Item*);
 
-    byte_t getCount();
+    count_t getCount();
 
-    void setCount(byte_t);
+    void setCount(count_t);
 
-    short_t getDamage();
+    ushort_t getDamage();
 
-    void setDamage(short_t);
+    void setDamage(ushort_t);
 
     std::shared_ptr<NBTTagCompound> getTag();
 
     void setTag(std::shared_ptr<NBTTagCompound>);
+
+    bool hasTag();
 
     bool isDamageable();
 
@@ -48,20 +50,22 @@ public:
 
     bool isStackable();
 
-    int getMaxStackSize();
+    count_t getMaxStackSize();
 
     void onCrafting(EntityPlayer*);
 
-    std::shared_ptr<ItemStack> splitStack(int);
+    std::shared_ptr<ItemStack> splitStack(count_t);
 
-    bool equals(std::shared_ptr<ItemStack>, bool, bool);
+    bool equals(std::shared_ptr<ItemStack>);
+
+    bool equals(std::shared_ptr<ItemStack>, bool);
 
     std::shared_ptr<ItemStack> clone();
 
 private:
     Item *item;
-    byte_t count;
-    short_t damage;
+    count_t count;
+    ushort_t damage;
     std::shared_ptr<NBTTagCompound> tag;
 };
 

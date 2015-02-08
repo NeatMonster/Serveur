@@ -11,7 +11,7 @@ void SlotCrafting::onCrafting(std::shared_ptr<ItemStack> stack) {
     stack->onCrafting(player);
 }
 
-void SlotCrafting::onCrafting(std::shared_ptr<ItemStack> stack, int) {
+void SlotCrafting::onCrafting(std::shared_ptr<ItemStack> stack, count_t) {
     onCrafting(stack);
 }
 

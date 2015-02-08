@@ -21,6 +21,13 @@ void NBTTagCompound::write(ubyte_t *&data, bool header) {
     *(data++) = Type::END;
 }
 
+int NBTTagCompound::size(bool header) {
+    int size = NBTTag::size(header) + 1;
+    for (auto child : children)
+        size += child.second->size(true);
+    return size;
+}
+
 void NBTTagCompound::print(int tab, bool header) {
     NBTTag::print(tab, header);
     std::cout << "TAG_Compound(" << (header ? ("'" + name + "'") : "None") << ")" << std::endl;

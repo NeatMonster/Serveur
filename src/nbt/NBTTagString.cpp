@@ -31,6 +31,10 @@ void NBTTagString::print(int tab, bool header) {
     std::cout << "TAG_String(" << (header ? ("'" + name + "'") : "None") << "): '" << value << "'" << std::endl;
 }
 
+int NBTTagString::size(bool header) {
+    return NBTTag::size(header) + 2 + value.size();
+}
+
 string_t NBTTagString::get() {
     return value;
 }

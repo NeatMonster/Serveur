@@ -232,9 +232,10 @@ void PacketBuffer::putTag(std::shared_ptr<NBTTagCompound> tag) {
     if (tag == nullptr)
         putByte(0);
     else {
+        reserve(position + tag->NBTTag::size());
         ubyte_t *data = buffer.data() + position;
         tag->NBTTag::write(data);
-        position = data - buffer.data();
+        setPosition(data - buffer.data());
     }
 }
 
