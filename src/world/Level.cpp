@@ -29,6 +29,7 @@ Level::Level(string_t worldName) {
     } else {
         time = dayTime = 0;
         spawn = Position(8, 4, 8);
+        difficulty = Difficulty::NORMAL;
     }
 }
 

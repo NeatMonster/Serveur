@@ -79,6 +79,26 @@ DataWatcher &Entity::getDataWatcher() {
     return dataWatcher;
 }
 
+bool Entity::getFlag(int flag) {
+    return (getDataWatcher().getByte(0) & 1 << flag) != 0;
+}
+
+bool Entity::isBurning() {
+    return getFlag(0); // TODO Finir la méthode, voire celle du NMS
+}
+
+bool Entity::isSneaking() {
+    return getFlag(1);
+}
+
+bool Entity::isSprinting() {
+    return getFlag(3);
+}
+
+bool Entity::isInvisible() {
+    return getFlag(5);
+}
+
 double_t Entity::getDistance(Entity *entity) {
     return (posX - entity->getX()) * (posX - entity->getX())
          + (posY - entity->getY()) * (posY - entity->getY())
