@@ -4,6 +4,7 @@
 #include "CommandGameMode.h"
 #include "CommandServer.h"
 #include "CommandStop.h"
+#include "Logger.h"
 #include "Server.h"
 
 #include <algorithm>
@@ -20,14 +21,13 @@ CommandManager::CommandManager() {
 CommandManager::~CommandManager() {
     delete reader;
     for (auto command : commands)
-        if (command.first == command.second->getName())
-            delete command.second;
+        delete command.second;
 };
 
 void CommandManager::registerCommand(Command *command) {
     commands[command->getName()] = command;
     for (string_t alias : command->getAliases())
-        commands[alias] = command;
+        aliases[alias] = command;
 }
 
 void CommandManager::processCommand(string_t s, CommandSender *sender) {
@@ -43,11 +43,14 @@ void CommandManager::processCommand(string_t s, CommandSender *sender) {
     std::transform(name.begin(), name.end(), name.begin(), ::tolower);
     if (name == "help")
         performHelp(sender);
-    else if (commands.find(name) == commands.end())
+    else if (commands.find(name) == commands.end() && aliases.find(name) == aliases.end())
         sender->sendMessage(Chat() << "Commande inconnue. Essayez /help pour une liste des commandes.");
     else
         try {
-            commands[name]->perform(sender, args);
+            if(commands.find(name) != commands.end())
+                commands[name]->perform(sender, args);
+            else
+                aliases[name]->perform(sender,args);
         } catch (const Command::WrongUsageException &e) {
             sender->sendMessage(Chat() << Color::RED << "Usage : " << e.what());
         } catch (const Command::CommandException &e) {

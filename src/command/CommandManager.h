@@ -25,6 +25,7 @@ public:
 
 private:
     std::map<string_t, Command*> commands;
+    std::map<string_t, Command*> aliases;
     CommandReader *reader;
     CommandQueue queue;
 };

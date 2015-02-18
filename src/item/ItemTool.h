@@ -37,7 +37,9 @@ public:
         int_t getEnchantability();
     };
 
-    ItemTool(float_t, ToolMaterial, std::set<Block*>);
+    ItemTool(float_t, ToolMaterial, std::set<Block*>&);
+
+    virtual ~ItemTool();
 
     ToolMaterial getToolMaterial();
 

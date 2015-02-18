@@ -31,12 +31,17 @@ int_t ItemTool::ToolMaterial::getEnchantability() {
     return enchantability;
 }
 
-ItemTool::ItemTool(float_t damageVsEntity, ToolMaterial material, std::set<Block*> effectiveBlocks) :
-                   toolMaterial(material), effectiveBlocks(effectiveBlocks) {
+ItemTool::ItemTool(float_t damageVsEntity, ToolMaterial material, std::set<Block*>& blocks) :
+                   toolMaterial(material), effectiveBlocks(blocks) {
     setMaxStackSize(1);
     setMaxDamage(material.getMaxUses());
     this->damageVsEntity = damageVsEntity + material.getDamageVsEntity();
     efficiency = material.getEfficiency();
+}
+
+ItemTool::~ItemTool() {
+    for(Block* block : effectiveBlocks)
+        delete block;
 }
 
 ItemTool::ToolMaterial ItemTool::getToolMaterial() {

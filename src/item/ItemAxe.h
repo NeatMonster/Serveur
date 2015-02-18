@@ -13,7 +13,7 @@ class ItemAxe : public ItemTool
         float_t getStrVsBlock(Block*);
 
     private:
-        static const std::set<Block*> effectiveBlocks;
+        static std::set<Block*> effectiveBlocks;
 };
 
 #endif /* defined(__Serveur__ItemAxe__) */

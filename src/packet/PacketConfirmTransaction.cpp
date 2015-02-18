@@ -1,6 +1,6 @@
 #include "PacketConfirmTransaction.h"
 
-#include "Packethandler.h"
+#include "PacketHandler.h"
 
 PacketConfirmTransaction::PacketConfirmTransaction() : ServerPacket(0x32) {}
 
