@@ -7,7 +7,7 @@
 #include "NBTTagInt.h"
 #include "NBTTagFloat.h"
 
-FoodStats::FoodStats() : foodLevel(20), saturationLevel(5.0F)
+FoodStats::FoodStats() : foodLevel(20), saturationLevel(5.0F), exhaustionLevel(0.F)
 {}
 
 void FoodStats::addStats(varint_t foodAmount, float_t saturationAmount) {
